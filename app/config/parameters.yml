@@ -2,7 +2,7 @@ parameters:
     database_driver:   mysql
     database_host:     localhost
     database_port:     ~
-    database_name:     symfony
+    database_name:     ledjassa
     database_user:     ledjassa
     database_password: ledjassa
 
@@ -13,3 +13,15 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+    
+# Propel Configuration
+propel:
+    path:       "%kernel.root_dir%/../vendor/propel"
+    phing_path: "%kernel.root_dir%/../vendor/phing"
+    dbal:
+       driver:               mysql
+       user:                 ledjassa
+       password:             "passledjassa"
+       dsn:                  mysql:host=localhost;dbname=ledjassa;charset=UTF8
+       options:              {}
+       attributes:           {}

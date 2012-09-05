@@ -22,7 +22,6 @@ use LeDjassa\AdsBundle\Model\Quarter;
 
 /**
  * @method AdQuery orderById($order = Criteria::ASC) Order by the id column
- * @method AdQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method AdQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method AdQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method AdQuery orderByPrice($order = Criteria::ASC) Order by the price column
@@ -32,7 +31,6 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method AdQuery orderByCategoryId($order = Criteria::ASC) Order by the category_id column
  *
  * @method AdQuery groupById() Group by the id column
- * @method AdQuery groupByName() Group by the name column
  * @method AdQuery groupByTitle() Group by the title column
  * @method AdQuery groupByDescription() Group by the description column
  * @method AdQuery groupByPrice() Group by the price column
@@ -64,7 +62,6 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method Ad findOne(PropelPDO $con = null) Return the first Ad matching the query
  * @method Ad findOneOrCreate(PropelPDO $con = null) Return the first Ad matching the query, or a new Ad object populated from the query conditions when no match is found
  *
- * @method Ad findOneByName(string $name) Return the first Ad filtered by the name column
  * @method Ad findOneByTitle(string $title) Return the first Ad filtered by the title column
  * @method Ad findOneByDescription(string $description) Return the first Ad filtered by the description column
  * @method Ad findOneByPrice(string $price) Return the first Ad filtered by the price column
@@ -74,7 +71,6 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method Ad findOneByCategoryId(int $category_id) Return the first Ad filtered by the category_id column
  *
  * @method array findById(int $id) Return Ad objects filtered by the id column
- * @method array findByName(string $name) Return Ad objects filtered by the name column
  * @method array findByTitle(string $title) Return Ad objects filtered by the title column
  * @method array findByDescription(string $description) Return Ad objects filtered by the description column
  * @method array findByPrice(string $price) Return Ad objects filtered by the price column
@@ -183,7 +179,7 @@ abstract class BaseAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID` FROM `ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID` FROM `ad` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -297,35 +293,6 @@ abstract class BaseAdQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AdPeer::ID, $id, $comparison);
-    }
-
-    /**
-     * Filter the query on the name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
-     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $name The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return AdQuery The current query, for fluid interface
-     */
-    public function filterByName($name = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($name)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $name)) {
-                $name = str_replace('*', '%', $name);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(AdPeer::NAME, $name, $comparison);
     }
 
     /**

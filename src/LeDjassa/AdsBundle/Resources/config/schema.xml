@@ -72,8 +72,7 @@
 
     <table name="ad" description="ad">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" primaryString="1" size="100" />
-        <column name="title" type="varchar" size="20" />
+        <column name="title" type="varchar" primaryString="1" size="100" />
         <column name="description" type="varchar" size="500" />
         <column name="price" type="varchar" size="30" />
         <column name="created_at" type="timestamp" />

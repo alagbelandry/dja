@@ -55,12 +55,6 @@ abstract class BaseAd extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the name field.
-     * @var        string
-     */
-    protected $name;
-
-    /**
      * The value for the title field.
      * @var        string
      */
@@ -158,16 +152,6 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get the [name] column value.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -314,27 +298,6 @@ abstract class BaseAd extends BaseObject implements Persistent
 
         return $this;
     } // setId()
-
-    /**
-     * Set the value of [name] column.
-     *
-     * @param string $v new value
-     * @return Ad The current object (for fluent API support)
-     */
-    public function setName($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[] = AdPeer::NAME;
-        }
-
-
-        return $this;
-    } // setName()
 
     /**
      * Set the value of [title] column.
@@ -528,14 +491,13 @@ abstract class BaseAd extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->price = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->created_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->updated_at = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->ad_type_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
-            $this->category_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->description = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->price = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->created_at = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->updated_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->ad_type_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->category_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -544,7 +506,7 @@ abstract class BaseAd extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = AdPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = AdPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Ad object", $e);
@@ -826,9 +788,6 @@ abstract class BaseAd extends BaseObject implements Persistent
         if ($this->isColumnModified(AdPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`ID`';
         }
-        if ($this->isColumnModified(AdPeer::NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`NAME`';
-        }
         if ($this->isColumnModified(AdPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '`TITLE`';
         }
@@ -863,9 +822,6 @@ abstract class BaseAd extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '`ID`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
-                    case '`NAME`':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case '`TITLE`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
@@ -1060,27 +1016,24 @@ abstract class BaseAd extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getName();
-                break;
-            case 2:
                 return $this->getTitle();
                 break;
-            case 3:
+            case 2:
                 return $this->getDescription();
                 break;
-            case 4:
+            case 3:
                 return $this->getPrice();
                 break;
-            case 5:
+            case 4:
                 return $this->getCreatedAt();
                 break;
-            case 6:
+            case 5:
                 return $this->getUpdatedAt();
                 break;
-            case 7:
+            case 6:
                 return $this->getAdTypeId();
                 break;
-            case 8:
+            case 7:
                 return $this->getCategoryId();
                 break;
             default:
@@ -1113,14 +1066,13 @@ abstract class BaseAd extends BaseObject implements Persistent
         $keys = AdPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getName(),
-            $keys[2] => $this->getTitle(),
-            $keys[3] => $this->getDescription(),
-            $keys[4] => $this->getPrice(),
-            $keys[5] => $this->getCreatedAt(),
-            $keys[6] => $this->getUpdatedAt(),
-            $keys[7] => $this->getAdTypeId(),
-            $keys[8] => $this->getCategoryId(),
+            $keys[1] => $this->getTitle(),
+            $keys[2] => $this->getDescription(),
+            $keys[3] => $this->getPrice(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getUpdatedAt(),
+            $keys[6] => $this->getAdTypeId(),
+            $keys[7] => $this->getCategoryId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aAdType) {
@@ -1173,27 +1125,24 @@ abstract class BaseAd extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setName($value);
-                break;
-            case 2:
                 $this->setTitle($value);
                 break;
-            case 3:
+            case 2:
                 $this->setDescription($value);
                 break;
-            case 4:
+            case 3:
                 $this->setPrice($value);
                 break;
-            case 5:
+            case 4:
                 $this->setCreatedAt($value);
                 break;
-            case 6:
+            case 5:
                 $this->setUpdatedAt($value);
                 break;
-            case 7:
+            case 6:
                 $this->setAdTypeId($value);
                 break;
-            case 8:
+            case 7:
                 $this->setCategoryId($value);
                 break;
         } // switch()
@@ -1221,14 +1170,13 @@ abstract class BaseAd extends BaseObject implements Persistent
         $keys = AdPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setPrice($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setCreatedAt($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setUpdatedAt($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setAdTypeId($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setCategoryId($arr[$keys[8]]);
+        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDescription($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setPrice($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setAdTypeId($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setCategoryId($arr[$keys[7]]);
     }
 
     /**
@@ -1241,7 +1189,6 @@ abstract class BaseAd extends BaseObject implements Persistent
         $criteria = new Criteria(AdPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(AdPeer::ID)) $criteria->add(AdPeer::ID, $this->id);
-        if ($this->isColumnModified(AdPeer::NAME)) $criteria->add(AdPeer::NAME, $this->name);
         if ($this->isColumnModified(AdPeer::TITLE)) $criteria->add(AdPeer::TITLE, $this->title);
         if ($this->isColumnModified(AdPeer::DESCRIPTION)) $criteria->add(AdPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(AdPeer::PRICE)) $criteria->add(AdPeer::PRICE, $this->price);
@@ -1312,7 +1259,6 @@ abstract class BaseAd extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setName($this->getName());
         $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setPrice($this->getPrice());
@@ -1956,7 +1902,6 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->name = null;
         $this->title = null;
         $this->description = null;
         $this->price = null;
@@ -2011,11 +1956,11 @@ abstract class BaseAd extends BaseObject implements Persistent
     /**
      * return the string representation of this object
      *
-     * @return string The value of the 'name' column
+     * @return string The value of the 'title' column
      */
     public function __toString()
     {
-        return (string) $this->getName();
+        return (string) $this->getTitle();
     }
 
     /**

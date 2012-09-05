@@ -43,9 +43,8 @@ class AdTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
-        $this->getColumn('NAME', false)->setPrimaryString(true);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 20, null);
+        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 100, null);
+        $this->getColumn('TITLE', false)->setPrimaryString(true);
         $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 500, null);
         $this->addColumn('PRICE', 'Price', 'VARCHAR', false, 30, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);

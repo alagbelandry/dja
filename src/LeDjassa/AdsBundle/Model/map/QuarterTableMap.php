@@ -45,7 +45,7 @@ class QuarterTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
-        $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
+        $this->addForeignKey('CITY_ID', 'cityId', 'INTEGER', 'city', 'ID', false, 6, null);
         $this->addForeignKey('AD_ID', 'AdId', 'INTEGER', 'ad', 'ID', false, null, null);
         // validators
     } // initialize()

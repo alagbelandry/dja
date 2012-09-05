@@ -193,7 +193,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getCreatedAt($format = null)
+    public function getcreatedAt($format = null)
     {
         if ($this->created_at === null) {
             return null;
@@ -230,7 +230,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getUpdatedAt($format = null)
+    public function getupdatedAt($format = null)
     {
         if ($this->updated_at === null) {
             return null;
@@ -273,7 +273,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getCategoryId()
+    public function getcategoryId()
     {
         return $this->category_id;
     }
@@ -369,7 +369,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      *               Empty strings are treated as null.
      * @return Ad The current object (for fluent API support)
      */
-    public function setCreatedAt($v)
+    public function setcreatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
@@ -383,7 +383,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
 
         return $this;
-    } // setCreatedAt()
+    } // setcreatedAt()
 
     /**
      * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
@@ -392,7 +392,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      *               Empty strings are treated as null.
      * @return Ad The current object (for fluent API support)
      */
-    public function setUpdatedAt($v)
+    public function setupdatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
@@ -406,7 +406,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
 
         return $this;
-    } // setUpdatedAt()
+    } // setupdatedAt()
 
     /**
      * Set the value of [ad_type_id] column.
@@ -439,7 +439,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @param int $v new value
      * @return Ad The current object (for fluent API support)
      */
-    public function setCategoryId($v)
+    public function setcategoryId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -456,7 +456,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
 
         return $this;
-    } // setCategoryId()
+    } // setcategoryId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -1025,16 +1025,16 @@ abstract class BaseAd extends BaseObject implements Persistent
                 return $this->getPrice();
                 break;
             case 4:
-                return $this->getCreatedAt();
+                return $this->getcreatedAt();
                 break;
             case 5:
-                return $this->getUpdatedAt();
+                return $this->getupdatedAt();
                 break;
             case 6:
                 return $this->getAdTypeId();
                 break;
             case 7:
-                return $this->getCategoryId();
+                return $this->getcategoryId();
                 break;
             default:
                 return null;
@@ -1069,10 +1069,10 @@ abstract class BaseAd extends BaseObject implements Persistent
             $keys[1] => $this->getTitle(),
             $keys[2] => $this->getDescription(),
             $keys[3] => $this->getPrice(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
+            $keys[4] => $this->getcreatedAt(),
+            $keys[5] => $this->getupdatedAt(),
             $keys[6] => $this->getAdTypeId(),
-            $keys[7] => $this->getCategoryId(),
+            $keys[7] => $this->getcategoryId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aAdType) {
@@ -1134,16 +1134,16 @@ abstract class BaseAd extends BaseObject implements Persistent
                 $this->setPrice($value);
                 break;
             case 4:
-                $this->setCreatedAt($value);
+                $this->setcreatedAt($value);
                 break;
             case 5:
-                $this->setUpdatedAt($value);
+                $this->setupdatedAt($value);
                 break;
             case 6:
                 $this->setAdTypeId($value);
                 break;
             case 7:
-                $this->setCategoryId($value);
+                $this->setcategoryId($value);
                 break;
         } // switch()
     }
@@ -1173,10 +1173,10 @@ abstract class BaseAd extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDescription($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setPrice($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
+        if (array_key_exists($keys[4], $arr)) $this->setcreatedAt($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setupdatedAt($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setAdTypeId($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setCategoryId($arr[$keys[7]]);
+        if (array_key_exists($keys[7], $arr)) $this->setcategoryId($arr[$keys[7]]);
     }
 
     /**
@@ -1262,10 +1262,10 @@ abstract class BaseAd extends BaseObject implements Persistent
         $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setPrice($this->getPrice());
-        $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setUpdatedAt($this->getUpdatedAt());
+        $copyObj->setcreatedAt($this->getcreatedAt());
+        $copyObj->setupdatedAt($this->getupdatedAt());
         $copyObj->setAdTypeId($this->getAdTypeId());
-        $copyObj->setCategoryId($this->getCategoryId());
+        $copyObj->setcategoryId($this->getcategoryId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1397,9 +1397,9 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function setCategory(Category $v = null)
     {
         if ($v === null) {
-            $this->setCategoryId(NULL);
+            $this->setcategoryId(NULL);
         } else {
-            $this->setCategoryId($v->getId());
+            $this->setcategoryId($v->getId());
         }
 
         $this->aCategory = $v;

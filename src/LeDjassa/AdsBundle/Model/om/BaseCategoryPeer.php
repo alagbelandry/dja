@@ -69,7 +69,7 @@ abstract class BaseCategoryPeer
      * e.g. CategoryPeer::$fieldNames[CategoryPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Code', 'CategoryTypeId', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Code', 'categoryTypeId', ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'code', 'categoryTypeId', ),
         BasePeer::TYPE_COLNAME => array (CategoryPeer::ID, CategoryPeer::TITLE, CategoryPeer::CODE, CategoryPeer::CATEGORY_TYPE_ID, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'CODE', 'CATEGORY_TYPE_ID', ),
@@ -84,7 +84,7 @@ abstract class BaseCategoryPeer
      * e.g. CategoryPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Code' => 2, 'CategoryTypeId' => 3, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Code' => 2, 'categoryTypeId' => 3, ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'code' => 2, 'categoryTypeId' => 3, ),
         BasePeer::TYPE_COLNAME => array (CategoryPeer::ID => 0, CategoryPeer::TITLE => 1, CategoryPeer::CODE => 2, CategoryPeer::CATEGORY_TYPE_ID => 3, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'CODE' => 2, 'CATEGORY_TYPE_ID' => 3, ),

@@ -46,7 +46,7 @@ class CityTableMap extends TableMap
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('AREA_ID', 'AreaId', 'INTEGER', 'area', 'ID', false, 5, null);
+        $this->addForeignKey('AREA_ID', 'areaId', 'INTEGER', 'area', 'ID', false, 5, null);
         // validators
     } // initialize()
 

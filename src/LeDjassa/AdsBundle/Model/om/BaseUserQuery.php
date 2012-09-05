@@ -22,15 +22,15 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method UserQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method UserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method UserQuery orderByPhone($order = Criteria::ASC) Order by the phone column
- * @method UserQuery orderByIpAdress($order = Criteria::ASC) Order by the ip_adress column
- * @method UserQuery orderByUserTypeId($order = Criteria::ASC) Order by the user_type_id column
+ * @method UserQuery orderByipAdress($order = Criteria::ASC) Order by the ip_adress column
+ * @method UserQuery orderByuserTypeId($order = Criteria::ASC) Order by the user_type_id column
  *
  * @method UserQuery groupById() Group by the id column
  * @method UserQuery groupByName() Group by the name column
  * @method UserQuery groupByEmail() Group by the email column
  * @method UserQuery groupByPhone() Group by the phone column
- * @method UserQuery groupByIpAdress() Group by the ip_adress column
- * @method UserQuery groupByUserTypeId() Group by the user_type_id column
+ * @method UserQuery groupByipAdress() Group by the ip_adress column
+ * @method UserQuery groupByuserTypeId() Group by the user_type_id column
  *
  * @method UserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,15 +46,15 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method User findOneByName(string $name) Return the first User filtered by the name column
  * @method User findOneByEmail(string $email) Return the first User filtered by the email column
  * @method User findOneByPhone(string $phone) Return the first User filtered by the phone column
- * @method User findOneByIpAdress(string $ip_adress) Return the first User filtered by the ip_adress column
- * @method User findOneByUserTypeId(int $user_type_id) Return the first User filtered by the user_type_id column
+ * @method User findOneByipAdress(string $ip_adress) Return the first User filtered by the ip_adress column
+ * @method User findOneByuserTypeId(int $user_type_id) Return the first User filtered by the user_type_id column
  *
  * @method array findById(int $id) Return User objects filtered by the id column
  * @method array findByName(string $name) Return User objects filtered by the name column
  * @method array findByEmail(string $email) Return User objects filtered by the email column
  * @method array findByPhone(string $phone) Return User objects filtered by the phone column
- * @method array findByIpAdress(string $ip_adress) Return User objects filtered by the ip_adress column
- * @method array findByUserTypeId(int $user_type_id) Return User objects filtered by the user_type_id column
+ * @method array findByipAdress(string $ip_adress) Return User objects filtered by the ip_adress column
+ * @method array findByuserTypeId(int $user_type_id) Return User objects filtered by the user_type_id column
  */
 abstract class BaseUserQuery extends ModelCriteria
 {
@@ -364,8 +364,8 @@ abstract class BaseUserQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByIpAdress('fooValue');   // WHERE ip_adress = 'fooValue'
-     * $query->filterByIpAdress('%fooValue%'); // WHERE ip_adress LIKE '%fooValue%'
+     * $query->filterByipAdress('fooValue');   // WHERE ip_adress = 'fooValue'
+     * $query->filterByipAdress('%fooValue%'); // WHERE ip_adress LIKE '%fooValue%'
      * </code>
      *
      * @param     string $ipAdress The value to use as filter.
@@ -374,7 +374,7 @@ abstract class BaseUserQuery extends ModelCriteria
      *
      * @return UserQuery The current query, for fluid interface
      */
-    public function filterByIpAdress($ipAdress = null, $comparison = null)
+    public function filterByipAdress($ipAdress = null, $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($ipAdress)) {
@@ -393,9 +393,9 @@ abstract class BaseUserQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByUserTypeId(1234); // WHERE user_type_id = 1234
-     * $query->filterByUserTypeId(array(12, 34)); // WHERE user_type_id IN (12, 34)
-     * $query->filterByUserTypeId(array('min' => 12)); // WHERE user_type_id > 12
+     * $query->filterByuserTypeId(1234); // WHERE user_type_id = 1234
+     * $query->filterByuserTypeId(array(12, 34)); // WHERE user_type_id IN (12, 34)
+     * $query->filterByuserTypeId(array('min' => 12)); // WHERE user_type_id > 12
      * </code>
      *
      * @see       filterByUserType()
@@ -408,7 +408,7 @@ abstract class BaseUserQuery extends ModelCriteria
      *
      * @return UserQuery The current query, for fluid interface
      */
-    public function filterByUserTypeId($userTypeId = null, $comparison = null)
+    public function filterByuserTypeId($userTypeId = null, $comparison = null)
     {
         if (is_array($userTypeId)) {
             $useMinMax = false;

@@ -21,12 +21,12 @@ use LeDjassa\AdsBundle\Model\QuarterQuery;
 /**
  * @method QuarterQuery orderById($order = Criteria::ASC) Order by the id column
  * @method QuarterQuery orderByName($order = Criteria::ASC) Order by the name column
- * @method QuarterQuery orderByCityId($order = Criteria::ASC) Order by the city_id column
+ * @method QuarterQuery orderBycityId($order = Criteria::ASC) Order by the city_id column
  * @method QuarterQuery orderByAdId($order = Criteria::ASC) Order by the ad_id column
  *
  * @method QuarterQuery groupById() Group by the id column
  * @method QuarterQuery groupByName() Group by the name column
- * @method QuarterQuery groupByCityId() Group by the city_id column
+ * @method QuarterQuery groupBycityId() Group by the city_id column
  * @method QuarterQuery groupByAdId() Group by the ad_id column
  *
  * @method QuarterQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -45,12 +45,12 @@ use LeDjassa\AdsBundle\Model\QuarterQuery;
  * @method Quarter findOneOrCreate(PropelPDO $con = null) Return the first Quarter matching the query, or a new Quarter object populated from the query conditions when no match is found
  *
  * @method Quarter findOneByName(string $name) Return the first Quarter filtered by the name column
- * @method Quarter findOneByCityId(int $city_id) Return the first Quarter filtered by the city_id column
+ * @method Quarter findOneBycityId(int $city_id) Return the first Quarter filtered by the city_id column
  * @method Quarter findOneByAdId(int $ad_id) Return the first Quarter filtered by the ad_id column
  *
  * @method array findById(int $id) Return Quarter objects filtered by the id column
  * @method array findByName(string $name) Return Quarter objects filtered by the name column
- * @method array findByCityId(int $city_id) Return Quarter objects filtered by the city_id column
+ * @method array findBycityId(int $city_id) Return Quarter objects filtered by the city_id column
  * @method array findByAdId(int $ad_id) Return Quarter objects filtered by the ad_id column
  */
 abstract class BaseQuarterQuery extends ModelCriteria
@@ -303,9 +303,9 @@ abstract class BaseQuarterQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByCityId(1234); // WHERE city_id = 1234
-     * $query->filterByCityId(array(12, 34)); // WHERE city_id IN (12, 34)
-     * $query->filterByCityId(array('min' => 12)); // WHERE city_id > 12
+     * $query->filterBycityId(1234); // WHERE city_id = 1234
+     * $query->filterBycityId(array(12, 34)); // WHERE city_id IN (12, 34)
+     * $query->filterBycityId(array('min' => 12)); // WHERE city_id > 12
      * </code>
      *
      * @see       filterByCity()
@@ -318,7 +318,7 @@ abstract class BaseQuarterQuery extends ModelCriteria
      *
      * @return QuarterQuery The current query, for fluid interface
      */
-    public function filterByCityId($cityId = null, $comparison = null)
+    public function filterBycityId($cityId = null, $comparison = null)
     {
         if (is_array($cityId)) {
             $useMinMax = false;

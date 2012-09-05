@@ -69,7 +69,7 @@ abstract class BaseCityPeer
      * e.g. CityPeer::$fieldNames[CityPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Code', 'AreaId', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Code', 'areaId', ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'code', 'areaId', ),
         BasePeer::TYPE_COLNAME => array (CityPeer::ID, CityPeer::NAME, CityPeer::CODE, CityPeer::AREA_ID, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CODE', 'AREA_ID', ),
@@ -84,7 +84,7 @@ abstract class BaseCityPeer
      * e.g. CityPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Code' => 2, 'AreaId' => 3, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Code' => 2, 'areaId' => 3, ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'code' => 2, 'areaId' => 3, ),
         BasePeer::TYPE_COLNAME => array (CityPeer::ID => 0, CityPeer::NAME => 1, CityPeer::CODE => 2, CityPeer::AREA_ID => 3, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CODE' => 2, 'AREA_ID' => 3, ),

@@ -45,7 +45,7 @@ class CategoryTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 6, null);
         $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 100, null);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('CATEGORY_TYPE_ID', 'CategoryTypeId', 'INTEGER', 'category_type', 'ID', false, 5, null);
+        $this->addForeignKey('CATEGORY_TYPE_ID', 'categoryTypeId', 'INTEGER', 'category_type', 'ID', false, 5, null);
         // validators
     } // initialize()
 

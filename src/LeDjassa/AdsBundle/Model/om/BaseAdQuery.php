@@ -25,19 +25,19 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method AdQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method AdQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method AdQuery orderByPrice($order = Criteria::ASC) Order by the price column
- * @method AdQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method AdQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method AdQuery orderBycreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method AdQuery orderByupdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method AdQuery orderByAdTypeId($order = Criteria::ASC) Order by the ad_type_id column
- * @method AdQuery orderByCategoryId($order = Criteria::ASC) Order by the category_id column
+ * @method AdQuery orderBycategoryId($order = Criteria::ASC) Order by the category_id column
  *
  * @method AdQuery groupById() Group by the id column
  * @method AdQuery groupByTitle() Group by the title column
  * @method AdQuery groupByDescription() Group by the description column
  * @method AdQuery groupByPrice() Group by the price column
- * @method AdQuery groupByCreatedAt() Group by the created_at column
- * @method AdQuery groupByUpdatedAt() Group by the updated_at column
+ * @method AdQuery groupBycreatedAt() Group by the created_at column
+ * @method AdQuery groupByupdatedAt() Group by the updated_at column
  * @method AdQuery groupByAdTypeId() Group by the ad_type_id column
- * @method AdQuery groupByCategoryId() Group by the category_id column
+ * @method AdQuery groupBycategoryId() Group by the category_id column
  *
  * @method AdQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AdQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -65,19 +65,19 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method Ad findOneByTitle(string $title) Return the first Ad filtered by the title column
  * @method Ad findOneByDescription(string $description) Return the first Ad filtered by the description column
  * @method Ad findOneByPrice(string $price) Return the first Ad filtered by the price column
- * @method Ad findOneByCreatedAt(string $created_at) Return the first Ad filtered by the created_at column
- * @method Ad findOneByUpdatedAt(string $updated_at) Return the first Ad filtered by the updated_at column
+ * @method Ad findOneBycreatedAt(string $created_at) Return the first Ad filtered by the created_at column
+ * @method Ad findOneByupdatedAt(string $updated_at) Return the first Ad filtered by the updated_at column
  * @method Ad findOneByAdTypeId(int $ad_type_id) Return the first Ad filtered by the ad_type_id column
- * @method Ad findOneByCategoryId(int $category_id) Return the first Ad filtered by the category_id column
+ * @method Ad findOneBycategoryId(int $category_id) Return the first Ad filtered by the category_id column
  *
  * @method array findById(int $id) Return Ad objects filtered by the id column
  * @method array findByTitle(string $title) Return Ad objects filtered by the title column
  * @method array findByDescription(string $description) Return Ad objects filtered by the description column
  * @method array findByPrice(string $price) Return Ad objects filtered by the price column
- * @method array findByCreatedAt(string $created_at) Return Ad objects filtered by the created_at column
- * @method array findByUpdatedAt(string $updated_at) Return Ad objects filtered by the updated_at column
+ * @method array findBycreatedAt(string $created_at) Return Ad objects filtered by the created_at column
+ * @method array findByupdatedAt(string $updated_at) Return Ad objects filtered by the updated_at column
  * @method array findByAdTypeId(int $ad_type_id) Return Ad objects filtered by the ad_type_id column
- * @method array findByCategoryId(int $category_id) Return Ad objects filtered by the category_id column
+ * @method array findBycategoryId(int $category_id) Return Ad objects filtered by the category_id column
  */
 abstract class BaseAdQuery extends ModelCriteria
 {
@@ -387,9 +387,9 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
+     * $query->filterBycreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
+     * $query->filterBycreatedAt('now'); // WHERE created_at = '2011-03-14'
+     * $query->filterBycreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
      * @param     mixed $createdAt The value to use as filter.
@@ -402,7 +402,7 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * @return AdQuery The current query, for fluid interface
      */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
+    public function filterBycreatedAt($createdAt = null, $comparison = null)
     {
         if (is_array($createdAt)) {
             $useMinMax = false;
@@ -430,9 +430,9 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
+     * $query->filterByupdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByupdatedAt('now'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByupdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
      * @param     mixed $updatedAt The value to use as filter.
@@ -445,7 +445,7 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * @return AdQuery The current query, for fluid interface
      */
-    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
+    public function filterByupdatedAt($updatedAt = null, $comparison = null)
     {
         if (is_array($updatedAt)) {
             $useMinMax = false;
@@ -516,9 +516,9 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByCategoryId(1234); // WHERE category_id = 1234
-     * $query->filterByCategoryId(array(12, 34)); // WHERE category_id IN (12, 34)
-     * $query->filterByCategoryId(array('min' => 12)); // WHERE category_id > 12
+     * $query->filterBycategoryId(1234); // WHERE category_id = 1234
+     * $query->filterBycategoryId(array(12, 34)); // WHERE category_id IN (12, 34)
+     * $query->filterBycategoryId(array('min' => 12)); // WHERE category_id > 12
      * </code>
      *
      * @see       filterByCategory()
@@ -531,7 +531,7 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * @return AdQuery The current query, for fluid interface
      */
-    public function filterByCategoryId($categoryId = null, $comparison = null)
+    public function filterBycategoryId($categoryId = null, $comparison = null)
     {
         if (is_array($categoryId)) {
             $useMinMax = false;

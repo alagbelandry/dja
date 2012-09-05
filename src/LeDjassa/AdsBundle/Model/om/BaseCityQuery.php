@@ -22,12 +22,12 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method CityQuery orderById($order = Criteria::ASC) Order by the id column
  * @method CityQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method CityQuery orderByCode($order = Criteria::ASC) Order by the code column
- * @method CityQuery orderByAreaId($order = Criteria::ASC) Order by the area_id column
+ * @method CityQuery orderByareaId($order = Criteria::ASC) Order by the area_id column
  *
  * @method CityQuery groupById() Group by the id column
  * @method CityQuery groupByName() Group by the name column
  * @method CityQuery groupByCode() Group by the code column
- * @method CityQuery groupByAreaId() Group by the area_id column
+ * @method CityQuery groupByareaId() Group by the area_id column
  *
  * @method CityQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CityQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,12 +46,12 @@ use LeDjassa\AdsBundle\Model\Quarter;
  *
  * @method City findOneByName(string $name) Return the first City filtered by the name column
  * @method City findOneByCode(string $code) Return the first City filtered by the code column
- * @method City findOneByAreaId(int $area_id) Return the first City filtered by the area_id column
+ * @method City findOneByareaId(int $area_id) Return the first City filtered by the area_id column
  *
  * @method array findById(int $id) Return City objects filtered by the id column
  * @method array findByName(string $name) Return City objects filtered by the name column
  * @method array findByCode(string $code) Return City objects filtered by the code column
- * @method array findByAreaId(int $area_id) Return City objects filtered by the area_id column
+ * @method array findByareaId(int $area_id) Return City objects filtered by the area_id column
  */
 abstract class BaseCityQuery extends ModelCriteria
 {
@@ -332,9 +332,9 @@ abstract class BaseCityQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByAreaId(1234); // WHERE area_id = 1234
-     * $query->filterByAreaId(array(12, 34)); // WHERE area_id IN (12, 34)
-     * $query->filterByAreaId(array('min' => 12)); // WHERE area_id > 12
+     * $query->filterByareaId(1234); // WHERE area_id = 1234
+     * $query->filterByareaId(array(12, 34)); // WHERE area_id IN (12, 34)
+     * $query->filterByareaId(array('min' => 12)); // WHERE area_id > 12
      * </code>
      *
      * @see       filterByArea()
@@ -347,7 +347,7 @@ abstract class BaseCityQuery extends ModelCriteria
      *
      * @return CityQuery The current query, for fluid interface
      */
-    public function filterByAreaId($areaId = null, $comparison = null)
+    public function filterByareaId($areaId = null, $comparison = null)
     {
         if (is_array($areaId)) {
             $useMinMax = false;
@@ -459,7 +459,7 @@ abstract class BaseCityQuery extends ModelCriteria
     {
         if ($quarter instanceof Quarter) {
             return $this
-                ->addUsingAlias(CityPeer::ID, $quarter->getCityId(), $comparison);
+                ->addUsingAlias(CityPeer::ID, $quarter->getcityId(), $comparison);
         } elseif ($quarter instanceof PropelObjectCollection) {
             return $this
                 ->useQuarterQuery()

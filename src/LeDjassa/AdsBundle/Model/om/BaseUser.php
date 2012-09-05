@@ -138,7 +138,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      *
      * @return string
      */
-    public function getIpAdress()
+    public function getipAdress()
     {
         return $this->ip_adress;
     }
@@ -148,7 +148,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getUserTypeId()
+    public function getuserTypeId()
     {
         return $this->user_type_id;
     }
@@ -243,7 +243,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @param string $v new value
      * @return User The current object (for fluent API support)
      */
-    public function setIpAdress($v)
+    public function setipAdress($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -256,7 +256,7 @@ abstract class BaseUser extends BaseObject implements Persistent
 
 
         return $this;
-    } // setIpAdress()
+    } // setipAdress()
 
     /**
      * Set the value of [user_type_id] column.
@@ -264,7 +264,7 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @param int $v new value
      * @return User The current object (for fluent API support)
      */
-    public function setUserTypeId($v)
+    public function setuserTypeId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -281,7 +281,7 @@ abstract class BaseUser extends BaseObject implements Persistent
 
 
         return $this;
-    } // setUserTypeId()
+    } // setuserTypeId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -763,10 +763,10 @@ abstract class BaseUser extends BaseObject implements Persistent
                 return $this->getPhone();
                 break;
             case 4:
-                return $this->getIpAdress();
+                return $this->getipAdress();
                 break;
             case 5:
-                return $this->getUserTypeId();
+                return $this->getuserTypeId();
                 break;
             default:
                 return null;
@@ -801,8 +801,8 @@ abstract class BaseUser extends BaseObject implements Persistent
             $keys[1] => $this->getName(),
             $keys[2] => $this->getEmail(),
             $keys[3] => $this->getPhone(),
-            $keys[4] => $this->getIpAdress(),
-            $keys[5] => $this->getUserTypeId(),
+            $keys[4] => $this->getipAdress(),
+            $keys[5] => $this->getuserTypeId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aUserType) {
@@ -855,10 +855,10 @@ abstract class BaseUser extends BaseObject implements Persistent
                 $this->setPhone($value);
                 break;
             case 4:
-                $this->setIpAdress($value);
+                $this->setipAdress($value);
                 break;
             case 5:
-                $this->setUserTypeId($value);
+                $this->setuserTypeId($value);
                 break;
         } // switch()
     }
@@ -888,8 +888,8 @@ abstract class BaseUser extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setEmail($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setPhone($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setIpAdress($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setUserTypeId($arr[$keys[5]]);
+        if (array_key_exists($keys[4], $arr)) $this->setipAdress($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setuserTypeId($arr[$keys[5]]);
     }
 
     /**
@@ -973,8 +973,8 @@ abstract class BaseUser extends BaseObject implements Persistent
         $copyObj->setName($this->getName());
         $copyObj->setEmail($this->getEmail());
         $copyObj->setPhone($this->getPhone());
-        $copyObj->setIpAdress($this->getIpAdress());
-        $copyObj->setUserTypeId($this->getUserTypeId());
+        $copyObj->setipAdress($this->getipAdress());
+        $copyObj->setuserTypeId($this->getuserTypeId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1043,9 +1043,9 @@ abstract class BaseUser extends BaseObject implements Persistent
     public function setUserType(UserType $v = null)
     {
         if ($v === null) {
-            $this->setUserTypeId(NULL);
+            $this->setuserTypeId(NULL);
         } else {
-            $this->setUserTypeId($v->getId());
+            $this->setuserTypeId($v->getId());
         }
 
         $this->aUserType = $v;

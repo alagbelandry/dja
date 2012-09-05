@@ -331,7 +331,7 @@ abstract class BaseCategoryTypeQuery extends ModelCriteria
     {
         if ($category instanceof Category) {
             return $this
-                ->addUsingAlias(CategoryTypePeer::ID, $category->getCategoryTypeId(), $comparison);
+                ->addUsingAlias(CategoryTypePeer::ID, $category->getcategoryTypeId(), $comparison);
         } elseif ($category instanceof PropelObjectCollection) {
             return $this
                 ->useCategoryQuery()

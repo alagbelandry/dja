@@ -82,7 +82,7 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[AdPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'CreatedAt', 'UpdatedAt', 'AdTypeId', 'CategoryId', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'createdAt', 'updatedAt', 'AdTypeId', 'categoryId', ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'description', 'price', 'createdAt', 'updatedAt', 'adTypeId', 'categoryId', ),
         BasePeer::TYPE_COLNAME => array (AdPeer::ID, AdPeer::TITLE, AdPeer::DESCRIPTION, AdPeer::PRICE, AdPeer::CREATED_AT, AdPeer::UPDATED_AT, AdPeer::AD_TYPE_ID, AdPeer::CATEGORY_ID, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'DESCRIPTION', 'PRICE', 'CREATED_AT', 'UPDATED_AT', 'AD_TYPE_ID', 'CATEGORY_ID', ),
@@ -97,7 +97,7 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, 'AdTypeId' => 6, 'CategoryId' => 7, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'createdAt' => 4, 'updatedAt' => 5, 'AdTypeId' => 6, 'categoryId' => 7, ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'createdAt' => 4, 'updatedAt' => 5, 'adTypeId' => 6, 'categoryId' => 7, ),
         BasePeer::TYPE_COLNAME => array (AdPeer::ID => 0, AdPeer::TITLE => 1, AdPeer::DESCRIPTION => 2, AdPeer::PRICE => 3, AdPeer::CREATED_AT => 4, AdPeer::UPDATED_AT => 5, AdPeer::AD_TYPE_ID => 6, AdPeer::CATEGORY_ID => 7, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'DESCRIPTION' => 2, 'PRICE' => 3, 'CREATED_AT' => 4, 'UPDATED_AT' => 5, 'AD_TYPE_ID' => 6, 'CATEGORY_ID' => 7, ),

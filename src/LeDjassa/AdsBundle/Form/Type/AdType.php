@@ -16,7 +16,13 @@ class AdType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('title');
-        $builder->add('isbn');
+        $builder->add('description');
+        $builder->add('price');
+
+        // Ad type relation
+
+        // Category relation 
+  
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

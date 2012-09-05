@@ -47,10 +47,10 @@ class AdTableMap extends TableMap
         $this->getColumn('TITLE', false)->setPrimaryString(true);
         $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 500, null);
         $this->addColumn('PRICE', 'Price', 'VARCHAR', false, 30, null);
-        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('CREATED_AT', 'createdAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('UPDATED_AT', 'updatedAt', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('AD_TYPE_ID', 'AdTypeId', 'INTEGER', 'ad_type', 'ID', false, 5, null);
-        $this->addForeignKey('CATEGORY_ID', 'CategoryId', 'INTEGER', 'category', 'ID', false, 6, null);
+        $this->addForeignKey('CATEGORY_ID', 'categoryId', 'INTEGER', 'category', 'ID', false, 6, null);
         // validators
     } // initialize()
 

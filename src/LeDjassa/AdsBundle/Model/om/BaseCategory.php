@@ -132,7 +132,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getCategoryTypeId()
+    public function getcategoryTypeId()
     {
         return $this->category_type_id;
     }
@@ -206,7 +206,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
      * @param int $v new value
      * @return Category The current object (for fluent API support)
      */
-    public function setCategoryTypeId($v)
+    public function setcategoryTypeId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -223,7 +223,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
 
 
         return $this;
-    } // setCategoryTypeId()
+    } // setcategoryTypeId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -716,7 +716,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
                 return $this->getCode();
                 break;
             case 3:
-                return $this->getCategoryTypeId();
+                return $this->getcategoryTypeId();
                 break;
             default:
                 return null;
@@ -750,7 +750,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $keys[0] => $this->getId(),
             $keys[1] => $this->getTitle(),
             $keys[2] => $this->getCode(),
-            $keys[3] => $this->getCategoryTypeId(),
+            $keys[3] => $this->getcategoryTypeId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aCategoryType) {
@@ -803,7 +803,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
                 $this->setCode($value);
                 break;
             case 3:
-                $this->setCategoryTypeId($value);
+                $this->setcategoryTypeId($value);
                 break;
         } // switch()
     }
@@ -832,7 +832,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setCode($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setCategoryTypeId($arr[$keys[3]]);
+        if (array_key_exists($keys[3], $arr)) $this->setcategoryTypeId($arr[$keys[3]]);
     }
 
     /**
@@ -913,7 +913,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
     {
         $copyObj->setTitle($this->getTitle());
         $copyObj->setCode($this->getCode());
-        $copyObj->setCategoryTypeId($this->getCategoryTypeId());
+        $copyObj->setcategoryTypeId($this->getcategoryTypeId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -988,9 +988,9 @@ abstract class BaseCategory extends BaseObject implements Persistent
     public function setCategoryType(CategoryType $v = null)
     {
         if ($v === null) {
-            $this->setCategoryTypeId(NULL);
+            $this->setcategoryTypeId(NULL);
         } else {
-            $this->setCategoryTypeId($v->getId());
+            $this->setcategoryTypeId($v->getId());
         }
 
         $this->aCategoryType = $v;

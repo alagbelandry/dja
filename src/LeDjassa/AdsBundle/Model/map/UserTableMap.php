@@ -47,8 +47,8 @@ class UserTableMap extends TableMap
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 100, null);
         $this->addColumn('PHONE', 'Phone', 'VARCHAR', false, 100, null);
-        $this->addColumn('IP_ADRESS', 'IpAdress', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('USER_TYPE_ID', 'UserTypeId', 'INTEGER', 'user_type', 'ID', false, 5, null);
+        $this->addColumn('IP_ADRESS', 'ipAdress', 'VARCHAR', false, 20, null);
+        $this->addForeignKey('USER_TYPE_ID', 'userTypeId', 'INTEGER', 'user_type', 'ID', false, 5, null);
         // validators
     } // initialize()
 

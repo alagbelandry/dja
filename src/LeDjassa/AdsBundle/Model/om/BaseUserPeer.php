@@ -75,7 +75,7 @@ abstract class BaseUserPeer
      * e.g. UserPeer::$fieldNames[UserPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Email', 'Phone', 'IpAdress', 'UserTypeId', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Email', 'Phone', 'ipAdress', 'userTypeId', ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'email', 'phone', 'ipAdress', 'userTypeId', ),
         BasePeer::TYPE_COLNAME => array (UserPeer::ID, UserPeer::NAME, UserPeer::EMAIL, UserPeer::PHONE, UserPeer::IP_ADRESS, UserPeer::USER_TYPE_ID, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'EMAIL', 'PHONE', 'IP_ADRESS', 'USER_TYPE_ID', ),
@@ -90,7 +90,7 @@ abstract class BaseUserPeer
      * e.g. UserPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Email' => 2, 'Phone' => 3, 'IpAdress' => 4, 'UserTypeId' => 5, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Email' => 2, 'Phone' => 3, 'ipAdress' => 4, 'userTypeId' => 5, ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'email' => 2, 'phone' => 3, 'ipAdress' => 4, 'userTypeId' => 5, ),
         BasePeer::TYPE_COLNAME => array (UserPeer::ID => 0, UserPeer::NAME => 1, UserPeer::EMAIL => 2, UserPeer::PHONE => 3, UserPeer::IP_ADRESS => 4, UserPeer::USER_TYPE_ID => 5, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'EMAIL' => 2, 'PHONE' => 3, 'IP_ADRESS' => 4, 'USER_TYPE_ID' => 5, ),

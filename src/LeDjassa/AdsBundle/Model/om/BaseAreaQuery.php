@@ -331,7 +331,7 @@ abstract class BaseAreaQuery extends ModelCriteria
     {
         if ($city instanceof City) {
             return $this
-                ->addUsingAlias(AreaPeer::ID, $city->getAreaId(), $comparison);
+                ->addUsingAlias(AreaPeer::ID, $city->getareaId(), $comparison);
         } elseif ($city instanceof PropelObjectCollection) {
             return $this
                 ->useCityQuery()

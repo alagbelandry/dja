@@ -132,7 +132,7 @@ abstract class BaseCity extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getAreaId()
+    public function getareaId()
     {
         return $this->area_id;
     }
@@ -206,7 +206,7 @@ abstract class BaseCity extends BaseObject implements Persistent
      * @param int $v new value
      * @return City The current object (for fluent API support)
      */
-    public function setAreaId($v)
+    public function setareaId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -223,7 +223,7 @@ abstract class BaseCity extends BaseObject implements Persistent
 
 
         return $this;
-    } // setAreaId()
+    } // setareaId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -716,7 +716,7 @@ abstract class BaseCity extends BaseObject implements Persistent
                 return $this->getCode();
                 break;
             case 3:
-                return $this->getAreaId();
+                return $this->getareaId();
                 break;
             default:
                 return null;
@@ -750,7 +750,7 @@ abstract class BaseCity extends BaseObject implements Persistent
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
             $keys[2] => $this->getCode(),
-            $keys[3] => $this->getAreaId(),
+            $keys[3] => $this->getareaId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aArea) {
@@ -803,7 +803,7 @@ abstract class BaseCity extends BaseObject implements Persistent
                 $this->setCode($value);
                 break;
             case 3:
-                $this->setAreaId($value);
+                $this->setareaId($value);
                 break;
         } // switch()
     }
@@ -832,7 +832,7 @@ abstract class BaseCity extends BaseObject implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setCode($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setAreaId($arr[$keys[3]]);
+        if (array_key_exists($keys[3], $arr)) $this->setareaId($arr[$keys[3]]);
     }
 
     /**
@@ -913,7 +913,7 @@ abstract class BaseCity extends BaseObject implements Persistent
     {
         $copyObj->setName($this->getName());
         $copyObj->setCode($this->getCode());
-        $copyObj->setAreaId($this->getAreaId());
+        $copyObj->setareaId($this->getareaId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -988,9 +988,9 @@ abstract class BaseCity extends BaseObject implements Persistent
     public function setArea(Area $v = null)
     {
         if ($v === null) {
-            $this->setAreaId(NULL);
+            $this->setareaId(NULL);
         } else {
-            $this->setAreaId($v->getId());
+            $this->setareaId($v->getId());
         }
 
         $this->aArea = $v;

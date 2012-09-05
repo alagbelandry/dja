@@ -331,7 +331,7 @@ abstract class BaseUserTypeQuery extends ModelCriteria
     {
         if ($user instanceof User) {
             return $this
-                ->addUsingAlias(UserTypePeer::ID, $user->getUserTypeId(), $comparison);
+                ->addUsingAlias(UserTypePeer::ID, $user->getuserTypeId(), $comparison);
         } elseif ($user instanceof PropelObjectCollection) {
             return $this
                 ->useUserQuery()

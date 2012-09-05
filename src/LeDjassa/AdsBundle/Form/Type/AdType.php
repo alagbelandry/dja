@@ -1,6 +1,6 @@
 <?php
 
-namespace LeDjassa\AdsBundle\LeDjassaAdsBundle\Form\Type\AdType
+namespace LeDjassa\AdsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,15 +20,20 @@ class AdType extends AbstractType
         $builder->add('price');
 
         // Ad type relation
+        $builder->add('ad_type', 'model', array(
+            'class' => 'LeDjassa\AdsBundle\Model\AdType',
+        ));
 
         // Category relation 
-  
+  		$builder->add('category', 'model', array(
+            'class' => 'LeDjassa\AdsBundle\Model\Category',
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'LeDjassa\AdsBundle\LeDjassaAdsBundle\Model\Ad',
+            'data_class' => 'LeDjassa\AdsBundle\Model\Ad',
         ));
     }
 

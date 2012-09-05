@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="ledjassa" namespace="LeDjassa\AdsBundle\Model" defaultIdMethod="native">
+<database name="default" namespace="LeDjassa\AdsBundle\Model" defaultIdMethod="native">
 
     <table name="category_type" description="type of category">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />

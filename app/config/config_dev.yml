@@ -24,3 +24,15 @@ assetic:
 
 #swiftmailer:
 #    delivery_address: me@example.com
+
+# Propel Configuration
+propel:
+    path:       "%kernel.root_dir%/../vendor/propel"
+    phing_path: "%kernel.root_dir%/../vendor/phing"
+    dbal:
+       driver:               mysql
+       user:                 ledjassa
+       password:             "passledjassa"
+       dsn:                  mysql:host=localhost;dbname=ledjassa;charset=UTF8
+       options:              {}
+       attributes:           {}

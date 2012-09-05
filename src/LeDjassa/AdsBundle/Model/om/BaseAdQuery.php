@@ -18,6 +18,7 @@ use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\AdType;
 use LeDjassa\AdsBundle\Model\Category;
 use LeDjassa\AdsBundle\Model\PictureAd;
+use LeDjassa\AdsBundle\Model\Quarter;
 
 /**
  * @method AdQuery orderById($order = Criteria::ASC) Order by the id column
@@ -51,6 +52,10 @@ use LeDjassa\AdsBundle\Model\PictureAd;
  * @method AdQuery leftJoinCategory($relationAlias = null) Adds a LEFT JOIN clause to the query using the Category relation
  * @method AdQuery rightJoinCategory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Category relation
  * @method AdQuery innerJoinCategory($relationAlias = null) Adds a INNER JOIN clause to the query using the Category relation
+ *
+ * @method AdQuery leftJoinQuarter($relationAlias = null) Adds a LEFT JOIN clause to the query using the Quarter relation
+ * @method AdQuery rightJoinQuarter($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Quarter relation
+ * @method AdQuery innerJoinQuarter($relationAlias = null) Adds a INNER JOIN clause to the query using the Quarter relation
  *
  * @method AdQuery leftJoinPictureAd($relationAlias = null) Adds a LEFT JOIN clause to the query using the PictureAd relation
  * @method AdQuery rightJoinPictureAd($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PictureAd relation
@@ -732,6 +737,80 @@ abstract class BaseAdQuery extends ModelCriteria
         return $this
             ->joinCategory($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Category', '\LeDjassa\AdsBundle\Model\CategoryQuery');
+    }
+
+    /**
+     * Filter the query by a related Quarter object
+     *
+     * @param   Quarter|PropelObjectCollection $quarter  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return   AdQuery The current query, for fluid interface
+     * @throws   PropelException - if the provided filter is invalid.
+     */
+    public function filterByQuarter($quarter, $comparison = null)
+    {
+        if ($quarter instanceof Quarter) {
+            return $this
+                ->addUsingAlias(AdPeer::ID, $quarter->getAdId(), $comparison);
+        } elseif ($quarter instanceof PropelObjectCollection) {
+            return $this
+                ->useQuarterQuery()
+                ->filterByPrimaryKeys($quarter->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByQuarter() only accepts arguments of type Quarter or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Quarter relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function joinQuarter($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Quarter');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Quarter');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Quarter relation Quarter object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \LeDjassa\AdsBundle\Model\QuarterQuery A secondary query class using the current class as primary query
+     */
+    public function useQuarterQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinQuarter($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Quarter', '\LeDjassa\AdsBundle\Model\QuarterQuery');
     }
 
     /**

@@ -33,6 +33,19 @@
     </foreign-key>
     </table>
 
+    <table name="quarter" description="quarter of city">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="name" type="varchar" primaryString="1" size="100" />
+        <column name="city_id" type="integer" size="6" />
+        <column name="ad_id" type="integer" />
+    <foreign-key foreignTable="city">
+        <reference local="city_id" foreign="id" />
+    </foreign-key>
+    <foreign-key foreignTable="ad">
+        <reference local="ad_id" foreign="id" />
+    </foreign-key>
+    </table>
+
     <table name="user_type" description="type of user">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
         <column name="title" type="varchar" primaryString="1" size="100" />

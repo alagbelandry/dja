@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'city' table.
+ * This class defines the structure of the 'quarter' table.
  *
  *
  *
@@ -18,13 +18,13 @@ use \TableMap;
  *
  * @package    propel.generator.src.LeDjassa.AdsBundle.Model.map
  */
-class CityTableMap extends TableMap
+class QuarterTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'src.LeDjassa.AdsBundle.Model.map.CityTableMap';
+    const CLASS_NAME = 'src.LeDjassa.AdsBundle.Model.map.QuarterTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -36,17 +36,17 @@ class CityTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('city');
-        $this->setPhpName('City');
-        $this->setClassname('LeDjassa\\AdsBundle\\Model\\City');
+        $this->setName('quarter');
+        $this->setPhpName('Quarter');
+        $this->setClassname('LeDjassa\\AdsBundle\\Model\\Quarter');
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 6, null);
+        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
-        $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('AREA_ID', 'AreaId', 'INTEGER', 'area', 'ID', false, 5, null);
+        $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
+        $this->addForeignKey('AD_ID', 'AdId', 'INTEGER', 'ad', 'ID', false, null, null);
         // validators
     } // initialize()
 
@@ -55,8 +55,8 @@ class CityTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Area', 'LeDjassa\\AdsBundle\\Model\\Area', RelationMap::MANY_TO_ONE, array('area_id' => 'id', ), null, null);
-        $this->addRelation('Quarter', 'LeDjassa\\AdsBundle\\Model\\Quarter', RelationMap::ONE_TO_MANY, array('id' => 'city_id', ), null, null, 'Quarters');
+        $this->addRelation('City', 'LeDjassa\\AdsBundle\\Model\\City', RelationMap::MANY_TO_ONE, array('city_id' => 'id', ), null, null);
+        $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::MANY_TO_ONE, array('ad_id' => 'id', ), null, null);
     } // buildRelations()
 
-} // CityTableMap
+} // QuarterTableMap

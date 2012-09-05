@@ -24,6 +24,8 @@ use LeDjassa\AdsBundle\Model\Category;
 use LeDjassa\AdsBundle\Model\CategoryQuery;
 use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Model\PictureAdQuery;
+use LeDjassa\AdsBundle\Model\Quarter;
+use LeDjassa\AdsBundle\Model\QuarterQuery;
 
 abstract class BaseAd extends BaseObject implements Persistent
 {
@@ -111,6 +113,12 @@ abstract class BaseAd extends BaseObject implements Persistent
     protected $aCategory;
 
     /**
+     * @var        PropelObjectCollection|Quarter[] Collection to store aggregation of Quarter objects.
+     */
+    protected $collQuarters;
+    protected $collQuartersPartial;
+
+    /**
      * @var        PropelObjectCollection|PictureAd[] Collection to store aggregation of PictureAd objects.
      */
     protected $collPictureAds;
@@ -129,6 +137,12 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInValidation = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $quartersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -600,6 +614,8 @@ abstract class BaseAd extends BaseObject implements Persistent
 
             $this->aAdType = null;
             $this->aCategory = null;
+            $this->collQuarters = null;
+
             $this->collPictureAds = null;
 
         } // if (deep)
@@ -743,6 +759,24 @@ abstract class BaseAd extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->quartersScheduledForDeletion !== null) {
+                if (!$this->quartersScheduledForDeletion->isEmpty()) {
+                    foreach ($this->quartersScheduledForDeletion as $quarter) {
+                        // need to save related object because we set the relation to null
+                        $quarter->save($con);
+                    }
+                    $this->quartersScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collQuarters !== null) {
+                foreach ($this->collQuarters as $referrerFK) {
+                    if (!$referrerFK->isDeleted()) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->pictureAdsScheduledForDeletion !== null) {
@@ -971,6 +1005,14 @@ abstract class BaseAd extends BaseObject implements Persistent
             }
 
 
+                if ($this->collQuarters !== null) {
+                    foreach ($this->collQuarters as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collPictureAds !== null) {
                     foreach ($this->collPictureAds as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1086,6 +1128,9 @@ abstract class BaseAd extends BaseObject implements Persistent
             }
             if (null !== $this->aCategory) {
                 $result['Category'] = $this->aCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collQuarters) {
+                $result['Quarters'] = $this->collQuarters->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPictureAds) {
                 $result['PictureAds'] = $this->collPictureAds->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1283,6 +1328,12 @@ abstract class BaseAd extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getQuarters() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addQuarter($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getPictureAds() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPictureAd($relObj->copy($deepCopy));
@@ -1452,9 +1503,244 @@ abstract class BaseAd extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('Quarter' == $relationName) {
+            $this->initQuarters();
+        }
         if ('PictureAd' == $relationName) {
             $this->initPictureAds();
         }
+    }
+
+    /**
+     * Clears out the collQuarters collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addQuarters()
+     */
+    public function clearQuarters()
+    {
+        $this->collQuarters = null; // important to set this to null since that means it is uninitialized
+        $this->collQuartersPartial = null;
+    }
+
+    /**
+     * reset is the collQuarters collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialQuarters($v = true)
+    {
+        $this->collQuartersPartial = $v;
+    }
+
+    /**
+     * Initializes the collQuarters collection.
+     *
+     * By default this just sets the collQuarters collection to an empty array (like clearcollQuarters());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initQuarters($overrideExisting = true)
+    {
+        if (null !== $this->collQuarters && !$overrideExisting) {
+            return;
+        }
+        $this->collQuarters = new PropelObjectCollection();
+        $this->collQuarters->setModel('Quarter');
+    }
+
+    /**
+     * Gets an array of Quarter objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Ad is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Quarter[] List of Quarter objects
+     * @throws PropelException
+     */
+    public function getQuarters($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collQuartersPartial && !$this->isNew();
+        if (null === $this->collQuarters || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collQuarters) {
+                // return empty collection
+                $this->initQuarters();
+            } else {
+                $collQuarters = QuarterQuery::create(null, $criteria)
+                    ->filterByAd($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collQuartersPartial && count($collQuarters)) {
+                      $this->initQuarters(false);
+
+                      foreach($collQuarters as $obj) {
+                        if (false == $this->collQuarters->contains($obj)) {
+                          $this->collQuarters->append($obj);
+                        }
+                      }
+
+                      $this->collQuartersPartial = true;
+                    }
+
+                    return $collQuarters;
+                }
+
+                if($partial && $this->collQuarters) {
+                    foreach($this->collQuarters as $obj) {
+                        if($obj->isNew()) {
+                            $collQuarters[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collQuarters = $collQuarters;
+                $this->collQuartersPartial = false;
+            }
+        }
+
+        return $this->collQuarters;
+    }
+
+    /**
+     * Sets a collection of Quarter objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $quarters A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     */
+    public function setQuarters(PropelCollection $quarters, PropelPDO $con = null)
+    {
+        $this->quartersScheduledForDeletion = $this->getQuarters(new Criteria(), $con)->diff($quarters);
+
+        foreach ($this->quartersScheduledForDeletion as $quarterRemoved) {
+            $quarterRemoved->setAd(null);
+        }
+
+        $this->collQuarters = null;
+        foreach ($quarters as $quarter) {
+            $this->addQuarter($quarter);
+        }
+
+        $this->collQuarters = $quarters;
+        $this->collQuartersPartial = false;
+    }
+
+    /**
+     * Returns the number of related Quarter objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Quarter objects.
+     * @throws PropelException
+     */
+    public function countQuarters(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collQuartersPartial && !$this->isNew();
+        if (null === $this->collQuarters || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collQuarters) {
+                return 0;
+            } else {
+                if($partial && !$criteria) {
+                    return count($this->getQuarters());
+                }
+                $query = QuarterQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByAd($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collQuarters);
+        }
+    }
+
+    /**
+     * Method called to associate a Quarter object to this object
+     * through the Quarter foreign key attribute.
+     *
+     * @param    Quarter $l Quarter
+     * @return Ad The current object (for fluent API support)
+     */
+    public function addQuarter(Quarter $l)
+    {
+        if ($this->collQuarters === null) {
+            $this->initQuarters();
+            $this->collQuartersPartial = true;
+        }
+        if (!in_array($l, $this->collQuarters->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddQuarter($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Quarter $quarter The quarter object to add.
+     */
+    protected function doAddQuarter($quarter)
+    {
+        $this->collQuarters[]= $quarter;
+        $quarter->setAd($this);
+    }
+
+    /**
+     * @param	Quarter $quarter The quarter object to remove.
+     */
+    public function removeQuarter($quarter)
+    {
+        if ($this->getQuarters()->contains($quarter)) {
+            $this->collQuarters->remove($this->collQuarters->search($quarter));
+            if (null === $this->quartersScheduledForDeletion) {
+                $this->quartersScheduledForDeletion = clone $this->collQuarters;
+                $this->quartersScheduledForDeletion->clear();
+            }
+            $this->quartersScheduledForDeletion[]= $quarter;
+            $quarter->setAd(null);
+        }
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Ad is new, it will return
+     * an empty collection; or if this Ad has previously
+     * been saved, it will retrieve related Quarters from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Ad.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Quarter[] List of Quarter objects
+     */
+    public function getQuartersJoinCity($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = QuarterQuery::create(null, $criteria);
+        $query->joinWith('City', $join_behavior);
+
+        return $this->getQuarters($query, $con);
     }
 
     /**
@@ -1698,6 +1984,11 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collQuarters) {
+                foreach ($this->collQuarters as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collPictureAds) {
                 foreach ($this->collPictureAds as $o) {
                     $o->clearAllReferences($deep);
@@ -1705,6 +1996,10 @@ abstract class BaseAd extends BaseObject implements Persistent
             }
         } // if ($deep)
 
+        if ($this->collQuarters instanceof PropelCollection) {
+            $this->collQuarters->clearIterator();
+        }
+        $this->collQuarters = null;
         if ($this->collPictureAds instanceof PropelCollection) {
             $this->collPictureAds->clearIterator();
         }

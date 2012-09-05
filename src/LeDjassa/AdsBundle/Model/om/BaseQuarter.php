@@ -9,30 +9,28 @@ use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
-use \PropelCollection;
 use \PropelException;
-use \PropelObjectCollection;
 use \PropelPDO;
-use LeDjassa\AdsBundle\Model\Area;
-use LeDjassa\AdsBundle\Model\AreaQuery;
+use LeDjassa\AdsBundle\Model\Ad;
+use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\City;
-use LeDjassa\AdsBundle\Model\CityPeer;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\Quarter;
+use LeDjassa\AdsBundle\Model\QuarterPeer;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
 
-abstract class BaseCity extends BaseObject implements Persistent
+abstract class BaseQuarter extends BaseObject implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'LeDjassa\\AdsBundle\\Model\\CityPeer';
+    const PEER = 'LeDjassa\\AdsBundle\\Model\\QuarterPeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        CityPeer
+     * @var        QuarterPeer
      */
     protected static $peer;
 
@@ -55,27 +53,26 @@ abstract class BaseCity extends BaseObject implements Persistent
     protected $name;
 
     /**
-     * The value for the code field.
-     * @var        string
-     */
-    protected $code;
-
-    /**
-     * The value for the area_id field.
+     * The value for the city_id field.
      * @var        int
      */
-    protected $area_id;
+    protected $city_id;
 
     /**
-     * @var        Area
+     * The value for the ad_id field.
+     * @var        int
      */
-    protected $aArea;
+    protected $ad_id;
 
     /**
-     * @var        PropelObjectCollection|Quarter[] Collection to store aggregation of Quarter objects.
+     * @var        City
      */
-    protected $collQuarters;
-    protected $collQuartersPartial;
+    protected $aCity;
+
+    /**
+     * @var        Ad
+     */
+    protected $aAd;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -90,12 +87,6 @@ abstract class BaseCity extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInValidation = false;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $quartersScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -118,30 +109,30 @@ abstract class BaseCity extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [code] column value.
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    /**
-     * Get the [area_id] column value.
+     * Get the [city_id] column value.
      *
      * @return int
      */
-    public function getAreaId()
+    public function getCityId()
     {
-        return $this->area_id;
+        return $this->city_id;
+    }
+
+    /**
+     * Get the [ad_id] column value.
+     *
+     * @return int
+     */
+    public function getAdId()
+    {
+        return $this->ad_id;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return City The current object (for fluent API support)
+     * @return Quarter The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -151,7 +142,7 @@ abstract class BaseCity extends BaseObject implements Persistent
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[] = CityPeer::ID;
+            $this->modifiedColumns[] = QuarterPeer::ID;
         }
 
 
@@ -162,7 +153,7 @@ abstract class BaseCity extends BaseObject implements Persistent
      * Set the value of [name] column.
      *
      * @param string $v new value
-     * @return City The current object (for fluent API support)
+     * @return Quarter The current object (for fluent API support)
      */
     public function setName($v)
     {
@@ -172,7 +163,7 @@ abstract class BaseCity extends BaseObject implements Persistent
 
         if ($this->name !== $v) {
             $this->name = $v;
-            $this->modifiedColumns[] = CityPeer::NAME;
+            $this->modifiedColumns[] = QuarterPeer::NAME;
         }
 
 
@@ -180,50 +171,54 @@ abstract class BaseCity extends BaseObject implements Persistent
     } // setName()
 
     /**
-     * Set the value of [code] column.
-     *
-     * @param string $v new value
-     * @return City The current object (for fluent API support)
-     */
-    public function setCode($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->code !== $v) {
-            $this->code = $v;
-            $this->modifiedColumns[] = CityPeer::CODE;
-        }
-
-
-        return $this;
-    } // setCode()
-
-    /**
-     * Set the value of [area_id] column.
+     * Set the value of [city_id] column.
      *
      * @param int $v new value
-     * @return City The current object (for fluent API support)
+     * @return Quarter The current object (for fluent API support)
      */
-    public function setAreaId($v)
+    public function setCityId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->area_id !== $v) {
-            $this->area_id = $v;
-            $this->modifiedColumns[] = CityPeer::AREA_ID;
+        if ($this->city_id !== $v) {
+            $this->city_id = $v;
+            $this->modifiedColumns[] = QuarterPeer::CITY_ID;
         }
 
-        if ($this->aArea !== null && $this->aArea->getId() !== $v) {
-            $this->aArea = null;
+        if ($this->aCity !== null && $this->aCity->getId() !== $v) {
+            $this->aCity = null;
         }
 
 
         return $this;
-    } // setAreaId()
+    } // setCityId()
+
+    /**
+     * Set the value of [ad_id] column.
+     *
+     * @param int $v new value
+     * @return Quarter The current object (for fluent API support)
+     */
+    public function setAdId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->ad_id !== $v) {
+            $this->ad_id = $v;
+            $this->modifiedColumns[] = QuarterPeer::AD_ID;
+        }
+
+        if ($this->aAd !== null && $this->aAd->getId() !== $v) {
+            $this->aAd = null;
+        }
+
+
+        return $this;
+    } // setAdId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -259,8 +254,8 @@ abstract class BaseCity extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->code = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->area_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->city_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->ad_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -269,10 +264,10 @@ abstract class BaseCity extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = CityPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = QuarterPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating City object", $e);
+            throw new PropelException("Error populating Quarter object", $e);
         }
     }
 
@@ -292,8 +287,11 @@ abstract class BaseCity extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aArea !== null && $this->area_id !== $this->aArea->getId()) {
-            $this->aArea = null;
+        if ($this->aCity !== null && $this->city_id !== $this->aCity->getId()) {
+            $this->aCity = null;
+        }
+        if ($this->aAd !== null && $this->ad_id !== $this->aAd->getId()) {
+            $this->aAd = null;
         }
     } // ensureConsistency
 
@@ -318,13 +316,13 @@ abstract class BaseCity extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(CityPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(QuarterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = CityPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = QuarterPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -334,9 +332,8 @@ abstract class BaseCity extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aArea = null;
-            $this->collQuarters = null;
-
+            $this->aCity = null;
+            $this->aAd = null;
         } // if (deep)
     }
 
@@ -357,12 +354,12 @@ abstract class BaseCity extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(CityPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(QuarterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = CityQuery::create()
+            $deleteQuery = QuarterQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -400,7 +397,7 @@ abstract class BaseCity extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(CityPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(QuarterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
@@ -420,7 +417,7 @@ abstract class BaseCity extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                CityPeer::addInstanceToPool($this);
+                QuarterPeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -455,11 +452,18 @@ abstract class BaseCity extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aArea !== null) {
-                if ($this->aArea->isModified() || $this->aArea->isNew()) {
-                    $affectedRows += $this->aArea->save($con);
+            if ($this->aCity !== null) {
+                if ($this->aCity->isModified() || $this->aCity->isNew()) {
+                    $affectedRows += $this->aCity->save($con);
                 }
-                $this->setArea($this->aArea);
+                $this->setCity($this->aCity);
+            }
+
+            if ($this->aAd !== null) {
+                if ($this->aAd->isModified() || $this->aAd->isNew()) {
+                    $affectedRows += $this->aAd->save($con);
+                }
+                $this->setAd($this->aAd);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -471,24 +475,6 @@ abstract class BaseCity extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->quartersScheduledForDeletion !== null) {
-                if (!$this->quartersScheduledForDeletion->isEmpty()) {
-                    foreach ($this->quartersScheduledForDeletion as $quarter) {
-                        // need to save related object because we set the relation to null
-                        $quarter->save($con);
-                    }
-                    $this->quartersScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collQuarters !== null) {
-                foreach ($this->collQuarters as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -511,27 +497,27 @@ abstract class BaseCity extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = CityPeer::ID;
+        $this->modifiedColumns[] = QuarterPeer::ID;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CityPeer::ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . QuarterPeer::ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(CityPeer::ID)) {
+        if ($this->isColumnModified(QuarterPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`ID`';
         }
-        if ($this->isColumnModified(CityPeer::NAME)) {
+        if ($this->isColumnModified(QuarterPeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = '`NAME`';
         }
-        if ($this->isColumnModified(CityPeer::CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`CODE`';
+        if ($this->isColumnModified(QuarterPeer::CITY_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`CITY_ID`';
         }
-        if ($this->isColumnModified(CityPeer::AREA_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`AREA_ID`';
+        if ($this->isColumnModified(QuarterPeer::AD_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`AD_ID`';
         }
 
         $sql = sprintf(
-            'INSERT INTO `city` (%s) VALUES (%s)',
+            'INSERT INTO `quarter` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -546,11 +532,11 @@ abstract class BaseCity extends BaseObject implements Persistent
                     case '`NAME`':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '`CODE`':
-                        $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
+                    case '`CITY_ID`':
+                        $stmt->bindValue($identifier, $this->city_id, PDO::PARAM_INT);
                         break;
-                    case '`AREA_ID`':
-                        $stmt->bindValue($identifier, $this->area_id, PDO::PARAM_INT);
+                    case '`AD_ID`':
+                        $stmt->bindValue($identifier, $this->ad_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -651,25 +637,23 @@ abstract class BaseCity extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aArea !== null) {
-                if (!$this->aArea->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aArea->getValidationFailures());
+            if ($this->aCity !== null) {
+                if (!$this->aCity->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCity->getValidationFailures());
+                }
+            }
+
+            if ($this->aAd !== null) {
+                if (!$this->aAd->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aAd->getValidationFailures());
                 }
             }
 
 
-            if (($retval = CityPeer::doValidate($this, $columns)) !== true) {
+            if (($retval = QuarterPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
-
-                if ($this->collQuarters !== null) {
-                    foreach ($this->collQuarters as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
 
 
             $this->alreadyInValidation = false;
@@ -690,7 +674,7 @@ abstract class BaseCity extends BaseObject implements Persistent
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = CityPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = QuarterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -713,10 +697,10 @@ abstract class BaseCity extends BaseObject implements Persistent
                 return $this->getName();
                 break;
             case 2:
-                return $this->getCode();
+                return $this->getCityId();
                 break;
             case 3:
-                return $this->getAreaId();
+                return $this->getAdId();
                 break;
             default:
                 return null;
@@ -741,23 +725,23 @@ abstract class BaseCity extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['City'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['Quarter'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['City'][$this->getPrimaryKey()] = true;
-        $keys = CityPeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['Quarter'][$this->getPrimaryKey()] = true;
+        $keys = QuarterPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
-            $keys[2] => $this->getCode(),
-            $keys[3] => $this->getAreaId(),
+            $keys[2] => $this->getCityId(),
+            $keys[3] => $this->getAdId(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->aArea) {
-                $result['Area'] = $this->aArea->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aCity) {
+                $result['City'] = $this->aCity->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collQuarters) {
-                $result['Quarters'] = $this->collQuarters->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->aAd) {
+                $result['Ad'] = $this->aAd->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -777,7 +761,7 @@ abstract class BaseCity extends BaseObject implements Persistent
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = CityPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = QuarterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -800,10 +784,10 @@ abstract class BaseCity extends BaseObject implements Persistent
                 $this->setName($value);
                 break;
             case 2:
-                $this->setCode($value);
+                $this->setCityId($value);
                 break;
             case 3:
-                $this->setAreaId($value);
+                $this->setAdId($value);
                 break;
         } // switch()
     }
@@ -827,12 +811,12 @@ abstract class BaseCity extends BaseObject implements Persistent
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = CityPeer::getFieldNames($keyType);
+        $keys = QuarterPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setCode($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setAreaId($arr[$keys[3]]);
+        if (array_key_exists($keys[2], $arr)) $this->setCityId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setAdId($arr[$keys[3]]);
     }
 
     /**
@@ -842,12 +826,12 @@ abstract class BaseCity extends BaseObject implements Persistent
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(CityPeer::DATABASE_NAME);
+        $criteria = new Criteria(QuarterPeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(CityPeer::ID)) $criteria->add(CityPeer::ID, $this->id);
-        if ($this->isColumnModified(CityPeer::NAME)) $criteria->add(CityPeer::NAME, $this->name);
-        if ($this->isColumnModified(CityPeer::CODE)) $criteria->add(CityPeer::CODE, $this->code);
-        if ($this->isColumnModified(CityPeer::AREA_ID)) $criteria->add(CityPeer::AREA_ID, $this->area_id);
+        if ($this->isColumnModified(QuarterPeer::ID)) $criteria->add(QuarterPeer::ID, $this->id);
+        if ($this->isColumnModified(QuarterPeer::NAME)) $criteria->add(QuarterPeer::NAME, $this->name);
+        if ($this->isColumnModified(QuarterPeer::CITY_ID)) $criteria->add(QuarterPeer::CITY_ID, $this->city_id);
+        if ($this->isColumnModified(QuarterPeer::AD_ID)) $criteria->add(QuarterPeer::AD_ID, $this->ad_id);
 
         return $criteria;
     }
@@ -862,8 +846,8 @@ abstract class BaseCity extends BaseObject implements Persistent
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(CityPeer::DATABASE_NAME);
-        $criteria->add(CityPeer::ID, $this->id);
+        $criteria = new Criteria(QuarterPeer::DATABASE_NAME);
+        $criteria->add(QuarterPeer::ID, $this->id);
 
         return $criteria;
     }
@@ -904,7 +888,7 @@ abstract class BaseCity extends BaseObject implements Persistent
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of City (or compatible) type.
+     * @param object $copyObj An object of Quarter (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
@@ -912,8 +896,8 @@ abstract class BaseCity extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
-        $copyObj->setCode($this->getCode());
-        $copyObj->setAreaId($this->getAreaId());
+        $copyObj->setCityId($this->getCityId());
+        $copyObj->setAdId($this->getAdId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -921,12 +905,6 @@ abstract class BaseCity extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
-
-            foreach ($this->getQuarters() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addQuarter($relObj->copy($deepCopy));
-                }
-            }
 
             //unflag object copy
             $this->startCopy = false;
@@ -947,7 +925,7 @@ abstract class BaseCity extends BaseObject implements Persistent
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return City Clone of current object.
+     * @return Quarter Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -967,38 +945,38 @@ abstract class BaseCity extends BaseObject implements Persistent
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return CityPeer
+     * @return QuarterPeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new CityPeer();
+            self::$peer = new QuarterPeer();
         }
 
         return self::$peer;
     }
 
     /**
-     * Declares an association between this object and a Area object.
+     * Declares an association between this object and a City object.
      *
-     * @param             Area $v
-     * @return City The current object (for fluent API support)
+     * @param             City $v
+     * @return Quarter The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setArea(Area $v = null)
+    public function setCity(City $v = null)
     {
         if ($v === null) {
-            $this->setAreaId(NULL);
+            $this->setCityId(NULL);
         } else {
-            $this->setAreaId($v->getId());
+            $this->setCityId($v->getId());
         }
 
-        $this->aArea = $v;
+        $this->aCity = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the Area object, it will not be re-added.
+        // If this object has already been added to the City object, it will not be re-added.
         if ($v !== null) {
-            $v->addCity($this);
+            $v->addQuarter($this);
         }
 
 
@@ -1007,274 +985,77 @@ abstract class BaseCity extends BaseObject implements Persistent
 
 
     /**
-     * Get the associated Area object
+     * Get the associated City object
      *
      * @param PropelPDO $con Optional Connection object.
-     * @return Area The associated Area object.
+     * @return City The associated City object.
      * @throws PropelException
      */
-    public function getArea(PropelPDO $con = null)
+    public function getCity(PropelPDO $con = null)
     {
-        if ($this->aArea === null && ($this->area_id !== null)) {
-            $this->aArea = AreaQuery::create()->findPk($this->area_id, $con);
+        if ($this->aCity === null && ($this->city_id !== null)) {
+            $this->aCity = CityQuery::create()->findPk($this->city_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aArea->addCities($this);
+                $this->aCity->addQuarters($this);
              */
         }
 
-        return $this->aArea;
-    }
-
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('Quarter' == $relationName) {
-            $this->initQuarters();
-        }
+        return $this->aCity;
     }
 
     /**
-     * Clears out the collQuarters collection
+     * Declares an association between this object and a Ad object.
      *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addQuarters()
-     */
-    public function clearQuarters()
-    {
-        $this->collQuarters = null; // important to set this to null since that means it is uninitialized
-        $this->collQuartersPartial = null;
-    }
-
-    /**
-     * reset is the collQuarters collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialQuarters($v = true)
-    {
-        $this->collQuartersPartial = $v;
-    }
-
-    /**
-     * Initializes the collQuarters collection.
-     *
-     * By default this just sets the collQuarters collection to an empty array (like clearcollQuarters());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initQuarters($overrideExisting = true)
-    {
-        if (null !== $this->collQuarters && !$overrideExisting) {
-            return;
-        }
-        $this->collQuarters = new PropelObjectCollection();
-        $this->collQuarters->setModel('Quarter');
-    }
-
-    /**
-     * Gets an array of Quarter objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this City is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Quarter[] List of Quarter objects
+     * @param             Ad $v
+     * @return Quarter The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getQuarters($criteria = null, PropelPDO $con = null)
+    public function setAd(Ad $v = null)
     {
-        $partial = $this->collQuartersPartial && !$this->isNew();
-        if (null === $this->collQuarters || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collQuarters) {
-                // return empty collection
-                $this->initQuarters();
-            } else {
-                $collQuarters = QuarterQuery::create(null, $criteria)
-                    ->filterByCity($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collQuartersPartial && count($collQuarters)) {
-                      $this->initQuarters(false);
-
-                      foreach($collQuarters as $obj) {
-                        if (false == $this->collQuarters->contains($obj)) {
-                          $this->collQuarters->append($obj);
-                        }
-                      }
-
-                      $this->collQuartersPartial = true;
-                    }
-
-                    return $collQuarters;
-                }
-
-                if($partial && $this->collQuarters) {
-                    foreach($this->collQuarters as $obj) {
-                        if($obj->isNew()) {
-                            $collQuarters[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collQuarters = $collQuarters;
-                $this->collQuartersPartial = false;
-            }
-        }
-
-        return $this->collQuarters;
-    }
-
-    /**
-     * Sets a collection of Quarter objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $quarters A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     */
-    public function setQuarters(PropelCollection $quarters, PropelPDO $con = null)
-    {
-        $this->quartersScheduledForDeletion = $this->getQuarters(new Criteria(), $con)->diff($quarters);
-
-        foreach ($this->quartersScheduledForDeletion as $quarterRemoved) {
-            $quarterRemoved->setCity(null);
-        }
-
-        $this->collQuarters = null;
-        foreach ($quarters as $quarter) {
-            $this->addQuarter($quarter);
-        }
-
-        $this->collQuarters = $quarters;
-        $this->collQuartersPartial = false;
-    }
-
-    /**
-     * Returns the number of related Quarter objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related Quarter objects.
-     * @throws PropelException
-     */
-    public function countQuarters(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collQuartersPartial && !$this->isNew();
-        if (null === $this->collQuarters || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collQuarters) {
-                return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getQuarters());
-                }
-                $query = QuarterQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByCity($this)
-                    ->count($con);
-            }
+        if ($v === null) {
+            $this->setAdId(NULL);
         } else {
-            return count($this->collQuarters);
+            $this->setAdId($v->getId());
         }
-    }
 
-    /**
-     * Method called to associate a Quarter object to this object
-     * through the Quarter foreign key attribute.
-     *
-     * @param    Quarter $l Quarter
-     * @return City The current object (for fluent API support)
-     */
-    public function addQuarter(Quarter $l)
-    {
-        if ($this->collQuarters === null) {
-            $this->initQuarters();
-            $this->collQuartersPartial = true;
+        $this->aAd = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Ad object, it will not be re-added.
+        if ($v !== null) {
+            $v->addQuarter($this);
         }
-        if (!in_array($l, $this->collQuarters->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddQuarter($l);
-        }
+
 
         return $this;
     }
 
-    /**
-     * @param	Quarter $quarter The quarter object to add.
-     */
-    protected function doAddQuarter($quarter)
-    {
-        $this->collQuarters[]= $quarter;
-        $quarter->setCity($this);
-    }
 
     /**
-     * @param	Quarter $quarter The quarter object to remove.
+     * Get the associated Ad object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return Ad The associated Ad object.
+     * @throws PropelException
      */
-    public function removeQuarter($quarter)
+    public function getAd(PropelPDO $con = null)
     {
-        if ($this->getQuarters()->contains($quarter)) {
-            $this->collQuarters->remove($this->collQuarters->search($quarter));
-            if (null === $this->quartersScheduledForDeletion) {
-                $this->quartersScheduledForDeletion = clone $this->collQuarters;
-                $this->quartersScheduledForDeletion->clear();
-            }
-            $this->quartersScheduledForDeletion[]= $quarter;
-            $quarter->setCity(null);
+        if ($this->aAd === null && ($this->ad_id !== null)) {
+            $this->aAd = AdQuery::create()->findPk($this->ad_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aAd->addQuarters($this);
+             */
         }
-    }
 
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this City is new, it will return
-     * an empty collection; or if this City has previously
-     * been saved, it will retrieve related Quarters from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in City.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Quarter[] List of Quarter objects
-     */
-    public function getQuartersJoinAd($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = QuarterQuery::create(null, $criteria);
-        $query->joinWith('Ad', $join_behavior);
-
-        return $this->getQuarters($query, $con);
+        return $this->aAd;
     }
 
     /**
@@ -1284,8 +1065,8 @@ abstract class BaseCity extends BaseObject implements Persistent
     {
         $this->id = null;
         $this->name = null;
-        $this->code = null;
-        $this->area_id = null;
+        $this->city_id = null;
+        $this->ad_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -1306,18 +1087,10 @@ abstract class BaseCity extends BaseObject implements Persistent
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collQuarters) {
-                foreach ($this->collQuarters as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        if ($this->collQuarters instanceof PropelCollection) {
-            $this->collQuarters->clearIterator();
-        }
-        $this->collQuarters = null;
-        $this->aArea = null;
+        $this->aCity = null;
+        $this->aAd = null;
     }
 
     /**

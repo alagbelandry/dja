@@ -331,7 +331,7 @@ abstract class BaseCategoryTypeQuery extends ModelCriteria
     {
         if ($category instanceof Category) {
             return $this
-                ->addUsingAlias(CategoryTypePeer::ID, $category->getcategoryTypeId(), $comparison);
+                ->addUsingAlias(CategoryTypePeer::ID, $category->getCategoryTypeId(), $comparison);
         } elseif ($category instanceof PropelObjectCollection) {
             return $this
                 ->useCategoryQuery()
@@ -350,7 +350,7 @@ abstract class BaseCategoryTypeQuery extends ModelCriteria
      *
      * @return CategoryTypeQuery The current query, for fluid interface
      */
-    public function joinCategory($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinCategory($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Category');
@@ -385,7 +385,7 @@ abstract class BaseCategoryTypeQuery extends ModelCriteria
      *
      * @return   \LeDjassa\AdsBundle\Model\CategoryQuery A secondary query class using the current class as primary query
      */
-    public function useCategoryQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useCategoryQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinCategory($relationAlias, $joinType)

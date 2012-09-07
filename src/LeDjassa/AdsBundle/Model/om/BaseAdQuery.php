@@ -19,29 +19,43 @@ use LeDjassa\AdsBundle\Model\AdType;
 use LeDjassa\AdsBundle\Model\Category;
 use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Model\Quarter;
+use LeDjassa\AdsBundle\Model\User;
+use LeDjassa\AdsBundle\Model\UserType;
 
 /**
  * @method AdQuery orderById($order = Criteria::ASC) Order by the id column
  * @method AdQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method AdQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method AdQuery orderByPrice($order = Criteria::ASC) Order by the price column
- * @method AdQuery orderBycreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method AdQuery orderByupdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method AdQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method AdQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method AdQuery orderByAdTypeId($order = Criteria::ASC) Order by the ad_type_id column
- * @method AdQuery orderBycategoryId($order = Criteria::ASC) Order by the category_id column
+ * @method AdQuery orderByCategoryId($order = Criteria::ASC) Order by the category_id column
+ * @method AdQuery orderByUserTypeId($order = Criteria::ASC) Order by the user_type_id column
+ * @method AdQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  *
  * @method AdQuery groupById() Group by the id column
  * @method AdQuery groupByTitle() Group by the title column
  * @method AdQuery groupByDescription() Group by the description column
  * @method AdQuery groupByPrice() Group by the price column
- * @method AdQuery groupBycreatedAt() Group by the created_at column
- * @method AdQuery groupByupdatedAt() Group by the updated_at column
+ * @method AdQuery groupByCreatedAt() Group by the created_at column
+ * @method AdQuery groupByUpdatedAt() Group by the updated_at column
  * @method AdQuery groupByAdTypeId() Group by the ad_type_id column
- * @method AdQuery groupBycategoryId() Group by the category_id column
+ * @method AdQuery groupByCategoryId() Group by the category_id column
+ * @method AdQuery groupByUserTypeId() Group by the user_type_id column
+ * @method AdQuery groupByUserId() Group by the user_id column
  *
  * @method AdQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AdQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method AdQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method AdQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
+ * @method AdQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
+ * @method AdQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ *
+ * @method AdQuery leftJoinUserType($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserType relation
+ * @method AdQuery rightJoinUserType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserType relation
+ * @method AdQuery innerJoinUserType($relationAlias = null) Adds a INNER JOIN clause to the query using the UserType relation
  *
  * @method AdQuery leftJoinAdType($relationAlias = null) Adds a LEFT JOIN clause to the query using the AdType relation
  * @method AdQuery rightJoinAdType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AdType relation
@@ -65,19 +79,23 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method Ad findOneByTitle(string $title) Return the first Ad filtered by the title column
  * @method Ad findOneByDescription(string $description) Return the first Ad filtered by the description column
  * @method Ad findOneByPrice(string $price) Return the first Ad filtered by the price column
- * @method Ad findOneBycreatedAt(string $created_at) Return the first Ad filtered by the created_at column
- * @method Ad findOneByupdatedAt(string $updated_at) Return the first Ad filtered by the updated_at column
+ * @method Ad findOneByCreatedAt(string $created_at) Return the first Ad filtered by the created_at column
+ * @method Ad findOneByUpdatedAt(string $updated_at) Return the first Ad filtered by the updated_at column
  * @method Ad findOneByAdTypeId(int $ad_type_id) Return the first Ad filtered by the ad_type_id column
- * @method Ad findOneBycategoryId(int $category_id) Return the first Ad filtered by the category_id column
+ * @method Ad findOneByCategoryId(int $category_id) Return the first Ad filtered by the category_id column
+ * @method Ad findOneByUserTypeId(int $user_type_id) Return the first Ad filtered by the user_type_id column
+ * @method Ad findOneByUserId(int $user_id) Return the first Ad filtered by the user_id column
  *
  * @method array findById(int $id) Return Ad objects filtered by the id column
  * @method array findByTitle(string $title) Return Ad objects filtered by the title column
  * @method array findByDescription(string $description) Return Ad objects filtered by the description column
  * @method array findByPrice(string $price) Return Ad objects filtered by the price column
- * @method array findBycreatedAt(string $created_at) Return Ad objects filtered by the created_at column
- * @method array findByupdatedAt(string $updated_at) Return Ad objects filtered by the updated_at column
+ * @method array findByCreatedAt(string $created_at) Return Ad objects filtered by the created_at column
+ * @method array findByUpdatedAt(string $updated_at) Return Ad objects filtered by the updated_at column
  * @method array findByAdTypeId(int $ad_type_id) Return Ad objects filtered by the ad_type_id column
- * @method array findBycategoryId(int $category_id) Return Ad objects filtered by the category_id column
+ * @method array findByCategoryId(int $category_id) Return Ad objects filtered by the category_id column
+ * @method array findByUserTypeId(int $user_type_id) Return Ad objects filtered by the user_type_id column
+ * @method array findByUserId(int $user_id) Return Ad objects filtered by the user_id column
  */
 abstract class BaseAdQuery extends ModelCriteria
 {
@@ -179,7 +197,7 @@ abstract class BaseAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID` FROM `ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `USER_ID` FROM `ad` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -387,9 +405,9 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterBycreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterBycreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterBycreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
+     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
      * </code>
      *
      * @param     mixed $createdAt The value to use as filter.
@@ -402,7 +420,7 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * @return AdQuery The current query, for fluid interface
      */
-    public function filterBycreatedAt($createdAt = null, $comparison = null)
+    public function filterByCreatedAt($createdAt = null, $comparison = null)
     {
         if (is_array($createdAt)) {
             $useMinMax = false;
@@ -430,9 +448,9 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByupdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByupdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByupdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
+     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
      * @param     mixed $updatedAt The value to use as filter.
@@ -445,7 +463,7 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * @return AdQuery The current query, for fluid interface
      */
-    public function filterByupdatedAt($updatedAt = null, $comparison = null)
+    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
     {
         if (is_array($updatedAt)) {
             $useMinMax = false;
@@ -516,9 +534,9 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterBycategoryId(1234); // WHERE category_id = 1234
-     * $query->filterBycategoryId(array(12, 34)); // WHERE category_id IN (12, 34)
-     * $query->filterBycategoryId(array('min' => 12)); // WHERE category_id > 12
+     * $query->filterByCategoryId(1234); // WHERE category_id = 1234
+     * $query->filterByCategoryId(array(12, 34)); // WHERE category_id IN (12, 34)
+     * $query->filterByCategoryId(array('min' => 12)); // WHERE category_id > 12
      * </code>
      *
      * @see       filterByCategory()
@@ -531,7 +549,7 @@ abstract class BaseAdQuery extends ModelCriteria
      *
      * @return AdQuery The current query, for fluid interface
      */
-    public function filterBycategoryId($categoryId = null, $comparison = null)
+    public function filterByCategoryId($categoryId = null, $comparison = null)
     {
         if (is_array($categoryId)) {
             $useMinMax = false;
@@ -552,6 +570,244 @@ abstract class BaseAdQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AdPeer::CATEGORY_ID, $categoryId, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_type_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserTypeId(1234); // WHERE user_type_id = 1234
+     * $query->filterByUserTypeId(array(12, 34)); // WHERE user_type_id IN (12, 34)
+     * $query->filterByUserTypeId(array('min' => 12)); // WHERE user_type_id > 12
+     * </code>
+     *
+     * @see       filterByUserType()
+     *
+     * @param     mixed $userTypeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserTypeId($userTypeId = null, $comparison = null)
+    {
+        if (is_array($userTypeId)) {
+            $useMinMax = false;
+            if (isset($userTypeId['min'])) {
+                $this->addUsingAlias(AdPeer::USER_TYPE_ID, $userTypeId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($userTypeId['max'])) {
+                $this->addUsingAlias(AdPeer::USER_TYPE_ID, $userTypeId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_TYPE_ID, $userTypeId, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserId(1234); // WHERE user_id = 1234
+     * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
+     * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
+     * </code>
+     *
+     * @see       filterByUser()
+     *
+     * @param     mixed $userId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserId($userId = null, $comparison = null)
+    {
+        if (is_array($userId)) {
+            $useMinMax = false;
+            if (isset($userId['min'])) {
+                $this->addUsingAlias(AdPeer::USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($userId['max'])) {
+                $this->addUsingAlias(AdPeer::USER_ID, $userId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_ID, $userId, $comparison);
+    }
+
+    /**
+     * Filter the query by a related User object
+     *
+     * @param   User|PropelObjectCollection $user The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return   AdQuery The current query, for fluid interface
+     * @throws   PropelException - if the provided filter is invalid.
+     */
+    public function filterByUser($user, $comparison = null)
+    {
+        if ($user instanceof User) {
+            return $this
+                ->addUsingAlias(AdPeer::USER_ID, $user->getId(), $comparison);
+        } elseif ($user instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(AdPeer::USER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByUser() only accepts arguments of type User or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the User relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function joinUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('User');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'User');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the User relation User object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \LeDjassa\AdsBundle\Model\UserQuery A secondary query class using the current class as primary query
+     */
+    public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinUser($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'User', '\LeDjassa\AdsBundle\Model\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related UserType object
+     *
+     * @param   UserType|PropelObjectCollection $userType The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return   AdQuery The current query, for fluid interface
+     * @throws   PropelException - if the provided filter is invalid.
+     */
+    public function filterByUserType($userType, $comparison = null)
+    {
+        if ($userType instanceof UserType) {
+            return $this
+                ->addUsingAlias(AdPeer::USER_TYPE_ID, $userType->getId(), $comparison);
+        } elseif ($userType instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(AdPeer::USER_TYPE_ID, $userType->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByUserType() only accepts arguments of type UserType or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the UserType relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function joinUserType($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('UserType');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'UserType');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the UserType relation UserType object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \LeDjassa\AdsBundle\Model\UserTypeQuery A secondary query class using the current class as primary query
+     */
+    public function useUserTypeQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinUserType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserType', '\LeDjassa\AdsBundle\Model\UserTypeQuery');
     }
 
     /**

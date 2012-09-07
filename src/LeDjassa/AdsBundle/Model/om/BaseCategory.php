@@ -132,7 +132,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getcategoryTypeId()
+    public function getCategoryTypeId()
     {
         return $this->category_type_id;
     }
@@ -206,7 +206,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
      * @param int $v new value
      * @return Category The current object (for fluent API support)
      */
-    public function setcategoryTypeId($v)
+    public function setCategoryTypeId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -223,7 +223,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
 
 
         return $this;
-    } // setcategoryTypeId()
+    } // setCategoryTypeId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -716,7 +716,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
                 return $this->getCode();
                 break;
             case 3:
-                return $this->getcategoryTypeId();
+                return $this->getCategoryTypeId();
                 break;
             default:
                 return null;
@@ -750,7 +750,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $keys[0] => $this->getId(),
             $keys[1] => $this->getTitle(),
             $keys[2] => $this->getCode(),
-            $keys[3] => $this->getcategoryTypeId(),
+            $keys[3] => $this->getCategoryTypeId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aCategoryType) {
@@ -803,7 +803,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
                 $this->setCode($value);
                 break;
             case 3:
-                $this->setcategoryTypeId($value);
+                $this->setCategoryTypeId($value);
                 break;
         } // switch()
     }
@@ -832,7 +832,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setCode($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setcategoryTypeId($arr[$keys[3]]);
+        if (array_key_exists($keys[3], $arr)) $this->setCategoryTypeId($arr[$keys[3]]);
     }
 
     /**
@@ -913,7 +913,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
     {
         $copyObj->setTitle($this->getTitle());
         $copyObj->setCode($this->getCode());
-        $copyObj->setcategoryTypeId($this->getcategoryTypeId());
+        $copyObj->setCategoryTypeId($this->getCategoryTypeId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -988,9 +988,9 @@ abstract class BaseCategory extends BaseObject implements Persistent
     public function setCategoryType(CategoryType $v = null)
     {
         if ($v === null) {
-            $this->setcategoryTypeId(NULL);
+            $this->setCategoryTypeId(NULL);
         } else {
-            $this->setcategoryTypeId($v->getId());
+            $this->setCategoryTypeId($v->getId());
         }
 
         $this->aCategoryType = $v;
@@ -1250,6 +1250,56 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $this->adsScheduledForDeletion[]= $ad;
             $ad->setCategory(null);
         }
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Category is new, it will return
+     * an empty collection; or if this Category has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Category.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('User', $join_behavior);
+
+        return $this->getAds($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Category is new, it will return
+     * an empty collection; or if this Category has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Category.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinUserType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('UserType', $join_behavior);
+
+        return $this->getAds($query, $con);
     }
 
 

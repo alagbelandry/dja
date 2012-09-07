@@ -70,7 +70,7 @@ abstract class BaseQuarterPeer
      * e.g. QuarterPeer::$fieldNames[QuarterPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'cityId', 'AdId', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'CityId', 'AdId', ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'cityId', 'adId', ),
         BasePeer::TYPE_COLNAME => array (QuarterPeer::ID, QuarterPeer::NAME, QuarterPeer::CITY_ID, QuarterPeer::AD_ID, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CITY_ID', 'AD_ID', ),
@@ -85,7 +85,7 @@ abstract class BaseQuarterPeer
      * e.g. QuarterPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'cityId' => 2, 'AdId' => 3, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'CityId' => 2, 'AdId' => 3, ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'cityId' => 2, 'adId' => 3, ),
         BasePeer::TYPE_COLNAME => array (QuarterPeer::ID => 0, QuarterPeer::NAME => 1, QuarterPeer::CITY_ID => 2, QuarterPeer::AD_ID => 3, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CITY_ID' => 2, 'AD_ID' => 3, ),

@@ -22,12 +22,12 @@ use LeDjassa\AdsBundle\Model\CategoryType;
  * @method CategoryQuery orderById($order = Criteria::ASC) Order by the id column
  * @method CategoryQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method CategoryQuery orderByCode($order = Criteria::ASC) Order by the code column
- * @method CategoryQuery orderBycategoryTypeId($order = Criteria::ASC) Order by the category_type_id column
+ * @method CategoryQuery orderByCategoryTypeId($order = Criteria::ASC) Order by the category_type_id column
  *
  * @method CategoryQuery groupById() Group by the id column
  * @method CategoryQuery groupByTitle() Group by the title column
  * @method CategoryQuery groupByCode() Group by the code column
- * @method CategoryQuery groupBycategoryTypeId() Group by the category_type_id column
+ * @method CategoryQuery groupByCategoryTypeId() Group by the category_type_id column
  *
  * @method CategoryQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CategoryQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,12 +46,12 @@ use LeDjassa\AdsBundle\Model\CategoryType;
  *
  * @method Category findOneByTitle(string $title) Return the first Category filtered by the title column
  * @method Category findOneByCode(string $code) Return the first Category filtered by the code column
- * @method Category findOneBycategoryTypeId(int $category_type_id) Return the first Category filtered by the category_type_id column
+ * @method Category findOneByCategoryTypeId(int $category_type_id) Return the first Category filtered by the category_type_id column
  *
  * @method array findById(int $id) Return Category objects filtered by the id column
  * @method array findByTitle(string $title) Return Category objects filtered by the title column
  * @method array findByCode(string $code) Return Category objects filtered by the code column
- * @method array findBycategoryTypeId(int $category_type_id) Return Category objects filtered by the category_type_id column
+ * @method array findByCategoryTypeId(int $category_type_id) Return Category objects filtered by the category_type_id column
  */
 abstract class BaseCategoryQuery extends ModelCriteria
 {
@@ -332,9 +332,9 @@ abstract class BaseCategoryQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterBycategoryTypeId(1234); // WHERE category_type_id = 1234
-     * $query->filterBycategoryTypeId(array(12, 34)); // WHERE category_type_id IN (12, 34)
-     * $query->filterBycategoryTypeId(array('min' => 12)); // WHERE category_type_id > 12
+     * $query->filterByCategoryTypeId(1234); // WHERE category_type_id = 1234
+     * $query->filterByCategoryTypeId(array(12, 34)); // WHERE category_type_id IN (12, 34)
+     * $query->filterByCategoryTypeId(array('min' => 12)); // WHERE category_type_id > 12
      * </code>
      *
      * @see       filterByCategoryType()
@@ -347,7 +347,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
      *
      * @return CategoryQuery The current query, for fluid interface
      */
-    public function filterBycategoryTypeId($categoryTypeId = null, $comparison = null)
+    public function filterByCategoryTypeId($categoryTypeId = null, $comparison = null)
     {
         if (is_array($categoryTypeId)) {
             $useMinMax = false;
@@ -404,7 +404,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
      *
      * @return CategoryQuery The current query, for fluid interface
      */
-    public function joinCategoryType($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinCategoryType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('CategoryType');
@@ -439,7 +439,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
      *
      * @return   \LeDjassa\AdsBundle\Model\CategoryTypeQuery A secondary query class using the current class as primary query
      */
-    public function useCategoryTypeQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useCategoryTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinCategoryType($relationAlias, $joinType)
@@ -459,7 +459,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
     {
         if ($ad instanceof Ad) {
             return $this
-                ->addUsingAlias(CategoryPeer::ID, $ad->getcategoryId(), $comparison);
+                ->addUsingAlias(CategoryPeer::ID, $ad->getCategoryId(), $comparison);
         } elseif ($ad instanceof PropelObjectCollection) {
             return $this
                 ->useAdQuery()

@@ -113,7 +113,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getcityId()
+    public function getCityId()
     {
         return $this->city_id;
     }
@@ -176,7 +176,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
      * @param int $v new value
      * @return Quarter The current object (for fluent API support)
      */
-    public function setcityId($v)
+    public function setCityId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -193,7 +193,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
 
 
         return $this;
-    } // setcityId()
+    } // setCityId()
 
     /**
      * Set the value of [ad_id] column.
@@ -697,7 +697,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
                 return $this->getName();
                 break;
             case 2:
-                return $this->getcityId();
+                return $this->getCityId();
                 break;
             case 3:
                 return $this->getAdId();
@@ -733,7 +733,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
-            $keys[2] => $this->getcityId(),
+            $keys[2] => $this->getCityId(),
             $keys[3] => $this->getAdId(),
         );
         if ($includeForeignObjects) {
@@ -784,7 +784,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
                 $this->setName($value);
                 break;
             case 2:
-                $this->setcityId($value);
+                $this->setCityId($value);
                 break;
             case 3:
                 $this->setAdId($value);
@@ -815,7 +815,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setcityId($arr[$keys[2]]);
+        if (array_key_exists($keys[2], $arr)) $this->setCityId($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setAdId($arr[$keys[3]]);
     }
 
@@ -896,7 +896,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
-        $copyObj->setcityId($this->getcityId());
+        $copyObj->setCityId($this->getCityId());
         $copyObj->setAdId($this->getAdId());
 
         if ($deepCopy && !$this->startCopy) {
@@ -966,9 +966,9 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     public function setCity(City $v = null)
     {
         if ($v === null) {
-            $this->setcityId(NULL);
+            $this->setCityId(NULL);
         } else {
-            $this->setcityId($v->getId());
+            $this->setCityId($v->getId());
         }
 
         $this->aCity = $v;

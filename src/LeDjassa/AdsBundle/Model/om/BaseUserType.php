@@ -13,8 +13,8 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use LeDjassa\AdsBundle\Model\User;
-use LeDjassa\AdsBundle\Model\UserQuery;
+use LeDjassa\AdsBundle\Model\Ad;
+use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\UserType;
 use LeDjassa\AdsBundle\Model\UserTypePeer;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
@@ -59,10 +59,10 @@ abstract class BaseUserType extends BaseObject implements Persistent
     protected $code;
 
     /**
-     * @var        PropelObjectCollection|User[] Collection to store aggregation of User objects.
+     * @var        PropelObjectCollection|Ad[] Collection to store aggregation of Ad objects.
      */
-    protected $collUsers;
-    protected $collUsersPartial;
+    protected $collAds;
+    protected $collAdsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -82,7 +82,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $usersScheduledForDeletion = null;
+    protected $adsScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -282,7 +282,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collUsers = null;
+            $this->collAds = null;
 
         } // if (deep)
     }
@@ -408,18 +408,18 @@ abstract class BaseUserType extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->usersScheduledForDeletion !== null) {
-                if (!$this->usersScheduledForDeletion->isEmpty()) {
-                    foreach ($this->usersScheduledForDeletion as $user) {
+            if ($this->adsScheduledForDeletion !== null) {
+                if (!$this->adsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->adsScheduledForDeletion as $ad) {
                         // need to save related object because we set the relation to null
-                        $user->save($con);
+                        $ad->save($con);
                     }
-                    $this->usersScheduledForDeletion = null;
+                    $this->adsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collUsers !== null) {
-                foreach ($this->collUsers as $referrerFK) {
+            if ($this->collAds !== null) {
+                foreach ($this->collAds as $referrerFK) {
                     if (!$referrerFK->isDeleted()) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -580,8 +580,8 @@ abstract class BaseUserType extends BaseObject implements Persistent
             }
 
 
-                if ($this->collUsers !== null) {
-                    foreach ($this->collUsers as $referrerFK) {
+                if ($this->collAds !== null) {
+                    foreach ($this->collAds as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -666,8 +666,8 @@ abstract class BaseUserType extends BaseObject implements Persistent
             $keys[2] => $this->getCode(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->collUsers) {
-                $result['Users'] = $this->collUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collAds) {
+                $result['Ads'] = $this->collAds->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -826,9 +826,9 @@ abstract class BaseUserType extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getUsers() as $relObj) {
+            foreach ($this->getAds() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUser($relObj->copy($deepCopy));
+                    $copyObj->addAd($relObj->copy($deepCopy));
                 }
             }
 
@@ -893,40 +893,40 @@ abstract class BaseUserType extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('User' == $relationName) {
-            $this->initUsers();
+        if ('Ad' == $relationName) {
+            $this->initAds();
         }
     }
 
     /**
-     * Clears out the collUsers collection
+     * Clears out the collAds collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addUsers()
+     * @see        addAds()
      */
-    public function clearUsers()
+    public function clearAds()
     {
-        $this->collUsers = null; // important to set this to null since that means it is uninitialized
-        $this->collUsersPartial = null;
+        $this->collAds = null; // important to set this to null since that means it is uninitialized
+        $this->collAdsPartial = null;
     }
 
     /**
-     * reset is the collUsers collection loaded partially
+     * reset is the collAds collection loaded partially
      *
      * @return void
      */
-    public function resetPartialUsers($v = true)
+    public function resetPartialAds($v = true)
     {
-        $this->collUsersPartial = $v;
+        $this->collAdsPartial = $v;
     }
 
     /**
-     * Initializes the collUsers collection.
+     * Initializes the collAds collection.
      *
-     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
+     * By default this just sets the collAds collection to an empty array (like clearcollAds());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -935,17 +935,17 @@ abstract class BaseUserType extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initUsers($overrideExisting = true)
+    public function initAds($overrideExisting = true)
     {
-        if (null !== $this->collUsers && !$overrideExisting) {
+        if (null !== $this->collAds && !$overrideExisting) {
             return;
         }
-        $this->collUsers = new PropelObjectCollection();
-        $this->collUsers->setModel('User');
+        $this->collAds = new PropelObjectCollection();
+        $this->collAds->setModel('Ad');
     }
 
     /**
-     * Gets an array of User objects which contain a foreign key that references this object.
+     * Gets an array of Ad objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -955,98 +955,98 @@ abstract class BaseUserType extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|User[] List of User objects
+     * @return PropelObjectCollection|Ad[] List of Ad objects
      * @throws PropelException
      */
-    public function getUsers($criteria = null, PropelPDO $con = null)
+    public function getAds($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
+        $partial = $this->collAdsPartial && !$this->isNew();
+        if (null === $this->collAds || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collAds) {
                 // return empty collection
-                $this->initUsers();
+                $this->initAds();
             } else {
-                $collUsers = UserQuery::create(null, $criteria)
+                $collAds = AdQuery::create(null, $criteria)
                     ->filterByUserType($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collUsersPartial && count($collUsers)) {
-                      $this->initUsers(false);
+                    if (false !== $this->collAdsPartial && count($collAds)) {
+                      $this->initAds(false);
 
-                      foreach($collUsers as $obj) {
-                        if (false == $this->collUsers->contains($obj)) {
-                          $this->collUsers->append($obj);
+                      foreach($collAds as $obj) {
+                        if (false == $this->collAds->contains($obj)) {
+                          $this->collAds->append($obj);
                         }
                       }
 
-                      $this->collUsersPartial = true;
+                      $this->collAdsPartial = true;
                     }
 
-                    return $collUsers;
+                    return $collAds;
                 }
 
-                if($partial && $this->collUsers) {
-                    foreach($this->collUsers as $obj) {
+                if($partial && $this->collAds) {
+                    foreach($this->collAds as $obj) {
                         if($obj->isNew()) {
-                            $collUsers[] = $obj;
+                            $collAds[] = $obj;
                         }
                     }
                 }
 
-                $this->collUsers = $collUsers;
-                $this->collUsersPartial = false;
+                $this->collAds = $collAds;
+                $this->collAdsPartial = false;
             }
         }
 
-        return $this->collUsers;
+        return $this->collAds;
     }
 
     /**
-     * Sets a collection of User objects related by a one-to-many relationship
+     * Sets a collection of Ad objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $users A Propel collection.
+     * @param PropelCollection $ads A Propel collection.
      * @param PropelPDO $con Optional connection object
      */
-    public function setUsers(PropelCollection $users, PropelPDO $con = null)
+    public function setAds(PropelCollection $ads, PropelPDO $con = null)
     {
-        $this->usersScheduledForDeletion = $this->getUsers(new Criteria(), $con)->diff($users);
+        $this->adsScheduledForDeletion = $this->getAds(new Criteria(), $con)->diff($ads);
 
-        foreach ($this->usersScheduledForDeletion as $userRemoved) {
-            $userRemoved->setUserType(null);
+        foreach ($this->adsScheduledForDeletion as $adRemoved) {
+            $adRemoved->setUserType(null);
         }
 
-        $this->collUsers = null;
-        foreach ($users as $user) {
-            $this->addUser($user);
+        $this->collAds = null;
+        foreach ($ads as $ad) {
+            $this->addAd($ad);
         }
 
-        $this->collUsers = $users;
-        $this->collUsersPartial = false;
+        $this->collAds = $ads;
+        $this->collAdsPartial = false;
     }
 
     /**
-     * Returns the number of related User objects.
+     * Returns the number of related Ad objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related User objects.
+     * @return int             Count of related Ad objects.
      * @throws PropelException
      */
-    public function countUsers(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countAds(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
+        $partial = $this->collAdsPartial && !$this->isNew();
+        if (null === $this->collAds || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAds) {
                 return 0;
             } else {
                 if($partial && !$criteria) {
-                    return count($this->getUsers());
+                    return count($this->getAds());
                 }
-                $query = UserQuery::create(null, $criteria);
+                $query = AdQuery::create(null, $criteria);
                 if ($distinct) {
                     $query->distinct();
                 }
@@ -1056,53 +1056,128 @@ abstract class BaseUserType extends BaseObject implements Persistent
                     ->count($con);
             }
         } else {
-            return count($this->collUsers);
+            return count($this->collAds);
         }
     }
 
     /**
-     * Method called to associate a User object to this object
-     * through the User foreign key attribute.
+     * Method called to associate a Ad object to this object
+     * through the Ad foreign key attribute.
      *
-     * @param    User $l User
+     * @param    Ad $l Ad
      * @return UserType The current object (for fluent API support)
      */
-    public function addUser(User $l)
+    public function addAd(Ad $l)
     {
-        if ($this->collUsers === null) {
-            $this->initUsers();
-            $this->collUsersPartial = true;
+        if ($this->collAds === null) {
+            $this->initAds();
+            $this->collAdsPartial = true;
         }
-        if (!in_array($l, $this->collUsers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddUser($l);
+        if (!in_array($l, $this->collAds->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddAd($l);
         }
 
         return $this;
     }
 
     /**
-     * @param	User $user The user object to add.
+     * @param	Ad $ad The ad object to add.
      */
-    protected function doAddUser($user)
+    protected function doAddAd($ad)
     {
-        $this->collUsers[]= $user;
-        $user->setUserType($this);
+        $this->collAds[]= $ad;
+        $ad->setUserType($this);
     }
 
     /**
-     * @param	User $user The user object to remove.
+     * @param	Ad $ad The ad object to remove.
      */
-    public function removeUser($user)
+    public function removeAd($ad)
     {
-        if ($this->getUsers()->contains($user)) {
-            $this->collUsers->remove($this->collUsers->search($user));
-            if (null === $this->usersScheduledForDeletion) {
-                $this->usersScheduledForDeletion = clone $this->collUsers;
-                $this->usersScheduledForDeletion->clear();
+        if ($this->getAds()->contains($ad)) {
+            $this->collAds->remove($this->collAds->search($ad));
+            if (null === $this->adsScheduledForDeletion) {
+                $this->adsScheduledForDeletion = clone $this->collAds;
+                $this->adsScheduledForDeletion->clear();
             }
-            $this->usersScheduledForDeletion[]= $user;
-            $user->setUserType(null);
+            $this->adsScheduledForDeletion[]= $ad;
+            $ad->setUserType(null);
         }
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this UserType is new, it will return
+     * an empty collection; or if this UserType has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in UserType.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('User', $join_behavior);
+
+        return $this->getAds($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this UserType is new, it will return
+     * an empty collection; or if this UserType has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in UserType.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinAdType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('AdType', $join_behavior);
+
+        return $this->getAds($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this UserType is new, it will return
+     * an empty collection; or if this UserType has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in UserType.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinCategory($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('Category', $join_behavior);
+
+        return $this->getAds($query, $con);
     }
 
     /**
@@ -1133,17 +1208,17 @@ abstract class BaseUserType extends BaseObject implements Persistent
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collUsers) {
-                foreach ($this->collUsers as $o) {
+            if ($this->collAds) {
+                foreach ($this->collAds as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        if ($this->collUsers instanceof PropelCollection) {
-            $this->collUsers->clearIterator();
+        if ($this->collAds instanceof PropelCollection) {
+            $this->collAds->clearIterator();
         }
-        $this->collUsers = null;
+        $this->collAds = null;
     }
 
     /**

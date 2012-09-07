@@ -3,15 +3,15 @@
 
     <table name="category_type" description="type of category">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" primaryString="1" size="100" />
+        <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
     </table>
 
     <table name="category" description="category of ad">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" size="100" />
+        <column name="title" type="varchar" required="true" size="100" />
         <column name="code" type="varchar" size="20" />
-        <column name="category_type_id" phpName="categoryTypeId" type="integer" size="5" />
+        <column name="category_type_id" required="true" phpName="CategoryTypeId" type="integer" size="5" />
     <foreign-key foreignTable="category_type">
         <reference local="category_type_id" foreign="id" />
     </foreign-key>
@@ -19,15 +19,15 @@
 
     <table name="area" description="area of country">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" primaryString="1" size="100" />
+        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
     </table>
 
     <table name="city" description="city of area">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" primaryString="1" size="100" />
+        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
-        <column name="area_id" phpName="areaId" type="integer" size="5" />
+        <column name="area_id" phpName="AreaId" required="true" type="integer" size="5" />
     <foreign-key foreignTable="area">
         <reference local="area_id" foreign="id" />
     </foreign-key>
@@ -35,8 +35,8 @@
 
     <table name="quarter" description="quarter of city">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" primaryString="1" size="100" />
-        <column name="city_id" phpName="cityId" type="integer" size="6" />
+        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="city_id" phpName="CityId" type="integer" size="6" />
         <column name="ad_id" phpName="AdId" type="integer" />
     <foreign-key foreignTable="city">
         <reference local="city_id" foreign="id" />
@@ -48,48 +48,52 @@
 
     <table name="user_type" description="type of user">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" primaryString="1" size="100" />
+        <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
     </table>
 
     <table name="user" description="user">
-        <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
+        <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" primaryString="1" size="100" />
         <column name="email" type="varchar" size="100" />
         <column name="phone" type="varchar" size="100" />
-        <column name="ip_adress" phpName="ipAdress" type="varchar" size="20" />
-        <column name="user_type_id" phpName="userTypeId" type="integer" size="5" />
-        <foreign-key foreignTable="user_type">
-            <reference local="user_type_id" foreign="id" />
-        </foreign-key>
+        <column name="ip_adress" phpName="IpAdress" type="varchar" size="20" />
     </table>
 
     <table name="ad_type" description="type of ad">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" primaryString="1" size="100" />
+        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
     </table>
 
     <table name="ad" description="ad">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" primaryString="1" size="100" />
+        <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="description" type="varchar" size="500" />
         <column name="price" type="varchar" size="30" />
-        <column name="created_at" phpName="createdAt" type="timestamp" />
-        <column name="updated_at" phpName="updatedAt" type="timestamp" />
+        <column name="created_at" phpName="CreatedAt" type="timestamp" />
+        <column name="updated_at" phpName="UpdatedAt" type="timestamp" />
         <column name="ad_type_id" phpName="AdTypeId" type="integer" size="5" />
-        <column name="category_id" phpName="categoryId" type="integer" size="6" />
-    <foreign-key foreignTable="ad_type">
-        <reference local="ad_type_id" foreign="id" />
-    </foreign-key>
-    <foreign-key foreignTable="category">
-        <reference local="category_id" foreign="id" />
-    </foreign-key>
+        <column name="category_id" phpName="CategoryId" type="integer" size="6" />
+        <column name="user_type_id" phpName="UserTypeId" type="integer" size="6" />
+        <column name="user_id" phpName="UserId" type="integer" size="6" />
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id" />
+        </foreign-key>
+        <foreign-key foreignTable="user_type">
+            <reference local="user_type_id" foreign="id" />
+        </foreign-key>
+        <foreign-key foreignTable="ad_type">
+            <reference local="ad_type_id" foreign="id" />
+        </foreign-key>
+        <foreign-key foreignTable="category">
+            <reference local="category_id" foreign="id" />
+        </foreign-key>
     </table>
 
     <table name="picture_ad" description="picture of ad">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-        <column name="path" type="varchar" size="500" />
+        <column name="path" required="true" type="varchar" size="500" />
         <column name="ad_id" phpName="AdId" type="integer" size="5" />
     <foreign-key foreignTable="ad">
         <reference local="ad_id" foreign="id" />

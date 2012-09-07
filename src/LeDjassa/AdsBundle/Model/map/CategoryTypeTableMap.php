@@ -43,7 +43,7 @@ class CategoryTypeTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 5, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 100, null);
+        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
         $this->getColumn('TITLE', false)->setPrimaryString(true);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
         // validators

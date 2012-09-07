@@ -43,7 +43,7 @@ class AreaTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 5, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
+        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
         // validators

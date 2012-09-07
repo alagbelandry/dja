@@ -331,7 +331,7 @@ abstract class BaseAreaQuery extends ModelCriteria
     {
         if ($city instanceof City) {
             return $this
-                ->addUsingAlias(AreaPeer::ID, $city->getareaId(), $comparison);
+                ->addUsingAlias(AreaPeer::ID, $city->getAreaId(), $comparison);
         } elseif ($city instanceof PropelObjectCollection) {
             return $this
                 ->useCityQuery()
@@ -350,7 +350,7 @@ abstract class BaseAreaQuery extends ModelCriteria
      *
      * @return AreaQuery The current query, for fluid interface
      */
-    public function joinCity($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinCity($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('City');
@@ -385,7 +385,7 @@ abstract class BaseAreaQuery extends ModelCriteria
      *
      * @return   \LeDjassa\AdsBundle\Model\CityQuery A secondary query class using the current class as primary query
      */
-    public function useCityQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useCityQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinCity($relationAlias, $joinType)

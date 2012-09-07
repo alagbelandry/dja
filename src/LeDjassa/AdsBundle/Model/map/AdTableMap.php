@@ -43,14 +43,16 @@ class AdTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 100, null);
+        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
         $this->getColumn('TITLE', false)->setPrimaryString(true);
         $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 500, null);
         $this->addColumn('PRICE', 'Price', 'VARCHAR', false, 30, null);
-        $this->addColumn('CREATED_AT', 'createdAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('UPDATED_AT', 'updatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('AD_TYPE_ID', 'AdTypeId', 'INTEGER', 'ad_type', 'ID', false, 5, null);
-        $this->addForeignKey('CATEGORY_ID', 'categoryId', 'INTEGER', 'category', 'ID', false, 6, null);
+        $this->addForeignKey('CATEGORY_ID', 'CategoryId', 'INTEGER', 'category', 'ID', false, 6, null);
+        $this->addForeignKey('USER_TYPE_ID', 'UserTypeId', 'INTEGER', 'user_type', 'ID', false, 6, null);
+        $this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'user', 'ID', false, 6, null);
         // validators
     } // initialize()
 
@@ -59,6 +61,8 @@ class AdTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('User', 'LeDjassa\\AdsBundle\\Model\\User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
+        $this->addRelation('UserType', 'LeDjassa\\AdsBundle\\Model\\UserType', RelationMap::MANY_TO_ONE, array('user_type_id' => 'id', ), null, null);
         $this->addRelation('AdType', 'LeDjassa\\AdsBundle\\Model\\AdType', RelationMap::MANY_TO_ONE, array('ad_type_id' => 'id', ), null, null);
         $this->addRelation('Category', 'LeDjassa\\AdsBundle\\Model\\Category', RelationMap::MANY_TO_ONE, array('category_id' => 'id', ), null, null);
         $this->addRelation('Quarter', 'LeDjassa\\AdsBundle\\Model\\Quarter', RelationMap::ONE_TO_MANY, array('id' => 'ad_id', ), null, null, 'Quarters');

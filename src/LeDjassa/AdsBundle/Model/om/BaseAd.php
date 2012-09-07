@@ -26,6 +26,10 @@ use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Model\PictureAdQuery;
 use LeDjassa\AdsBundle\Model\Quarter;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
+use LeDjassa\AdsBundle\Model\User;
+use LeDjassa\AdsBundle\Model\UserQuery;
+use LeDjassa\AdsBundle\Model\UserType;
+use LeDjassa\AdsBundle\Model\UserTypeQuery;
 
 abstract class BaseAd extends BaseObject implements Persistent
 {
@@ -95,6 +99,28 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @var        int
      */
     protected $category_id;
+
+    /**
+     * The value for the user_type_id field.
+     * @var        int
+     */
+    protected $user_type_id;
+
+    /**
+     * The value for the user_id field.
+     * @var        int
+     */
+    protected $user_id;
+
+    /**
+     * @var        User
+     */
+    protected $aUser;
+
+    /**
+     * @var        UserType
+     */
+    protected $aUserType;
 
     /**
      * @var        AdType
@@ -193,7 +219,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getcreatedAt($format = null)
+    public function getCreatedAt($format = null)
     {
         if ($this->created_at === null) {
             return null;
@@ -230,7 +256,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getupdatedAt($format = null)
+    public function getUpdatedAt($format = null)
     {
         if ($this->updated_at === null) {
             return null;
@@ -273,9 +299,29 @@ abstract class BaseAd extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getcategoryId()
+    public function getCategoryId()
     {
         return $this->category_id;
+    }
+
+    /**
+     * Get the [user_type_id] column value.
+     *
+     * @return int
+     */
+    public function getUserTypeId()
+    {
+        return $this->user_type_id;
+    }
+
+    /**
+     * Get the [user_id] column value.
+     *
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
     }
 
     /**
@@ -369,7 +415,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      *               Empty strings are treated as null.
      * @return Ad The current object (for fluent API support)
      */
-    public function setcreatedAt($v)
+    public function setCreatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->created_at !== null || $dt !== null) {
@@ -383,7 +429,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
 
         return $this;
-    } // setcreatedAt()
+    } // setCreatedAt()
 
     /**
      * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
@@ -392,7 +438,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      *               Empty strings are treated as null.
      * @return Ad The current object (for fluent API support)
      */
-    public function setupdatedAt($v)
+    public function setUpdatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->updated_at !== null || $dt !== null) {
@@ -406,7 +452,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
 
         return $this;
-    } // setupdatedAt()
+    } // setUpdatedAt()
 
     /**
      * Set the value of [ad_type_id] column.
@@ -439,7 +485,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @param int $v new value
      * @return Ad The current object (for fluent API support)
      */
-    public function setcategoryId($v)
+    public function setCategoryId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -456,7 +502,57 @@ abstract class BaseAd extends BaseObject implements Persistent
 
 
         return $this;
-    } // setcategoryId()
+    } // setCategoryId()
+
+    /**
+     * Set the value of [user_type_id] column.
+     *
+     * @param int $v new value
+     * @return Ad The current object (for fluent API support)
+     */
+    public function setUserTypeId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->user_type_id !== $v) {
+            $this->user_type_id = $v;
+            $this->modifiedColumns[] = AdPeer::USER_TYPE_ID;
+        }
+
+        if ($this->aUserType !== null && $this->aUserType->getId() !== $v) {
+            $this->aUserType = null;
+        }
+
+
+        return $this;
+    } // setUserTypeId()
+
+    /**
+     * Set the value of [user_id] column.
+     *
+     * @param int $v new value
+     * @return Ad The current object (for fluent API support)
+     */
+    public function setUserId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->user_id !== $v) {
+            $this->user_id = $v;
+            $this->modifiedColumns[] = AdPeer::USER_ID;
+        }
+
+        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
+            $this->aUser = null;
+        }
+
+
+        return $this;
+    } // setUserId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -498,6 +594,8 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->updated_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->ad_type_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
             $this->category_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+            $this->user_type_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+            $this->user_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -506,7 +604,7 @@ abstract class BaseAd extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = AdPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = AdPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Ad object", $e);
@@ -534,6 +632,12 @@ abstract class BaseAd extends BaseObject implements Persistent
         }
         if ($this->aCategory !== null && $this->category_id !== $this->aCategory->getId()) {
             $this->aCategory = null;
+        }
+        if ($this->aUserType !== null && $this->user_type_id !== $this->aUserType->getId()) {
+            $this->aUserType = null;
+        }
+        if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
+            $this->aUser = null;
         }
     } // ensureConsistency
 
@@ -574,6 +678,8 @@ abstract class BaseAd extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aUser = null;
+            $this->aUserType = null;
             $this->aAdType = null;
             $this->aCategory = null;
             $this->collQuarters = null;
@@ -698,6 +804,20 @@ abstract class BaseAd extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aUser !== null) {
+                if ($this->aUser->isModified() || $this->aUser->isNew()) {
+                    $affectedRows += $this->aUser->save($con);
+                }
+                $this->setUser($this->aUser);
+            }
+
+            if ($this->aUserType !== null) {
+                if ($this->aUserType->isModified() || $this->aUserType->isNew()) {
+                    $affectedRows += $this->aUserType->save($con);
+                }
+                $this->setUserType($this->aUserType);
+            }
+
             if ($this->aAdType !== null) {
                 if ($this->aAdType->isModified() || $this->aAdType->isNew()) {
                     $affectedRows += $this->aAdType->save($con);
@@ -809,6 +929,12 @@ abstract class BaseAd extends BaseObject implements Persistent
         if ($this->isColumnModified(AdPeer::CATEGORY_ID)) {
             $modifiedColumns[':p' . $index++]  = '`CATEGORY_ID`';
         }
+        if ($this->isColumnModified(AdPeer::USER_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`USER_TYPE_ID`';
+        }
+        if ($this->isColumnModified(AdPeer::USER_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`USER_ID`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `ad` (%s) VALUES (%s)',
@@ -843,6 +969,12 @@ abstract class BaseAd extends BaseObject implements Persistent
                         break;
                     case '`CATEGORY_ID`':
                         $stmt->bindValue($identifier, $this->category_id, PDO::PARAM_INT);
+                        break;
+                    case '`USER_TYPE_ID`':
+                        $stmt->bindValue($identifier, $this->user_type_id, PDO::PARAM_INT);
+                        break;
+                    case '`USER_ID`':
+                        $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -943,6 +1075,18 @@ abstract class BaseAd extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aUser !== null) {
+                if (!$this->aUser->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
+                }
+            }
+
+            if ($this->aUserType !== null) {
+                if (!$this->aUserType->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aUserType->getValidationFailures());
+                }
+            }
+
             if ($this->aAdType !== null) {
                 if (!$this->aAdType->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aAdType->getValidationFailures());
@@ -1025,16 +1169,22 @@ abstract class BaseAd extends BaseObject implements Persistent
                 return $this->getPrice();
                 break;
             case 4:
-                return $this->getcreatedAt();
+                return $this->getCreatedAt();
                 break;
             case 5:
-                return $this->getupdatedAt();
+                return $this->getUpdatedAt();
                 break;
             case 6:
                 return $this->getAdTypeId();
                 break;
             case 7:
-                return $this->getcategoryId();
+                return $this->getCategoryId();
+                break;
+            case 8:
+                return $this->getUserTypeId();
+                break;
+            case 9:
+                return $this->getUserId();
                 break;
             default:
                 return null;
@@ -1069,12 +1219,20 @@ abstract class BaseAd extends BaseObject implements Persistent
             $keys[1] => $this->getTitle(),
             $keys[2] => $this->getDescription(),
             $keys[3] => $this->getPrice(),
-            $keys[4] => $this->getcreatedAt(),
-            $keys[5] => $this->getupdatedAt(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getUpdatedAt(),
             $keys[6] => $this->getAdTypeId(),
-            $keys[7] => $this->getcategoryId(),
+            $keys[7] => $this->getCategoryId(),
+            $keys[8] => $this->getUserTypeId(),
+            $keys[9] => $this->getUserId(),
         );
         if ($includeForeignObjects) {
+            if (null !== $this->aUser) {
+                $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aUserType) {
+                $result['UserType'] = $this->aUserType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aAdType) {
                 $result['AdType'] = $this->aAdType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
@@ -1134,16 +1292,22 @@ abstract class BaseAd extends BaseObject implements Persistent
                 $this->setPrice($value);
                 break;
             case 4:
-                $this->setcreatedAt($value);
+                $this->setCreatedAt($value);
                 break;
             case 5:
-                $this->setupdatedAt($value);
+                $this->setUpdatedAt($value);
                 break;
             case 6:
                 $this->setAdTypeId($value);
                 break;
             case 7:
-                $this->setcategoryId($value);
+                $this->setCategoryId($value);
+                break;
+            case 8:
+                $this->setUserTypeId($value);
+                break;
+            case 9:
+                $this->setUserId($value);
                 break;
         } // switch()
     }
@@ -1173,10 +1337,12 @@ abstract class BaseAd extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDescription($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setPrice($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setcreatedAt($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setupdatedAt($arr[$keys[5]]);
+        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setAdTypeId($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setcategoryId($arr[$keys[7]]);
+        if (array_key_exists($keys[7], $arr)) $this->setCategoryId($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setUserTypeId($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setUserId($arr[$keys[9]]);
     }
 
     /**
@@ -1196,6 +1362,8 @@ abstract class BaseAd extends BaseObject implements Persistent
         if ($this->isColumnModified(AdPeer::UPDATED_AT)) $criteria->add(AdPeer::UPDATED_AT, $this->updated_at);
         if ($this->isColumnModified(AdPeer::AD_TYPE_ID)) $criteria->add(AdPeer::AD_TYPE_ID, $this->ad_type_id);
         if ($this->isColumnModified(AdPeer::CATEGORY_ID)) $criteria->add(AdPeer::CATEGORY_ID, $this->category_id);
+        if ($this->isColumnModified(AdPeer::USER_TYPE_ID)) $criteria->add(AdPeer::USER_TYPE_ID, $this->user_type_id);
+        if ($this->isColumnModified(AdPeer::USER_ID)) $criteria->add(AdPeer::USER_ID, $this->user_id);
 
         return $criteria;
     }
@@ -1262,10 +1430,12 @@ abstract class BaseAd extends BaseObject implements Persistent
         $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setPrice($this->getPrice());
-        $copyObj->setcreatedAt($this->getcreatedAt());
-        $copyObj->setupdatedAt($this->getupdatedAt());
+        $copyObj->setCreatedAt($this->getCreatedAt());
+        $copyObj->setUpdatedAt($this->getUpdatedAt());
         $copyObj->setAdTypeId($this->getAdTypeId());
-        $copyObj->setcategoryId($this->getcategoryId());
+        $copyObj->setCategoryId($this->getCategoryId());
+        $copyObj->setUserTypeId($this->getUserTypeId());
+        $copyObj->setUserId($this->getUserId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1337,6 +1507,108 @@ abstract class BaseAd extends BaseObject implements Persistent
     }
 
     /**
+     * Declares an association between this object and a User object.
+     *
+     * @param             User $v
+     * @return Ad The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setUser(User $v = null)
+    {
+        if ($v === null) {
+            $this->setUserId(NULL);
+        } else {
+            $this->setUserId($v->getId());
+        }
+
+        $this->aUser = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the User object, it will not be re-added.
+        if ($v !== null) {
+            $v->addAd($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated User object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return User The associated User object.
+     * @throws PropelException
+     */
+    public function getUser(PropelPDO $con = null)
+    {
+        if ($this->aUser === null && ($this->user_id !== null)) {
+            $this->aUser = UserQuery::create()->findPk($this->user_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUser->addAds($this);
+             */
+        }
+
+        return $this->aUser;
+    }
+
+    /**
+     * Declares an association between this object and a UserType object.
+     *
+     * @param             UserType $v
+     * @return Ad The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setUserType(UserType $v = null)
+    {
+        if ($v === null) {
+            $this->setUserTypeId(NULL);
+        } else {
+            $this->setUserTypeId($v->getId());
+        }
+
+        $this->aUserType = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the UserType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addAd($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated UserType object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return UserType The associated UserType object.
+     * @throws PropelException
+     */
+    public function getUserType(PropelPDO $con = null)
+    {
+        if ($this->aUserType === null && ($this->user_type_id !== null)) {
+            $this->aUserType = UserTypeQuery::create()->findPk($this->user_type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUserType->addAds($this);
+             */
+        }
+
+        return $this->aUserType;
+    }
+
+    /**
      * Declares an association between this object and a AdType object.
      *
      * @param             AdType $v
@@ -1397,9 +1669,9 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function setCategory(Category $v = null)
     {
         if ($v === null) {
-            $this->setcategoryId(NULL);
+            $this->setCategoryId(NULL);
         } else {
-            $this->setcategoryId($v->getId());
+            $this->setCategoryId($v->getId());
         }
 
         $this->aCategory = $v;
@@ -1909,6 +2181,8 @@ abstract class BaseAd extends BaseObject implements Persistent
         $this->updated_at = null;
         $this->ad_type_id = null;
         $this->category_id = null;
+        $this->user_type_id = null;
+        $this->user_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -1949,6 +2223,8 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->collPictureAds->clearIterator();
         }
         $this->collPictureAds = null;
+        $this->aUser = null;
+        $this->aUserType = null;
         $this->aAdType = null;
         $this->aCategory = null;
     }

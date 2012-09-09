@@ -37,12 +37,8 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="city_id" phpName="CityId" type="integer" size="6" />
-        <column name="ad_id" phpName="AdId" type="integer" />
     <foreign-key foreignTable="city">
         <reference local="city_id" foreign="id" />
-    </foreign-key>
-    <foreign-key foreignTable="ad">
-        <reference local="ad_id" foreign="id" />
     </foreign-key>
     </table>
 
@@ -77,6 +73,10 @@
         <column name="category_id" phpName="CategoryId" type="integer" size="6" />
         <column name="user_type_id" phpName="UserTypeId" type="integer" size="6" />
         <column name="user_id" phpName="UserId" type="integer" size="6" />
+        <column name="city_id" phpName="CityId" type="integer" size="6" />
+        <foreign-key foreignTable="city">
+            <reference local="city_id" foreign="id" />
+        </foreign-key>
         <foreign-key foreignTable="user">
             <reference local="user_id" foreign="id" />
         </foreign-key>

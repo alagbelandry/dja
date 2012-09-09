@@ -11,8 +11,6 @@ use \Persistent;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use LeDjassa\AdsBundle\Model\Ad;
-use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\Quarter;
@@ -59,20 +57,9 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     protected $city_id;
 
     /**
-     * The value for the ad_id field.
-     * @var        int
-     */
-    protected $ad_id;
-
-    /**
      * @var        City
      */
     protected $aCity;
-
-    /**
-     * @var        Ad
-     */
-    protected $aAd;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -116,16 +103,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     public function getCityId()
     {
         return $this->city_id;
-    }
-
-    /**
-     * Get the [ad_id] column value.
-     *
-     * @return int
-     */
-    public function getAdId()
-    {
-        return $this->ad_id;
     }
 
     /**
@@ -196,31 +173,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     } // setCityId()
 
     /**
-     * Set the value of [ad_id] column.
-     *
-     * @param int $v new value
-     * @return Quarter The current object (for fluent API support)
-     */
-    public function setAdId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->ad_id !== $v) {
-            $this->ad_id = $v;
-            $this->modifiedColumns[] = QuarterPeer::AD_ID;
-        }
-
-        if ($this->aAd !== null && $this->aAd->getId() !== $v) {
-            $this->aAd = null;
-        }
-
-
-        return $this;
-    } // setAdId()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -255,7 +207,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->city_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-            $this->ad_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -264,7 +215,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = QuarterPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = QuarterPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Quarter object", $e);
@@ -289,9 +240,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
 
         if ($this->aCity !== null && $this->city_id !== $this->aCity->getId()) {
             $this->aCity = null;
-        }
-        if ($this->aAd !== null && $this->ad_id !== $this->aAd->getId()) {
-            $this->aAd = null;
         }
     } // ensureConsistency
 
@@ -333,7 +281,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCity = null;
-            $this->aAd = null;
         } // if (deep)
     }
 
@@ -459,13 +406,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
                 $this->setCity($this->aCity);
             }
 
-            if ($this->aAd !== null) {
-                if ($this->aAd->isModified() || $this->aAd->isNew()) {
-                    $affectedRows += $this->aAd->save($con);
-                }
-                $this->setAd($this->aAd);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -512,9 +452,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         if ($this->isColumnModified(QuarterPeer::CITY_ID)) {
             $modifiedColumns[':p' . $index++]  = '`CITY_ID`';
         }
-        if ($this->isColumnModified(QuarterPeer::AD_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`AD_ID`';
-        }
 
         $sql = sprintf(
             'INSERT INTO `quarter` (%s) VALUES (%s)',
@@ -534,9 +471,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
                         break;
                     case '`CITY_ID`':
                         $stmt->bindValue($identifier, $this->city_id, PDO::PARAM_INT);
-                        break;
-                    case '`AD_ID`':
-                        $stmt->bindValue($identifier, $this->ad_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -643,12 +577,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->aAd !== null) {
-                if (!$this->aAd->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aAd->getValidationFailures());
-                }
-            }
-
 
             if (($retval = QuarterPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
@@ -699,9 +627,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             case 2:
                 return $this->getCityId();
                 break;
-            case 3:
-                return $this->getAdId();
-                break;
             default:
                 return null;
                 break;
@@ -734,14 +659,10 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
             $keys[2] => $this->getCityId(),
-            $keys[3] => $this->getAdId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aCity) {
                 $result['City'] = $this->aCity->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aAd) {
-                $result['Ad'] = $this->aAd->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -786,9 +707,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             case 2:
                 $this->setCityId($value);
                 break;
-            case 3:
-                $this->setAdId($value);
-                break;
         } // switch()
     }
 
@@ -816,7 +734,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setCityId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setAdId($arr[$keys[3]]);
     }
 
     /**
@@ -831,7 +748,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         if ($this->isColumnModified(QuarterPeer::ID)) $criteria->add(QuarterPeer::ID, $this->id);
         if ($this->isColumnModified(QuarterPeer::NAME)) $criteria->add(QuarterPeer::NAME, $this->name);
         if ($this->isColumnModified(QuarterPeer::CITY_ID)) $criteria->add(QuarterPeer::CITY_ID, $this->city_id);
-        if ($this->isColumnModified(QuarterPeer::AD_ID)) $criteria->add(QuarterPeer::AD_ID, $this->ad_id);
 
         return $criteria;
     }
@@ -897,7 +813,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     {
         $copyObj->setName($this->getName());
         $copyObj->setCityId($this->getCityId());
-        $copyObj->setAdId($this->getAdId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1008,57 +923,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     }
 
     /**
-     * Declares an association between this object and a Ad object.
-     *
-     * @param             Ad $v
-     * @return Quarter The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setAd(Ad $v = null)
-    {
-        if ($v === null) {
-            $this->setAdId(NULL);
-        } else {
-            $this->setAdId($v->getId());
-        }
-
-        $this->aAd = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the Ad object, it will not be re-added.
-        if ($v !== null) {
-            $v->addQuarter($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated Ad object
-     *
-     * @param PropelPDO $con Optional Connection object.
-     * @return Ad The associated Ad object.
-     * @throws PropelException
-     */
-    public function getAd(PropelPDO $con = null)
-    {
-        if ($this->aAd === null && ($this->ad_id !== null)) {
-            $this->aAd = AdQuery::create()->findPk($this->ad_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aAd->addQuarters($this);
-             */
-        }
-
-        return $this->aAd;
-    }
-
-    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -1066,7 +930,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         $this->id = null;
         $this->name = null;
         $this->city_id = null;
-        $this->ad_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -1090,7 +953,6 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         } // if ($deep)
 
         $this->aCity = null;
-        $this->aAd = null;
     }
 
     /**

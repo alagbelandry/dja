@@ -12,6 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\Area;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\CityPeer;
@@ -40,6 +41,10 @@ use LeDjassa\AdsBundle\Model\Quarter;
  * @method CityQuery leftJoinQuarter($relationAlias = null) Adds a LEFT JOIN clause to the query using the Quarter relation
  * @method CityQuery rightJoinQuarter($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Quarter relation
  * @method CityQuery innerJoinQuarter($relationAlias = null) Adds a INNER JOIN clause to the query using the Quarter relation
+ *
+ * @method CityQuery leftJoinAd($relationAlias = null) Adds a LEFT JOIN clause to the query using the Ad relation
+ * @method CityQuery rightJoinAd($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Ad relation
+ * @method CityQuery innerJoinAd($relationAlias = null) Adds a INNER JOIN clause to the query using the Ad relation
  *
  * @method City findOne(PropelPDO $con = null) Return the first City matching the query
  * @method City findOneOrCreate(PropelPDO $con = null) Return the first City matching the query, or a new City object populated from the query conditions when no match is found
@@ -518,6 +523,80 @@ abstract class BaseCityQuery extends ModelCriteria
         return $this
             ->joinQuarter($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Quarter', '\LeDjassa\AdsBundle\Model\QuarterQuery');
+    }
+
+    /**
+     * Filter the query by a related Ad object
+     *
+     * @param   Ad|PropelObjectCollection $ad  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return   CityQuery The current query, for fluid interface
+     * @throws   PropelException - if the provided filter is invalid.
+     */
+    public function filterByAd($ad, $comparison = null)
+    {
+        if ($ad instanceof Ad) {
+            return $this
+                ->addUsingAlias(CityPeer::ID, $ad->getCityId(), $comparison);
+        } elseif ($ad instanceof PropelObjectCollection) {
+            return $this
+                ->useAdQuery()
+                ->filterByPrimaryKeys($ad->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByAd() only accepts arguments of type Ad or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Ad relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CityQuery The current query, for fluid interface
+     */
+    public function joinAd($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Ad');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Ad');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Ad relation Ad object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \LeDjassa\AdsBundle\Model\AdQuery A secondary query class using the current class as primary query
+     */
+    public function useAdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinAd($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Ad', '\LeDjassa\AdsBundle\Model\AdQuery');
     }
 
     /**

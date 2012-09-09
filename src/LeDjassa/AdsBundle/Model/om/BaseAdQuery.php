@@ -17,8 +17,8 @@ use LeDjassa\AdsBundle\Model\AdPeer;
 use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\AdType;
 use LeDjassa\AdsBundle\Model\Category;
+use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\PictureAd;
-use LeDjassa\AdsBundle\Model\Quarter;
 use LeDjassa\AdsBundle\Model\User;
 use LeDjassa\AdsBundle\Model\UserType;
 
@@ -33,6 +33,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery orderByCategoryId($order = Criteria::ASC) Order by the category_id column
  * @method AdQuery orderByUserTypeId($order = Criteria::ASC) Order by the user_type_id column
  * @method AdQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method AdQuery orderByCityId($order = Criteria::ASC) Order by the city_id column
  *
  * @method AdQuery groupById() Group by the id column
  * @method AdQuery groupByTitle() Group by the title column
@@ -44,10 +45,15 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery groupByCategoryId() Group by the category_id column
  * @method AdQuery groupByUserTypeId() Group by the user_type_id column
  * @method AdQuery groupByUserId() Group by the user_id column
+ * @method AdQuery groupByCityId() Group by the city_id column
  *
  * @method AdQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AdQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method AdQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method AdQuery leftJoinCity($relationAlias = null) Adds a LEFT JOIN clause to the query using the City relation
+ * @method AdQuery rightJoinCity($relationAlias = null) Adds a RIGHT JOIN clause to the query using the City relation
+ * @method AdQuery innerJoinCity($relationAlias = null) Adds a INNER JOIN clause to the query using the City relation
  *
  * @method AdQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
  * @method AdQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
@@ -65,10 +71,6 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery rightJoinCategory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Category relation
  * @method AdQuery innerJoinCategory($relationAlias = null) Adds a INNER JOIN clause to the query using the Category relation
  *
- * @method AdQuery leftJoinQuarter($relationAlias = null) Adds a LEFT JOIN clause to the query using the Quarter relation
- * @method AdQuery rightJoinQuarter($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Quarter relation
- * @method AdQuery innerJoinQuarter($relationAlias = null) Adds a INNER JOIN clause to the query using the Quarter relation
- *
  * @method AdQuery leftJoinPictureAd($relationAlias = null) Adds a LEFT JOIN clause to the query using the PictureAd relation
  * @method AdQuery rightJoinPictureAd($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PictureAd relation
  * @method AdQuery innerJoinPictureAd($relationAlias = null) Adds a INNER JOIN clause to the query using the PictureAd relation
@@ -85,6 +87,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method Ad findOneByCategoryId(int $category_id) Return the first Ad filtered by the category_id column
  * @method Ad findOneByUserTypeId(int $user_type_id) Return the first Ad filtered by the user_type_id column
  * @method Ad findOneByUserId(int $user_id) Return the first Ad filtered by the user_id column
+ * @method Ad findOneByCityId(int $city_id) Return the first Ad filtered by the city_id column
  *
  * @method array findById(int $id) Return Ad objects filtered by the id column
  * @method array findByTitle(string $title) Return Ad objects filtered by the title column
@@ -96,6 +99,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method array findByCategoryId(int $category_id) Return Ad objects filtered by the category_id column
  * @method array findByUserTypeId(int $user_type_id) Return Ad objects filtered by the user_type_id column
  * @method array findByUserId(int $user_id) Return Ad objects filtered by the user_id column
+ * @method array findByCityId(int $city_id) Return Ad objects filtered by the city_id column
  */
 abstract class BaseAdQuery extends ModelCriteria
 {
@@ -197,7 +201,7 @@ abstract class BaseAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `USER_ID` FROM `ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `USER_ID`, `CITY_ID` FROM `ad` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -659,6 +663,125 @@ abstract class BaseAdQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the city_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCityId(1234); // WHERE city_id = 1234
+     * $query->filterByCityId(array(12, 34)); // WHERE city_id IN (12, 34)
+     * $query->filterByCityId(array('min' => 12)); // WHERE city_id > 12
+     * </code>
+     *
+     * @see       filterByCity()
+     *
+     * @param     mixed $cityId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByCityId($cityId = null, $comparison = null)
+    {
+        if (is_array($cityId)) {
+            $useMinMax = false;
+            if (isset($cityId['min'])) {
+                $this->addUsingAlias(AdPeer::CITY_ID, $cityId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($cityId['max'])) {
+                $this->addUsingAlias(AdPeer::CITY_ID, $cityId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::CITY_ID, $cityId, $comparison);
+    }
+
+    /**
+     * Filter the query by a related City object
+     *
+     * @param   City|PropelObjectCollection $city The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return   AdQuery The current query, for fluid interface
+     * @throws   PropelException - if the provided filter is invalid.
+     */
+    public function filterByCity($city, $comparison = null)
+    {
+        if ($city instanceof City) {
+            return $this
+                ->addUsingAlias(AdPeer::CITY_ID, $city->getId(), $comparison);
+        } elseif ($city instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(AdPeer::CITY_ID, $city->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByCity() only accepts arguments of type City or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the City relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function joinCity($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('City');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'City');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the City relation City object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \LeDjassa\AdsBundle\Model\CityQuery A secondary query class using the current class as primary query
+     */
+    public function useCityQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCity($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'City', '\LeDjassa\AdsBundle\Model\CityQuery');
+    }
+
+    /**
      * Filter the query by a related User object
      *
      * @param   User|PropelObjectCollection $user The related object(s) to use as filter
@@ -960,80 +1083,6 @@ abstract class BaseAdQuery extends ModelCriteria
         return $this
             ->joinCategory($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Category', '\LeDjassa\AdsBundle\Model\CategoryQuery');
-    }
-
-    /**
-     * Filter the query by a related Quarter object
-     *
-     * @param   Quarter|PropelObjectCollection $quarter  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return   AdQuery The current query, for fluid interface
-     * @throws   PropelException - if the provided filter is invalid.
-     */
-    public function filterByQuarter($quarter, $comparison = null)
-    {
-        if ($quarter instanceof Quarter) {
-            return $this
-                ->addUsingAlias(AdPeer::ID, $quarter->getAdId(), $comparison);
-        } elseif ($quarter instanceof PropelObjectCollection) {
-            return $this
-                ->useQuarterQuery()
-                ->filterByPrimaryKeys($quarter->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByQuarter() only accepts arguments of type Quarter or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Quarter relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return AdQuery The current query, for fluid interface
-     */
-    public function joinQuarter($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Quarter');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Quarter');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Quarter relation Quarter object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \LeDjassa\AdsBundle\Model\QuarterQuery A secondary query class using the current class as primary query
-     */
-    public function useQuarterQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinQuarter($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Quarter', '\LeDjassa\AdsBundle\Model\QuarterQuery');
     }
 
     /**

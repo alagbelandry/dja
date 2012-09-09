@@ -57,6 +57,7 @@ class CityTableMap extends TableMap
     {
         $this->addRelation('Area', 'LeDjassa\\AdsBundle\\Model\\Area', RelationMap::MANY_TO_ONE, array('area_id' => 'id', ), null, null);
         $this->addRelation('Quarter', 'LeDjassa\\AdsBundle\\Model\\Quarter', RelationMap::ONE_TO_MANY, array('id' => 'city_id', ), null, null, 'Quarters');
+        $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'city_id', ), null, null, 'Ads');
     } // buildRelations()
 
 } // CityTableMap

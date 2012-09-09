@@ -46,7 +46,6 @@ class QuarterTableMap extends TableMap
         $this->addColumn('NAME', 'Name', 'VARCHAR', true, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
-        $this->addForeignKey('AD_ID', 'AdId', 'INTEGER', 'ad', 'ID', false, null, null);
         // validators
     } // initialize()
 
@@ -56,7 +55,6 @@ class QuarterTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('City', 'LeDjassa\\AdsBundle\\Model\\City', RelationMap::MANY_TO_ONE, array('city_id' => 'id', ), null, null);
-        $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::MANY_TO_ONE, array('ad_id' => 'id', ), null, null);
     } // buildRelations()
 
 } // QuarterTableMap

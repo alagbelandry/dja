@@ -1,4 +1,17 @@
 <form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
-	{{ form_widget(form) }}
+	
+	{{ form_errors(form) }}
+
+	{{ form_row(form.city) }}
+	{{ form_row(form.category) }}
+	{{ form_row(form.user_type) }}
+	{{ form_row(form.ad_type) }}
+
+	{{ form_row(form.title) }}
+	{{ form_row(form.description) }}
+	{{ form_row(form.price) }}
+
+	{{ form_rest(form) }}
+
 	<input type="submit" />
 </form>

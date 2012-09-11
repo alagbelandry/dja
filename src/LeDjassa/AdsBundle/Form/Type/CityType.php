@@ -20,19 +20,20 @@ class CityType extends AbstractType {
     	$builder->add('area', 'model', array(
             'class'         => 'LeDjassa\AdsBundle\Model\Area',
             'label'         => 'Region :',
-             'empty_value'  => 'Choisir une region'
-          //  'query' => CityQuery::create(),
+            'empty_value'   => 'Choisir une region',
+            'property_path' => false,
         ));
 
         $builder->add('name', 'model', array(
-            'class'       => 'LeDjassa\AdsBundle\Model\City',
-            'label'       => 'Ville :',
-            'empty_value' => 'Choisir une ville'
-          //  'query' => CityQuery::create(),
+            'class'         => 'LeDjassa\AdsBundle\Model\City',
+            'label'         => 'Ville :',
+            'empty_value'   => 'Choisir une ville',
         ));
 
         // City relation
-        $builder->add('quarter', new QuarterType());
+        $builder->add('quarter', new QuarterType(), array(
+            'property_path' => false,
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

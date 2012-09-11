@@ -5,6 +5,10 @@
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
+        <vendor type="mysql">
+            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Charset" value="latin1"/>
+        </vendor>
     </table>
 
     <table name="category" description="category of ad">
@@ -15,12 +19,20 @@
     <foreign-key foreignTable="category_type">
         <reference local="category_type_id" foreign="id" />
     </foreign-key>
+    <vendor type="mysql">
+        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Charset" value="latin1"/>
+    </vendor>    
     </table>
 
     <table name="area" description="area of country">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
+        <vendor type="mysql">
+            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Charset" value="latin1"/>
+        </vendor>
     </table>
 
     <table name="city" description="city of area">
@@ -31,6 +43,10 @@
     <foreign-key foreignTable="area">
         <reference local="area_id" foreign="id" />
     </foreign-key>
+    <vendor type="mysql">
+        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Charset" value="latin1"/>
+    </vendor>
     </table>
 
     <table name="quarter" description="quarter of city">
@@ -40,12 +56,20 @@
     <foreign-key foreignTable="city">
         <reference local="city_id" foreign="id" />
     </foreign-key>
+    <vendor type="mysql">
+        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Charset" value="latin1"/>
+    </vendor>
     </table>
 
     <table name="user_type" description="type of user">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
+        <vendor type="mysql">
+            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Charset" value="latin1"/>
+        </vendor>
     </table>
 
     <table name="user" description="user">
@@ -54,12 +78,20 @@
         <column name="email" type="varchar" size="100" />
         <column name="phone" type="varchar" size="100" />
         <column name="ip_adress" phpName="IpAdress" type="varchar" size="20" />
+        <vendor type="mysql">
+            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Charset" value="latin1"/>
+        </vendor>
     </table>
 
     <table name="ad_type" description="type of ad">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
+        <vendor type="mysql">
+            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Charset" value="latin1"/>
+        </vendor>
     </table>
 
     <table name="ad" description="ad">
@@ -89,6 +121,14 @@
         <foreign-key foreignTable="category">
             <reference local="category_id" foreign="id" />
         </foreign-key>
+        <behavior name="timestampable">
+            <parameter name="create_column" value="created_at" />
+            <parameter name="update_column" value="updated_at" />
+        </behavior>
+        <vendor type="mysql">
+            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Charset" value="latin1"/>
+        </vendor>
     </table>
 
     <table name="picture_ad" description="picture of ad">
@@ -98,6 +138,10 @@
     <foreign-key foreignTable="ad">
         <reference local="ad_id" foreign="id" />
     </foreign-key>
+    <vendor type="mysql">
+        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Charset" value="latin1"/>
+    </vendor>
     </table>
 
 </database>

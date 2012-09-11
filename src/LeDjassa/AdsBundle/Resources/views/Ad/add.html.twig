@@ -4,7 +4,7 @@
 		
 		$(document).ready(function() {
 
-			var idArea = $("select#ad_city_area option:selected").val();
+			var idArea = $("select#ad_city_quarter_name option:selected").val();
 			if (!idArea) {
 				hideCityAndQuarterField(idArea);
 			} else {
@@ -27,7 +27,7 @@
 	 */
 	function fillCityField(idArea) {
 			// get list city
-			$('select#ad_city_name, #ad_city_quarter').parent('div').show();
+			$('select#ad_city_name, #ad_city_quarter_name').parent('div').show();
 			$.ajax({
 	        	type: 'POST',
 	            dataType: 'json',
@@ -54,7 +54,7 @@
 	 * @param  {[type]} $idArea [id area]
 	 */
 	function hideCityAndQuarterField($idArea) {
-		$('select#ad_city_name, #ad_city_quarter').parent('div').hide();	
+		$('select#ad_city_name, #ad_city_quarter_name').parent('div').hide();	
 	}
 	</script>
 
@@ -64,7 +64,25 @@
 	
 	{{ form_errors(form) }}
 
-	{{ form_row(form.city) }}
+	<div>
+		{{ form_errors(form.city.area) }}
+		{{ form_label(form.city.area) }}
+		{{ form_widget(form.city.area) }}
+	</div>
+	
+	<div>
+		{{ form_errors(form.city.name) }}
+		{{ form_label(form.city.name) }}
+		{{ form_widget(form.city.name) }}
+	</div>
+
+	<div>
+		{{ form_errors(form.city.quarter.name) }}
+		{{ form_label(form.city.quarter.name) }}
+		{{ form_widget(form.city.quarter.name) }}
+	</div>
+
+
 	{{ form_row(form.category) }}
 	{{ form_row(form.user_type) }}
 	{{ form_row(form.ad_type) }}

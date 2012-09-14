@@ -1,10 +1,26 @@
 {% block javascripts %}
 	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-1.8.1.min.js')}}"></script>
+	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-ui-1.8.23.custom.min.js')}}"></script>
 	<script type="text/javascript">
-		
 		$(document).ready(function() {
 
-			var idArea = $("select#ad_city_quarter_name option:selected").val();
+			$("#ad_city_quarter_name").focus(function () {
+				$.ajax({
+	        		type: 'POST',
+	            	dataType: 'json',
+	            	url:  '{{ path('quarter_in_city_get') }}',
+	            	data: 'idCity='+ $("select#ad_city_name option:selected").val(),
+	            	success: function(response)
+	            	{
+	            		$("#ad_city_quarter_name").autocomplete({
+							source: response
+						});
+	        	    },
+				});
+			});
+
+			// manage display city list and quarter text
+			var idArea = $("select#ad_city_area option:selected").val();
 			if (!idArea) {
 				hideCityAndQuarterField(idArea);
 			} else {
@@ -31,20 +47,15 @@
 			$.ajax({
 	        	type: 'POST',
 	            dataType: 'json',
-	            url:  '{{ path('city_from_area_get') }}',
+	            url:  '{{ path('city_in_area_get') }}',
 	            data: 'areaId=' + idArea,
 	            success: function(response)
 	            {
 	            	$('select#ad_city_name').find("option").remove();
-	            	//$('select#city_name').find("option").remove();
-	                $.each(response, function(i, item) {console.log(i);console.log(item);
+	                $.each(response, function(i, item) {
 	                $('#ad_city_name').append(new Option(item, i));
 	             	});
 	            },
-	            error : function(response)
-	            {
-
-	            }
 			});
 
 	}
@@ -81,7 +92,6 @@
 		{{ form_label(form.city.quarter.name) }}
 		{{ form_widget(form.city.quarter.name) }}
 	</div>
-
 
 	{{ form_row(form.category) }}
 	{{ form_row(form.user_type) }}

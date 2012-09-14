@@ -32,29 +32,24 @@ class AdController extends Controller
         if ('POST' === $request->getMethod()) { 
         	$form->bindRequest($request);
 
-            // get parameters list
-            $parametersList = $request->request->get('ad');
+            $city = $this->getCity();
 
-             // get city
-            $idCity = isset($parametersList['city']['name']) ? $parametersList['city']['name'] : '';
-            $city = CityQuery::create()
-                ->findOneById($idCity);
-
-            // add city to ad
+            // link ad to city
             $ad->setCity($city);
 
-            // add city to quarter
-            $nameQuarter = isset($parametersList['city']['quarter']['name']) ? $parametersList['city']['quarter']['name'] : '';
-            if ($city instanceof City && !empty($nameQuarter)) {
-                $quarter = new Quarter();
-                $quarter->setName($nameQuarter)
-                        ->setCity($city);
+            // quarter must be link to city
+            if ($city instanceof City) {
+                $quarter = $this->getQuarter();
+
+                if ($quarter instanceof Quarter) {
+                    $quarter->setCity($city);
+                }
             }
 
         	if ($form->isValid()) {
         		$ad->save();
 
-                if($quarter instanceof  Quarter) {
+                if(isset($quarter) && $quarter instanceof Quarter) {
                     $quarter->save();
                 }
         	}
@@ -67,13 +62,66 @@ class AdController extends Controller
     }
 
     /**
+     * Get post parameter of ad form
+     * @return array list parameter or false if list not exist
+     */
+    function getPostParameters() 
+    {
+        $request = $this->get('request');
+        if ('POST' === $request->getMethod()) { 
+            return $request->request->get('ad');
+        }
+            return array();
+    }
+
+    /**
+     * Get city select in form
+     * @return City city select
+     */
+    function getCity() 
+    {
+        $parameters = $this->getPostParameters();
+
+        $idCity = isset($parameters['city']['name']) ? $parameters['city']['name'] : '';
+
+        return CityQuery::create()
+                ->findOneById($idCity);
+    }
+
+    /**
+     * Get new quarter depends of name quarter parameter of form
+     * @return Quarter|false new quarter or false if it's not
+     */
+    function getQuarter()
+    {
+        $parameters = $this->getPostParameters();
+        $nameQuarter = isset($parameters['city']['quarter']['name']) ? ucfirst($parameters['city']['quarter']['name']) : '';
+
+        if (empty($nameQuarter)) {
+            return false;
+        }
+
+        $quarter = QuarterQuery::create()
+                      ->findOneByName($nameQuarter);
+
+        // not a new quarter name
+        if ($quarter instanceof Quarter) {
+            return false;
+        }
+                
+        $quarter = new Quarter();
+        $quarter->setName($nameQuarter);
+
+        return $quarter;
+    }
+
+    /**
     * Return city list depending area
-    * @param Area $area region
-    * @return Response ajax response
-    * @Route("/recupererVilles", name="city_from_area_get")
+    * @return Response ajax response city list
+    * @Route("/recupererVilles", name="city_in_area_get")
     * 
     */
-    public function getCityFromAreaAction()
+    public function getCityInAreaAction()
     {
         $cityList = array();
         $request = $this->get('request');
@@ -87,6 +135,32 @@ class AdController extends Controller
         }
  
         $response = new Response(json_encode($cityList));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+    * Return city list depending area
+    * @param Area $area region
+    * @return Response ajax response quarter list
+    * @Route("/recupererQuartier", name="quarter_in_city_get")
+    * 
+    */
+    public function getQuarterInCityAction()
+    {
+        $quarterList = array();
+        $request = $this->get('request');
+        $idCity = $request->get('idCity');
+
+        if ($request->isXmlHttpRequest()) {
+            $quarterList = QuarterQuery::create()
+                                ->select("Name")
+                                ->filterByCityId($idCity)
+                                ->find()
+                                ->toArray();
+        }
+    
+        $response = new Response(json_encode($quarterList));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }

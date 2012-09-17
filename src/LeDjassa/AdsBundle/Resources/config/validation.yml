@@ -1,0 +1,12 @@
+LeDjassa\AdsBundle\Model\Ad:
+    properties:
+        title:
+        	- NotBlank: { message: "Le titre de l'annonce ne doit pas etre vide." }
+            - MinLength: { limit:3, message: "Le titre de l'annonce doit avoir au moins {{ limit }} caractères." }
+        description:
+            - NotBlank: { message: "La description de l'annonce ne doit pas etre vide." }
+            - MinLength: { limit:10, message: "La description de l'annonce doit avoir au moins {{ limit }} caractères." }
+        price:
+            - Type:
+                type: numeric
+                message: Le prix contient des caractères non autorisés. Veuillez saisir des chiffres uniquement.

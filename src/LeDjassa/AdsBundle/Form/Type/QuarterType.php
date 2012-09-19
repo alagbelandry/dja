@@ -18,6 +18,7 @@ class QuarterType extends AbstractType {
         
     	$builder->add('name', 'text', array(
             'label' => 'Quartier :',
+            'required' => false,
         ));
 
     }

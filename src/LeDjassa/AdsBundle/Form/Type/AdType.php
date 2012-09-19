@@ -27,16 +27,16 @@ class AdType extends AbstractType
         $builder->add('price', 'money', array(
             'label'    => 'Prix :',
             'currency' => 'CFA',
+            'required'  => false, 
         ));
-
+    
         // Category  relation
         $builder->add('category', 'model', array(
             'class'    => 'LeDjassa\AdsBundle\Model\Category',
             'label'    => 'Categorie :',
             'property' => 'title',
         ));
-
-        // User type relation 
+   
         $builder->add('user_type', 'model', array(
             'class'    => 'LeDjassa\AdsBundle\Model\UserType',
             'label'    => 'Vous publiez l\'annonce en tant que : ',

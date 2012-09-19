@@ -7,7 +7,7 @@
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="MyISAM"/>
-            <parameter name="Charset" value="latin1"/>
+            <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
 
@@ -21,7 +21,7 @@
     </foreign-key>
     <vendor type="mysql">
         <parameter name="Engine" value="MyISAM"/>
-        <parameter name="Charset" value="latin1"/>
+        <parameter name="Charset" value="utf8"/>
     </vendor>    
     </table>
 
@@ -31,7 +31,7 @@
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="MyISAM"/>
-            <parameter name="Charset" value="latin1"/>
+            <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
 
@@ -45,7 +45,7 @@
     </foreign-key>
     <vendor type="mysql">
         <parameter name="Engine" value="MyISAM"/>
-        <parameter name="Charset" value="latin1"/>
+        <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>
 
@@ -58,7 +58,7 @@
     </foreign-key>
     <vendor type="mysql">
         <parameter name="Engine" value="MyISAM"/>
-        <parameter name="Charset" value="latin1"/>
+        <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>
 
@@ -68,7 +68,7 @@
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="MyISAM"/>
-            <parameter name="Charset" value="latin1"/>
+            <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
 
@@ -80,7 +80,7 @@
         <column name="ip_adress" phpName="IpAdress" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="MyISAM"/>
-            <parameter name="Charset" value="latin1"/>
+            <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
 
@@ -90,7 +90,7 @@
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="MyISAM"/>
-            <parameter name="Charset" value="latin1"/>
+            <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
 
@@ -127,7 +127,7 @@
         </behavior>
         <vendor type="mysql">
             <parameter name="Engine" value="MyISAM"/>
-            <parameter name="Charset" value="latin1"/>
+            <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
 
@@ -140,7 +140,7 @@
     </foreign-key>
     <vendor type="mysql">
         <parameter name="Engine" value="MyISAM"/>
-        <parameter name="Charset" value="latin1"/>
+        <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>
 

@@ -12,6 +12,8 @@ use LeDjassa\AdsBundle\Model\Quarter;
 use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
+use LeDjassa\AdsBundle\Model\UserTypeQuery;
+use LeDjassa\AdsBundle\Model\AdTypeQuery;
 
 /**
  * @Route("/annonces")
@@ -26,8 +28,9 @@ class AdController extends Controller
     {
     	
         $ad = new Ad();
+        
         $form = $this->createForm(new AdType(), $ad);
-
+      
         $request = $this->get('request');
         if ('POST' === $request->getMethod()) { 
         	$form->bindRequest($request);

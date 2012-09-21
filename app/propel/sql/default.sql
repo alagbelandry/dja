@@ -15,7 +15,7 @@ CREATE TABLE `category_type`
     `title` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='type of category';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='type of category';
 
 -- ---------------------------------------------------------------------
 -- category
@@ -34,7 +34,7 @@ CREATE TABLE `category`
     CONSTRAINT `category_FK_1`
         FOREIGN KEY (`category_type_id`)
         REFERENCES `category_type` (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='category of ad';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='category of ad';
 
 -- ---------------------------------------------------------------------
 -- area
@@ -48,7 +48,7 @@ CREATE TABLE `area`
     `name` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='area of country';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='area of country';
 
 -- ---------------------------------------------------------------------
 -- city
@@ -67,7 +67,7 @@ CREATE TABLE `city`
     CONSTRAINT `city_FK_1`
         FOREIGN KEY (`area_id`)
         REFERENCES `area` (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='city of area';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='city of area';
 
 -- ---------------------------------------------------------------------
 -- quarter
@@ -85,7 +85,7 @@ CREATE TABLE `quarter`
     CONSTRAINT `quarter_FK_1`
         FOREIGN KEY (`city_id`)
         REFERENCES `city` (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='quarter of city';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='quarter of city';
 
 -- ---------------------------------------------------------------------
 -- user_type
@@ -99,7 +99,7 @@ CREATE TABLE `user_type`
     `title` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='type of user';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='type of user';
 
 -- ---------------------------------------------------------------------
 -- user
@@ -115,7 +115,7 @@ CREATE TABLE `user`
     `phone` VARCHAR(100),
     `ip_adress` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='user';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='user';
 
 -- ---------------------------------------------------------------------
 -- ad_type
@@ -129,7 +129,7 @@ CREATE TABLE `ad_type`
     `name` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='type of ad';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='type of ad';
 
 -- ---------------------------------------------------------------------
 -- ad
@@ -171,7 +171,7 @@ CREATE TABLE `ad`
     CONSTRAINT `ad_FK_5`
         FOREIGN KEY (`category_id`)
         REFERENCES `category` (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='ad';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='ad';
 
 -- ---------------------------------------------------------------------
 -- picture_ad
@@ -189,7 +189,7 @@ CREATE TABLE `picture_ad`
     CONSTRAINT `picture_ad_FK_1`
         FOREIGN KEY (`ad_id`)
         REFERENCES `ad` (`id`)
-) ENGINE=MyISAM CHARACTER SET='latin1' COMMENT='picture of ad';
+) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='picture of ad';
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;

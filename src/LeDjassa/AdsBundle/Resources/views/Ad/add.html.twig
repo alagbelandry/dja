@@ -4,6 +4,31 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
+    		var $container = $('#ad_picture_ads');
+    		if ($container.children().length == 0) {
+        		addPicture();
+    		}
+	
+    		$('#add_picture').click(function() {
+        		addPicture();
+   			 });
+
+    		function addPicture() {
+        		var index = $container.children().length;
+        		var $newContainerPicture = $container.attr('data-prototype').replace(/__name__/g, index);
+        		var $removePicture = $('<a href="#" id="remove_picture">Supprimer cette photo</a>');
+
+       			$container.append(
+           			 $($newContainerPicture).append($removePicture)
+       			);
+
+       			$removePicture.click(function(e) {
+        			e.preventDefault();
+			        $('#ad_picture_ads_' + index).parent('div').remove();
+			    });
+  			}
+
+			// manage autocomplete on quarter name field
 			$("#ad_city_quarter_name").focus(function () {
 				$.ajax({
 	        		type: 'POST',
@@ -67,13 +92,14 @@
 	function hideCityAndQuarterField($idArea) {
 		$('select#ad_city_name, #ad_city_quarter_name').parent('div').hide();	
 	}
+
 	</script>
 
 {% endblock %}
 
 <form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
 	
-	{{ form_errors(form) }}
+		{{ form_errors(form) }}
 
 	<div>
 		{{ form_errors(form.city.area) }}
@@ -100,10 +126,11 @@
 	{{ form_row(form.title) }}
 	{{ form_row(form.description) }}
 	{{ form_row(form.price) }}
+	{{ form_row(form.picture_ads) }}
+
+	<a href="#" id="add_picture">Ajouter une photo</a>
 
 	{{ form_rest(form) }}
 
 	<input type="submit" />
 </form>
-
-

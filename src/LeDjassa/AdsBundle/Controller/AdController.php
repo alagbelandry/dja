@@ -9,7 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\Quarter;
+use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Form\Type\AdType;
+use LeDjassa\AdsBundle\Form\Type\PictureAdType;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
@@ -20,7 +22,7 @@ use LeDjassa\AdsBundle\Model\AdTypeQuery;
  */
 class AdController extends Controller
 {
-	/**
+ 	/**
 	* @Route("/ajouter", name="ad_add")
 	* @Template()
 	*/
@@ -30,31 +32,30 @@ class AdController extends Controller
         $ad = new Ad();
         
         $form = $this->createForm(new AdType(), $ad);
-      
+        
         $request = $this->get('request');
         if ('POST' === $request->getMethod()) { 
         	$form->bindRequest($request);
 
-            $city = $this->getCity();
+            if ($form->isValid()) {
 
-            // link ad to city
-            $ad->setCity($city);
+                $city = $this->getCity();
 
-            // quarter must be link to city
-            if ($city instanceof City) {
-                $quarter = $this->getQuarter();
+                // link ad and city
+                $ad->setCity($city);
 
-                if ($quarter instanceof Quarter) {
-                    $quarter->setCity($city);
+                // quarter must be link to city
+                if ($city instanceof City) {
+                    $quarter = $this->getQuarter();
+                    if ($quarter instanceof Quarter) {
+                        $quarter->setCity($city);
+                    }
                 }
-            }
-
-        	if ($form->isValid()) {
-        		$ad->save();
-
                 if(isset($quarter) && $quarter instanceof Quarter) {
                     $quarter->save();
                 }
+
+                $ad->save();
         	}
 
         	//return $this->redirect($this->generateUrl('ad_success'));
@@ -71,7 +72,7 @@ class AdController extends Controller
     function getPostParameters() 
     {
         $request = $this->get('request');
-        if ('POST' === $request->getMethod()) { 
+        if ('POST' === $request->getMethod()) {
             return $request->request->get('ad');
         }
             return array();

@@ -27,9 +27,9 @@ class AdType extends AbstractType
         $builder->add('price', 'money', array(
             'label'    => 'Prix :',
             'currency' => 'CFA',
-            'required'  => false, 
+            'required' => false, 
         ));
-    
+
         // Category  relation
         $builder->add('category', 'model', array(
             'class'    => 'LeDjassa\AdsBundle\Model\Category',
@@ -57,6 +57,19 @@ class AdType extends AbstractType
 
         // City relation
         $builder->add('city', new CityType());
+        
+        // Picture ad relation 
+        $builder->add('picture_ads', 'collection', array('type'         => new PictureAdType(),
+                                                        'prototype'     => true,
+                                                        'allow_add'     => true,
+                                                        'allow_delete'  => true,
+                                                        'required'      => false,
+                                                        'by_reference'  => false,
+                                                        'label'         => 'Photos d\'illustration',
+
+        ));
+        
+   
     }
    
     public function setDefaultOptions(OptionsResolverInterface $resolver)

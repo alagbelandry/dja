@@ -62,7 +62,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'ledjassa', $modelName = 'LeDjassa\\AdsBundle\\Model\\Category', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = 'LeDjassa\\AdsBundle\\Model\\Category', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -404,7 +404,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
      *
      * @return CategoryQuery The current query, for fluid interface
      */
-    public function joinCategoryType($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinCategoryType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('CategoryType');
@@ -439,7 +439,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
      *
      * @return   \LeDjassa\AdsBundle\Model\CategoryTypeQuery A secondary query class using the current class as primary query
      */
-    public function useCategoryTypeQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useCategoryTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinCategoryType($relationAlias, $joinType)

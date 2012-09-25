@@ -17,7 +17,7 @@ abstract class BaseAdTypePeer
 {
 
     /** the default database name for this class */
-    const DATABASE_NAME = 'ledjassa';
+    const DATABASE_NAME = 'default';
 
     /** the table name for this class */
     const TABLE_NAME = 'ad_type';

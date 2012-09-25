@@ -43,7 +43,7 @@ class UserTypeTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 5, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 100, null);
+        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
         $this->getColumn('TITLE', false)->setPrimaryString(true);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
         // validators
@@ -54,7 +54,7 @@ class UserTypeTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('User', 'LeDjassa\\AdsBundle\\Model\\User', RelationMap::ONE_TO_MANY, array('id' => 'user_type_id', ), null, null, 'Users');
+        $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'user_type_id', ), null, null, 'Ads');
     } // buildRelations()
 
 } // UserTypeTableMap

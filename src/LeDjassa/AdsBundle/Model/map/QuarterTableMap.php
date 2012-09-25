@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'category' table.
+ * This class defines the structure of the 'quarter' table.
  *
  *
  *
@@ -18,13 +18,13 @@ use \TableMap;
  *
  * @package    propel.generator.src.LeDjassa.AdsBundle.Model.map
  */
-class CategoryTableMap extends TableMap
+class QuarterTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'src.LeDjassa.AdsBundle.Model.map.CategoryTableMap';
+    const CLASS_NAME = 'src.LeDjassa.AdsBundle.Model.map.QuarterTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -36,16 +36,16 @@ class CategoryTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('category');
-        $this->setPhpName('Category');
-        $this->setClassname('LeDjassa\\AdsBundle\\Model\\Category');
+        $this->setName('quarter');
+        $this->setPhpName('Quarter');
+        $this->setClassname('LeDjassa\\AdsBundle\\Model\\Quarter');
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 6, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
-        $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('CATEGORY_TYPE_ID', 'CategoryTypeId', 'INTEGER', 'category_type', 'ID', true, 5, null);
+        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 100, null);
+        $this->getColumn('NAME', false)->setPrimaryString(true);
+        $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
         // validators
     } // initialize()
 
@@ -54,8 +54,7 @@ class CategoryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CategoryType', 'LeDjassa\\AdsBundle\\Model\\CategoryType', RelationMap::MANY_TO_ONE, array('category_type_id' => 'id', ), null, null);
-        $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'category_id', ), null, null, 'Ads');
+        $this->addRelation('City', 'LeDjassa\\AdsBundle\\Model\\City', RelationMap::MANY_TO_ONE, array('city_id' => 'id', ), null, null);
     } // buildRelations()
 
-} // CategoryTableMap
+} // QuarterTableMap

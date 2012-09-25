@@ -42,13 +42,12 @@ class UserTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 5, null);
+        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 6, null);
         $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 100, null);
         $this->addColumn('PHONE', 'Phone', 'VARCHAR', false, 100, null);
         $this->addColumn('IP_ADRESS', 'IpAdress', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('USER_TYPE_ID', 'UserTypeId', 'INTEGER', 'user_type', 'ID', false, 5, null);
         // validators
     } // initialize()
 
@@ -57,7 +56,7 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('UserType', 'LeDjassa\\AdsBundle\\Model\\UserType', RelationMap::MANY_TO_ONE, array('user_type_id' => 'id', ), null, null);
+        $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'Ads');
     } // buildRelations()
 
 } // UserTableMap

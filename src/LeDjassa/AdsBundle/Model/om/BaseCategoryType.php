@@ -410,10 +410,9 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
 
             if ($this->categoriesScheduledForDeletion !== null) {
                 if (!$this->categoriesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->categoriesScheduledForDeletion as $category) {
-                        // need to save related object because we set the relation to null
-                        $category->save($con);
-                    }
+                    CategoryQuery::create()
+                        ->filterByPrimaryKeys($this->categoriesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
                     $this->categoriesScheduledForDeletion = null;
                 }
             }

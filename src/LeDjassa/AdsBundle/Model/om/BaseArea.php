@@ -410,10 +410,9 @@ abstract class BaseArea extends BaseObject implements Persistent
 
             if ($this->citiesScheduledForDeletion !== null) {
                 if (!$this->citiesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->citiesScheduledForDeletion as $city) {
-                        // need to save related object because we set the relation to null
-                        $city->save($con);
-                    }
+                    CityQuery::create()
+                        ->filterByPrimaryKeys($this->citiesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
                     $this->citiesScheduledForDeletion = null;
                 }
             }

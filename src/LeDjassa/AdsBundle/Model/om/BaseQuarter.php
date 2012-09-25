@@ -9,28 +9,26 @@ use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
-use \PropelCollection;
 use \PropelException;
-use \PropelObjectCollection;
 use \PropelPDO;
-use LeDjassa\AdsBundle\Model\Ad;
-use LeDjassa\AdsBundle\Model\AdQuery;
-use LeDjassa\AdsBundle\Model\UserType;
-use LeDjassa\AdsBundle\Model\UserTypePeer;
-use LeDjassa\AdsBundle\Model\UserTypeQuery;
+use LeDjassa\AdsBundle\Model\City;
+use LeDjassa\AdsBundle\Model\CityQuery;
+use LeDjassa\AdsBundle\Model\Quarter;
+use LeDjassa\AdsBundle\Model\QuarterPeer;
+use LeDjassa\AdsBundle\Model\QuarterQuery;
 
-abstract class BaseUserType extends BaseObject implements Persistent
+abstract class BaseQuarter extends BaseObject implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'LeDjassa\\AdsBundle\\Model\\UserTypePeer';
+    const PEER = 'LeDjassa\\AdsBundle\\Model\\QuarterPeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        UserTypePeer
+     * @var        QuarterPeer
      */
     protected static $peer;
 
@@ -47,22 +45,21 @@ abstract class BaseUserType extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the title field.
+     * The value for the name field.
      * @var        string
      */
-    protected $title;
+    protected $name;
 
     /**
-     * The value for the code field.
-     * @var        string
+     * The value for the city_id field.
+     * @var        int
      */
-    protected $code;
+    protected $city_id;
 
     /**
-     * @var        PropelObjectCollection|Ad[] Collection to store aggregation of Ad objects.
+     * @var        City
      */
-    protected $collAds;
-    protected $collAdsPartial;
+    protected $aCity;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -79,12 +76,6 @@ abstract class BaseUserType extends BaseObject implements Persistent
     protected $alreadyInValidation = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $adsScheduledForDeletion = null;
-
-    /**
      * Get the [id] column value.
      *
      * @return int
@@ -95,30 +86,30 @@ abstract class BaseUserType extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [title] column value.
+     * Get the [name] column value.
      *
      * @return string
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
-     * Get the [code] column value.
+     * Get the [city_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getCode()
+    public function getCityId()
     {
-        return $this->code;
+        return $this->city_id;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return UserType The current object (for fluent API support)
+     * @return Quarter The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -128,7 +119,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[] = UserTypePeer::ID;
+            $this->modifiedColumns[] = QuarterPeer::ID;
         }
 
 
@@ -136,46 +127,50 @@ abstract class BaseUserType extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [title] column.
+     * Set the value of [name] column.
      *
      * @param string $v new value
-     * @return UserType The current object (for fluent API support)
+     * @return Quarter The current object (for fluent API support)
      */
-    public function setTitle($v)
+    public function setName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->title !== $v) {
-            $this->title = $v;
-            $this->modifiedColumns[] = UserTypePeer::TITLE;
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[] = QuarterPeer::NAME;
         }
 
 
         return $this;
-    } // setTitle()
+    } // setName()
 
     /**
-     * Set the value of [code] column.
+     * Set the value of [city_id] column.
      *
-     * @param string $v new value
-     * @return UserType The current object (for fluent API support)
+     * @param int $v new value
+     * @return Quarter The current object (for fluent API support)
      */
-    public function setCode($v)
+    public function setCityId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->code !== $v) {
-            $this->code = $v;
-            $this->modifiedColumns[] = UserTypePeer::CODE;
+        if ($this->city_id !== $v) {
+            $this->city_id = $v;
+            $this->modifiedColumns[] = QuarterPeer::CITY_ID;
+        }
+
+        if ($this->aCity !== null && $this->aCity->getId() !== $v) {
+            $this->aCity = null;
         }
 
 
         return $this;
-    } // setCode()
+    } // setCityId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -210,8 +205,8 @@ abstract class BaseUserType extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->code = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->city_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -220,10 +215,10 @@ abstract class BaseUserType extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = UserTypePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = QuarterPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating UserType object", $e);
+            throw new PropelException("Error populating Quarter object", $e);
         }
     }
 
@@ -243,6 +238,9 @@ abstract class BaseUserType extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aCity !== null && $this->city_id !== $this->aCity->getId()) {
+            $this->aCity = null;
+        }
     } // ensureConsistency
 
     /**
@@ -266,13 +264,13 @@ abstract class BaseUserType extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(UserTypePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(QuarterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = UserTypePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = QuarterPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -282,8 +280,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collAds = null;
-
+            $this->aCity = null;
         } // if (deep)
     }
 
@@ -304,12 +301,12 @@ abstract class BaseUserType extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(UserTypePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(QuarterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = UserTypeQuery::create()
+            $deleteQuery = QuarterQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -347,7 +344,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(UserTypePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(QuarterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
@@ -367,7 +364,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                UserTypePeer::addInstanceToPool($this);
+                QuarterPeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -397,6 +394,18 @@ abstract class BaseUserType extends BaseObject implements Persistent
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aCity !== null) {
+                if ($this->aCity->isModified() || $this->aCity->isNew()) {
+                    $affectedRows += $this->aCity->save($con);
+                }
+                $this->setCity($this->aCity);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -406,24 +415,6 @@ abstract class BaseUserType extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->adsScheduledForDeletion !== null) {
-                if (!$this->adsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->adsScheduledForDeletion as $ad) {
-                        // need to save related object because we set the relation to null
-                        $ad->save($con);
-                    }
-                    $this->adsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collAds !== null) {
-                foreach ($this->collAds as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -446,24 +437,24 @@ abstract class BaseUserType extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = UserTypePeer::ID;
+        $this->modifiedColumns[] = QuarterPeer::ID;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . UserTypePeer::ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . QuarterPeer::ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(UserTypePeer::ID)) {
+        if ($this->isColumnModified(QuarterPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`ID`';
         }
-        if ($this->isColumnModified(UserTypePeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+        if ($this->isColumnModified(QuarterPeer::NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`NAME`';
         }
-        if ($this->isColumnModified(UserTypePeer::CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`CODE`';
+        if ($this->isColumnModified(QuarterPeer::CITY_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`CITY_ID`';
         }
 
         $sql = sprintf(
-            'INSERT INTO `user_type` (%s) VALUES (%s)',
+            'INSERT INTO `quarter` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -475,11 +466,11 @@ abstract class BaseUserType extends BaseObject implements Persistent
                     case '`ID`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
-                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                    case '`NAME`':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '`CODE`':
-                        $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
+                    case '`CITY_ID`':
+                        $stmt->bindValue($identifier, $this->city_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -575,18 +566,22 @@ abstract class BaseUserType extends BaseObject implements Persistent
             $failureMap = array();
 
 
-            if (($retval = UserTypePeer::doValidate($this, $columns)) !== true) {
-                $failureMap = array_merge($failureMap, $retval);
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their coresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aCity !== null) {
+                if (!$this->aCity->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCity->getValidationFailures());
+                }
             }
 
 
-                if ($this->collAds !== null) {
-                    foreach ($this->collAds as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
+            if (($retval = QuarterPeer::doValidate($this, $columns)) !== true) {
+                $failureMap = array_merge($failureMap, $retval);
+            }
+
 
 
             $this->alreadyInValidation = false;
@@ -607,7 +602,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = UserTypePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = QuarterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -627,10 +622,10 @@ abstract class BaseUserType extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getName();
                 break;
             case 2:
-                return $this->getCode();
+                return $this->getCityId();
                 break;
             default:
                 return null;
@@ -655,19 +650,19 @@ abstract class BaseUserType extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['UserType'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['Quarter'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['UserType'][$this->getPrimaryKey()] = true;
-        $keys = UserTypePeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['Quarter'][$this->getPrimaryKey()] = true;
+        $keys = QuarterPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getCode(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getCityId(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->collAds) {
-                $result['Ads'] = $this->collAds->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->aCity) {
+                $result['City'] = $this->aCity->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -687,7 +682,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = UserTypePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = QuarterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -707,10 +702,10 @@ abstract class BaseUserType extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setName($value);
                 break;
             case 2:
-                $this->setCode($value);
+                $this->setCityId($value);
                 break;
         } // switch()
     }
@@ -734,11 +729,11 @@ abstract class BaseUserType extends BaseObject implements Persistent
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = UserTypePeer::getFieldNames($keyType);
+        $keys = QuarterPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setCode($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setCityId($arr[$keys[2]]);
     }
 
     /**
@@ -748,11 +743,11 @@ abstract class BaseUserType extends BaseObject implements Persistent
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(UserTypePeer::DATABASE_NAME);
+        $criteria = new Criteria(QuarterPeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(UserTypePeer::ID)) $criteria->add(UserTypePeer::ID, $this->id);
-        if ($this->isColumnModified(UserTypePeer::TITLE)) $criteria->add(UserTypePeer::TITLE, $this->title);
-        if ($this->isColumnModified(UserTypePeer::CODE)) $criteria->add(UserTypePeer::CODE, $this->code);
+        if ($this->isColumnModified(QuarterPeer::ID)) $criteria->add(QuarterPeer::ID, $this->id);
+        if ($this->isColumnModified(QuarterPeer::NAME)) $criteria->add(QuarterPeer::NAME, $this->name);
+        if ($this->isColumnModified(QuarterPeer::CITY_ID)) $criteria->add(QuarterPeer::CITY_ID, $this->city_id);
 
         return $criteria;
     }
@@ -767,8 +762,8 @@ abstract class BaseUserType extends BaseObject implements Persistent
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(UserTypePeer::DATABASE_NAME);
-        $criteria->add(UserTypePeer::ID, $this->id);
+        $criteria = new Criteria(QuarterPeer::DATABASE_NAME);
+        $criteria->add(QuarterPeer::ID, $this->id);
 
         return $criteria;
     }
@@ -809,15 +804,15 @@ abstract class BaseUserType extends BaseObject implements Persistent
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of UserType (or compatible) type.
+     * @param object $copyObj An object of Quarter (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setTitle($this->getTitle());
-        $copyObj->setCode($this->getCode());
+        $copyObj->setName($this->getName());
+        $copyObj->setCityId($this->getCityId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -825,12 +820,6 @@ abstract class BaseUserType extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
-
-            foreach ($this->getAds() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addAd($relObj->copy($deepCopy));
-                }
-            }
 
             //unflag object copy
             $this->startCopy = false;
@@ -851,7 +840,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return UserType Clone of current object.
+     * @return Quarter Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -871,338 +860,66 @@ abstract class BaseUserType extends BaseObject implements Persistent
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return UserTypePeer
+     * @return QuarterPeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new UserTypePeer();
+            self::$peer = new QuarterPeer();
         }
 
         return self::$peer;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a City object.
      *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('Ad' == $relationName) {
-            $this->initAds();
-        }
-    }
-
-    /**
-     * Clears out the collAds collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addAds()
-     */
-    public function clearAds()
-    {
-        $this->collAds = null; // important to set this to null since that means it is uninitialized
-        $this->collAdsPartial = null;
-    }
-
-    /**
-     * reset is the collAds collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialAds($v = true)
-    {
-        $this->collAdsPartial = $v;
-    }
-
-    /**
-     * Initializes the collAds collection.
-     *
-     * By default this just sets the collAds collection to an empty array (like clearcollAds());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initAds($overrideExisting = true)
-    {
-        if (null !== $this->collAds && !$overrideExisting) {
-            return;
-        }
-        $this->collAds = new PropelObjectCollection();
-        $this->collAds->setModel('Ad');
-    }
-
-    /**
-     * Gets an array of Ad objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this UserType is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|Ad[] List of Ad objects
+     * @param             City $v
+     * @return Quarter The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getAds($criteria = null, PropelPDO $con = null)
+    public function setCity(City $v = null)
     {
-        $partial = $this->collAdsPartial && !$this->isNew();
-        if (null === $this->collAds || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collAds) {
-                // return empty collection
-                $this->initAds();
-            } else {
-                $collAds = AdQuery::create(null, $criteria)
-                    ->filterByUserType($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collAdsPartial && count($collAds)) {
-                      $this->initAds(false);
-
-                      foreach($collAds as $obj) {
-                        if (false == $this->collAds->contains($obj)) {
-                          $this->collAds->append($obj);
-                        }
-                      }
-
-                      $this->collAdsPartial = true;
-                    }
-
-                    return $collAds;
-                }
-
-                if($partial && $this->collAds) {
-                    foreach($this->collAds as $obj) {
-                        if($obj->isNew()) {
-                            $collAds[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collAds = $collAds;
-                $this->collAdsPartial = false;
-            }
-        }
-
-        return $this->collAds;
-    }
-
-    /**
-     * Sets a collection of Ad objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $ads A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     */
-    public function setAds(PropelCollection $ads, PropelPDO $con = null)
-    {
-        $this->adsScheduledForDeletion = $this->getAds(new Criteria(), $con)->diff($ads);
-
-        foreach ($this->adsScheduledForDeletion as $adRemoved) {
-            $adRemoved->setUserType(null);
-        }
-
-        $this->collAds = null;
-        foreach ($ads as $ad) {
-            $this->addAd($ad);
-        }
-
-        $this->collAds = $ads;
-        $this->collAdsPartial = false;
-    }
-
-    /**
-     * Returns the number of related Ad objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related Ad objects.
-     * @throws PropelException
-     */
-    public function countAds(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collAdsPartial && !$this->isNew();
-        if (null === $this->collAds || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collAds) {
-                return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getAds());
-                }
-                $query = AdQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByUserType($this)
-                    ->count($con);
-            }
+        if ($v === null) {
+            $this->setCityId(NULL);
         } else {
-            return count($this->collAds);
+            $this->setCityId($v->getId());
         }
-    }
 
-    /**
-     * Method called to associate a Ad object to this object
-     * through the Ad foreign key attribute.
-     *
-     * @param    Ad $l Ad
-     * @return UserType The current object (for fluent API support)
-     */
-    public function addAd(Ad $l)
-    {
-        if ($this->collAds === null) {
-            $this->initAds();
-            $this->collAdsPartial = true;
+        $this->aCity = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the City object, it will not be re-added.
+        if ($v !== null) {
+            $v->addQuarter($this);
         }
-        if (!in_array($l, $this->collAds->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddAd($l);
-        }
+
 
         return $this;
     }
 
-    /**
-     * @param	Ad $ad The ad object to add.
-     */
-    protected function doAddAd($ad)
-    {
-        $this->collAds[]= $ad;
-        $ad->setUserType($this);
-    }
 
     /**
-     * @param	Ad $ad The ad object to remove.
+     * Get the associated City object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @return City The associated City object.
+     * @throws PropelException
      */
-    public function removeAd($ad)
+    public function getCity(PropelPDO $con = null)
     {
-        if ($this->getAds()->contains($ad)) {
-            $this->collAds->remove($this->collAds->search($ad));
-            if (null === $this->adsScheduledForDeletion) {
-                $this->adsScheduledForDeletion = clone $this->collAds;
-                $this->adsScheduledForDeletion->clear();
-            }
-            $this->adsScheduledForDeletion[]= $ad;
-            $ad->setUserType(null);
+        if ($this->aCity === null && ($this->city_id !== null)) {
+            $this->aCity = CityQuery::create()->findPk($this->city_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCity->addQuarters($this);
+             */
         }
-    }
 
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this UserType is new, it will return
-     * an empty collection; or if this UserType has previously
-     * been saved, it will retrieve related Ads from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in UserType.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Ad[] List of Ad objects
-     */
-    public function getAdsJoinCity($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = AdQuery::create(null, $criteria);
-        $query->joinWith('City', $join_behavior);
-
-        return $this->getAds($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this UserType is new, it will return
-     * an empty collection; or if this UserType has previously
-     * been saved, it will retrieve related Ads from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in UserType.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Ad[] List of Ad objects
-     */
-    public function getAdsJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = AdQuery::create(null, $criteria);
-        $query->joinWith('User', $join_behavior);
-
-        return $this->getAds($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this UserType is new, it will return
-     * an empty collection; or if this UserType has previously
-     * been saved, it will retrieve related Ads from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in UserType.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Ad[] List of Ad objects
-     */
-    public function getAdsJoinAdType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = AdQuery::create(null, $criteria);
-        $query->joinWith('AdType', $join_behavior);
-
-        return $this->getAds($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this UserType is new, it will return
-     * an empty collection; or if this UserType has previously
-     * been saved, it will retrieve related Ads from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in UserType.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Ad[] List of Ad objects
-     */
-    public function getAdsJoinCategory($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = AdQuery::create(null, $criteria);
-        $query->joinWith('Category', $join_behavior);
-
-        return $this->getAds($query, $con);
+        return $this->aCity;
     }
 
     /**
@@ -1211,8 +928,8 @@ abstract class BaseUserType extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->title = null;
-        $this->code = null;
+        $this->name = null;
+        $this->city_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -1233,27 +950,19 @@ abstract class BaseUserType extends BaseObject implements Persistent
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collAds) {
-                foreach ($this->collAds as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        if ($this->collAds instanceof PropelCollection) {
-            $this->collAds->clearIterator();
-        }
-        $this->collAds = null;
+        $this->aCity = null;
     }
 
     /**
      * return the string representation of this object
      *
-     * @return string The value of the 'title' column
+     * @return string The value of the 'name' column
      */
     public function __toString()
     {
-        return (string) $this->getTitle();
+        return (string) $this->getName();
     }
 
     /**

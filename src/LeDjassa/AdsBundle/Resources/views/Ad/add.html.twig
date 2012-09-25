@@ -1,0 +1,136 @@
+{% block javascripts %}
+	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-1.8.1.min.js')}}"></script>
+	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-ui-1.8.23.custom.min.js')}}"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+    		var $container = $('#ad_picture_ads');
+    		if ($container.children().length == 0) {
+        		addPicture();
+    		}
+	
+    		$('#add_picture').click(function() {
+        		addPicture();
+   			 });
+
+    		function addPicture() {
+        		var index = $container.children().length;
+        		var $newContainerPicture = $container.attr('data-prototype').replace(/__name__/g, index);
+        		var $removePicture = $('<a href="#" id="remove_picture">Supprimer cette photo</a>');
+
+       			$container.append(
+           			 $($newContainerPicture).append($removePicture)
+       			);
+
+       			$removePicture.click(function(e) {
+        			e.preventDefault();
+			        $('#ad_picture_ads_' + index).parent('div').remove();
+			    });
+  			}
+
+			// manage autocomplete on quarter name field
+			$("#ad_city_quarter_name").focus(function () {
+				$.ajax({
+	        		type: 'POST',
+	            	dataType: 'json',
+	            	url:  '{{ path('quarter_in_city_get') }}',
+	            	data: 'idCity='+ $("select#ad_city_name option:selected").val(),
+	            	success: function(response)
+	            	{
+	            		$("#ad_city_quarter_name").autocomplete({
+							source: response
+						});
+	        	    },
+				});
+			});
+
+			// manage display city list and quarter text
+			var idArea = $("select#ad_city_area option:selected").val();
+			if (!idArea) {
+				hideCityAndQuarterField(idArea);
+			} else {
+				fillCityField(idArea);	
+			};
+			$("select#ad_city_area").change(function() {
+				var idArea = $(this).val();
+				if (!idArea) {
+					hideCityAndQuarterField(idArea);
+				} else {
+					fillCityField(idArea);	
+				}	
+			});
+
+		});
+	
+	/**
+	 * [fillCityField Hydrate city field]
+	 * @param  {[type]} $idArea [id area]
+	 */
+	function fillCityField(idArea) {
+			// get list city
+			$('select#ad_city_name, #ad_city_quarter_name').parent('div').show();
+			$.ajax({
+	        	type: 'POST',
+	            dataType: 'json',
+	            url:  '{{ path('city_in_area_get') }}',
+	            data: 'areaId=' + idArea,
+	            success: function(response)
+	            {
+	            	$('select#ad_city_name').find("option").remove();
+	                $.each(response, function(i, item) {
+	                $('#ad_city_name').append(new Option(item, i));
+	             	});
+	            },
+			});
+
+	}
+
+	/**
+	 * [hideCityAndQuarterField Hide city and quarter field depending arear value]
+	 * @param  {[type]} $idArea [id area]
+	 */
+	function hideCityAndQuarterField($idArea) {
+		$('select#ad_city_name, #ad_city_quarter_name').parent('div').hide();	
+	}
+
+	</script>
+
+{% endblock %}
+
+<form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
+	
+		{{ form_errors(form) }}
+
+	<div>
+		{{ form_errors(form.city.area) }}
+		{{ form_label(form.city.area) }}
+		{{ form_widget(form.city.area) }}
+	</div>
+	
+	<div>
+		{{ form_errors(form.city.name) }}
+		{{ form_label(form.city.name) }}
+		{{ form_widget(form.city.name) }}
+	</div>
+
+	<div>
+		{{ form_errors(form.city.quarter.name) }}
+		{{ form_label(form.city.quarter.name) }}
+		{{ form_widget(form.city.quarter.name) }}
+	</div>
+
+	{{ form_row(form.category) }}
+	{{ form_row(form.user_type) }}
+	{{ form_row(form.ad_type) }}
+
+	{{ form_row(form.title) }}
+	{{ form_row(form.description) }}
+	{{ form_row(form.price) }}
+	{{ form_row(form.picture_ads) }}
+
+	<a href="#" id="add_picture">Ajouter une photo</a>
+
+	{{ form_rest(form) }}
+
+	<input type="submit" />
+</form>

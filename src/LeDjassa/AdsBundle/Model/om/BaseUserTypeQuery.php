@@ -12,7 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use LeDjassa\AdsBundle\Model\User;
+use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\UserType;
 use LeDjassa\AdsBundle\Model\UserTypePeer;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
@@ -30,9 +30,9 @@ use LeDjassa\AdsBundle\Model\UserTypeQuery;
  * @method UserTypeQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method UserTypeQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method UserTypeQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method UserTypeQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method UserTypeQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ * @method UserTypeQuery leftJoinAd($relationAlias = null) Adds a LEFT JOIN clause to the query using the Ad relation
+ * @method UserTypeQuery rightJoinAd($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Ad relation
+ * @method UserTypeQuery innerJoinAd($relationAlias = null) Adds a INNER JOIN clause to the query using the Ad relation
  *
  * @method UserType findOne(PropelPDO $con = null) Return the first UserType matching the query
  * @method UserType findOneOrCreate(PropelPDO $con = null) Return the first UserType matching the query, or a new UserType object populated from the query conditions when no match is found
@@ -53,7 +53,7 @@ abstract class BaseUserTypeQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'ledjassa', $modelName = 'LeDjassa\\AdsBundle\\Model\\UserType', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = 'LeDjassa\\AdsBundle\\Model\\UserType', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -319,41 +319,41 @@ abstract class BaseUserTypeQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related User object
+     * Filter the query by a related Ad object
      *
-     * @param   User|PropelObjectCollection $user  the related object to use as filter
+     * @param   Ad|PropelObjectCollection $ad  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return   UserTypeQuery The current query, for fluid interface
      * @throws   PropelException - if the provided filter is invalid.
      */
-    public function filterByUser($user, $comparison = null)
+    public function filterByAd($ad, $comparison = null)
     {
-        if ($user instanceof User) {
+        if ($ad instanceof Ad) {
             return $this
-                ->addUsingAlias(UserTypePeer::ID, $user->getUserTypeId(), $comparison);
-        } elseif ($user instanceof PropelObjectCollection) {
+                ->addUsingAlias(UserTypePeer::ID, $ad->getUserTypeId(), $comparison);
+        } elseif ($ad instanceof PropelObjectCollection) {
             return $this
-                ->useUserQuery()
-                ->filterByPrimaryKeys($user->getPrimaryKeys())
+                ->useAdQuery()
+                ->filterByPrimaryKeys($ad->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByUser() only accepts arguments of type User or PropelCollection');
+            throw new PropelException('filterByAd() only accepts arguments of type Ad or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the User relation
+     * Adds a JOIN clause to the query using the Ad relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return UserTypeQuery The current query, for fluid interface
      */
-    public function joinUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinAd($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('User');
+        $relationMap = $tableMap->getRelation('Ad');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -368,14 +368,14 @@ abstract class BaseUserTypeQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'User');
+            $this->addJoinObject($join, 'Ad');
         }
 
         return $this;
     }
 
     /**
-     * Use the User relation User object
+     * Use the Ad relation Ad object
      *
      * @see       useQuery()
      *
@@ -383,13 +383,13 @@ abstract class BaseUserTypeQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \LeDjassa\AdsBundle\Model\UserQuery A secondary query class using the current class as primary query
+     * @return   \LeDjassa\AdsBundle\Model\AdQuery A secondary query class using the current class as primary query
      */
-    public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useAdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\LeDjassa\AdsBundle\Model\UserQuery');
+            ->joinAd($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Ad', '\LeDjassa\AdsBundle\Model\AdQuery');
     }
 
     /**

@@ -9,13 +9,19 @@ use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
+use \PropelCollection;
 use \PropelException;
+use \PropelObjectCollection;
 use \PropelPDO;
+use LeDjassa\AdsBundle\Model\Ad;
+use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\Area;
 use LeDjassa\AdsBundle\Model\AreaQuery;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\CityPeer;
 use LeDjassa\AdsBundle\Model\CityQuery;
+use LeDjassa\AdsBundle\Model\Quarter;
+use LeDjassa\AdsBundle\Model\QuarterQuery;
 
 abstract class BaseCity extends BaseObject implements Persistent
 {
@@ -68,6 +74,18 @@ abstract class BaseCity extends BaseObject implements Persistent
     protected $aArea;
 
     /**
+     * @var        PropelObjectCollection|Quarter[] Collection to store aggregation of Quarter objects.
+     */
+    protected $collQuarters;
+    protected $collQuartersPartial;
+
+    /**
+     * @var        PropelObjectCollection|Ad[] Collection to store aggregation of Ad objects.
+     */
+    protected $collAds;
+    protected $collAdsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      * @var        boolean
@@ -80,6 +98,18 @@ abstract class BaseCity extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInValidation = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $quartersScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $adsScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -319,6 +349,10 @@ abstract class BaseCity extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aArea = null;
+            $this->collQuarters = null;
+
+            $this->collAds = null;
+
         } // if (deep)
     }
 
@@ -453,6 +487,42 @@ abstract class BaseCity extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->quartersScheduledForDeletion !== null) {
+                if (!$this->quartersScheduledForDeletion->isEmpty()) {
+                    foreach ($this->quartersScheduledForDeletion as $quarter) {
+                        // need to save related object because we set the relation to null
+                        $quarter->save($con);
+                    }
+                    $this->quartersScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collQuarters !== null) {
+                foreach ($this->collQuarters as $referrerFK) {
+                    if (!$referrerFK->isDeleted()) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->adsScheduledForDeletion !== null) {
+                if (!$this->adsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->adsScheduledForDeletion as $ad) {
+                        // need to save related object because we set the relation to null
+                        $ad->save($con);
+                    }
+                    $this->adsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collAds !== null) {
+                foreach ($this->collAds as $referrerFK) {
+                    if (!$referrerFK->isDeleted()) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -627,6 +697,22 @@ abstract class BaseCity extends BaseObject implements Persistent
             }
 
 
+                if ($this->collQuarters !== null) {
+                    foreach ($this->collQuarters as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collAds !== null) {
+                    foreach ($this->collAds as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
 
             $this->alreadyInValidation = false;
         }
@@ -711,6 +797,12 @@ abstract class BaseCity extends BaseObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aArea) {
                 $result['Area'] = $this->aArea->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collQuarters) {
+                $result['Quarters'] = $this->collQuarters->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collAds) {
+                $result['Ads'] = $this->collAds->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -875,6 +967,18 @@ abstract class BaseCity extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getQuarters() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addQuarter($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getAds() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addAd($relObj->copy($deepCopy));
+                }
+            }
+
             //unflag object copy
             $this->startCopy = false;
         } // if ($deepCopy)
@@ -976,6 +1080,539 @@ abstract class BaseCity extends BaseObject implements Persistent
         return $this->aArea;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Quarter' == $relationName) {
+            $this->initQuarters();
+        }
+        if ('Ad' == $relationName) {
+            $this->initAds();
+        }
+    }
+
+    /**
+     * Clears out the collQuarters collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addQuarters()
+     */
+    public function clearQuarters()
+    {
+        $this->collQuarters = null; // important to set this to null since that means it is uninitialized
+        $this->collQuartersPartial = null;
+    }
+
+    /**
+     * reset is the collQuarters collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialQuarters($v = true)
+    {
+        $this->collQuartersPartial = $v;
+    }
+
+    /**
+     * Initializes the collQuarters collection.
+     *
+     * By default this just sets the collQuarters collection to an empty array (like clearcollQuarters());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initQuarters($overrideExisting = true)
+    {
+        if (null !== $this->collQuarters && !$overrideExisting) {
+            return;
+        }
+        $this->collQuarters = new PropelObjectCollection();
+        $this->collQuarters->setModel('Quarter');
+    }
+
+    /**
+     * Gets an array of Quarter objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this City is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Quarter[] List of Quarter objects
+     * @throws PropelException
+     */
+    public function getQuarters($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collQuartersPartial && !$this->isNew();
+        if (null === $this->collQuarters || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collQuarters) {
+                // return empty collection
+                $this->initQuarters();
+            } else {
+                $collQuarters = QuarterQuery::create(null, $criteria)
+                    ->filterByCity($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collQuartersPartial && count($collQuarters)) {
+                      $this->initQuarters(false);
+
+                      foreach($collQuarters as $obj) {
+                        if (false == $this->collQuarters->contains($obj)) {
+                          $this->collQuarters->append($obj);
+                        }
+                      }
+
+                      $this->collQuartersPartial = true;
+                    }
+
+                    return $collQuarters;
+                }
+
+                if($partial && $this->collQuarters) {
+                    foreach($this->collQuarters as $obj) {
+                        if($obj->isNew()) {
+                            $collQuarters[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collQuarters = $collQuarters;
+                $this->collQuartersPartial = false;
+            }
+        }
+
+        return $this->collQuarters;
+    }
+
+    /**
+     * Sets a collection of Quarter objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $quarters A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     */
+    public function setQuarters(PropelCollection $quarters, PropelPDO $con = null)
+    {
+        $this->quartersScheduledForDeletion = $this->getQuarters(new Criteria(), $con)->diff($quarters);
+
+        foreach ($this->quartersScheduledForDeletion as $quarterRemoved) {
+            $quarterRemoved->setCity(null);
+        }
+
+        $this->collQuarters = null;
+        foreach ($quarters as $quarter) {
+            $this->addQuarter($quarter);
+        }
+
+        $this->collQuarters = $quarters;
+        $this->collQuartersPartial = false;
+    }
+
+    /**
+     * Returns the number of related Quarter objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Quarter objects.
+     * @throws PropelException
+     */
+    public function countQuarters(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collQuartersPartial && !$this->isNew();
+        if (null === $this->collQuarters || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collQuarters) {
+                return 0;
+            } else {
+                if($partial && !$criteria) {
+                    return count($this->getQuarters());
+                }
+                $query = QuarterQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByCity($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collQuarters);
+        }
+    }
+
+    /**
+     * Method called to associate a Quarter object to this object
+     * through the Quarter foreign key attribute.
+     *
+     * @param    Quarter $l Quarter
+     * @return City The current object (for fluent API support)
+     */
+    public function addQuarter(Quarter $l)
+    {
+        if ($this->collQuarters === null) {
+            $this->initQuarters();
+            $this->collQuartersPartial = true;
+        }
+        if (!in_array($l, $this->collQuarters->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddQuarter($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Quarter $quarter The quarter object to add.
+     */
+    protected function doAddQuarter($quarter)
+    {
+        $this->collQuarters[]= $quarter;
+        $quarter->setCity($this);
+    }
+
+    /**
+     * @param	Quarter $quarter The quarter object to remove.
+     */
+    public function removeQuarter($quarter)
+    {
+        if ($this->getQuarters()->contains($quarter)) {
+            $this->collQuarters->remove($this->collQuarters->search($quarter));
+            if (null === $this->quartersScheduledForDeletion) {
+                $this->quartersScheduledForDeletion = clone $this->collQuarters;
+                $this->quartersScheduledForDeletion->clear();
+            }
+            $this->quartersScheduledForDeletion[]= $quarter;
+            $quarter->setCity(null);
+        }
+    }
+
+    /**
+     * Clears out the collAds collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addAds()
+     */
+    public function clearAds()
+    {
+        $this->collAds = null; // important to set this to null since that means it is uninitialized
+        $this->collAdsPartial = null;
+    }
+
+    /**
+     * reset is the collAds collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialAds($v = true)
+    {
+        $this->collAdsPartial = $v;
+    }
+
+    /**
+     * Initializes the collAds collection.
+     *
+     * By default this just sets the collAds collection to an empty array (like clearcollAds());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initAds($overrideExisting = true)
+    {
+        if (null !== $this->collAds && !$overrideExisting) {
+            return;
+        }
+        $this->collAds = new PropelObjectCollection();
+        $this->collAds->setModel('Ad');
+    }
+
+    /**
+     * Gets an array of Ad objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this City is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     * @throws PropelException
+     */
+    public function getAds($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collAdsPartial && !$this->isNew();
+        if (null === $this->collAds || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collAds) {
+                // return empty collection
+                $this->initAds();
+            } else {
+                $collAds = AdQuery::create(null, $criteria)
+                    ->filterByCity($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collAdsPartial && count($collAds)) {
+                      $this->initAds(false);
+
+                      foreach($collAds as $obj) {
+                        if (false == $this->collAds->contains($obj)) {
+                          $this->collAds->append($obj);
+                        }
+                      }
+
+                      $this->collAdsPartial = true;
+                    }
+
+                    return $collAds;
+                }
+
+                if($partial && $this->collAds) {
+                    foreach($this->collAds as $obj) {
+                        if($obj->isNew()) {
+                            $collAds[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collAds = $collAds;
+                $this->collAdsPartial = false;
+            }
+        }
+
+        return $this->collAds;
+    }
+
+    /**
+     * Sets a collection of Ad objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $ads A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     */
+    public function setAds(PropelCollection $ads, PropelPDO $con = null)
+    {
+        $this->adsScheduledForDeletion = $this->getAds(new Criteria(), $con)->diff($ads);
+
+        foreach ($this->adsScheduledForDeletion as $adRemoved) {
+            $adRemoved->setCity(null);
+        }
+
+        $this->collAds = null;
+        foreach ($ads as $ad) {
+            $this->addAd($ad);
+        }
+
+        $this->collAds = $ads;
+        $this->collAdsPartial = false;
+    }
+
+    /**
+     * Returns the number of related Ad objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Ad objects.
+     * @throws PropelException
+     */
+    public function countAds(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collAdsPartial && !$this->isNew();
+        if (null === $this->collAds || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAds) {
+                return 0;
+            } else {
+                if($partial && !$criteria) {
+                    return count($this->getAds());
+                }
+                $query = AdQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByCity($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collAds);
+        }
+    }
+
+    /**
+     * Method called to associate a Ad object to this object
+     * through the Ad foreign key attribute.
+     *
+     * @param    Ad $l Ad
+     * @return City The current object (for fluent API support)
+     */
+    public function addAd(Ad $l)
+    {
+        if ($this->collAds === null) {
+            $this->initAds();
+            $this->collAdsPartial = true;
+        }
+        if (!in_array($l, $this->collAds->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddAd($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Ad $ad The ad object to add.
+     */
+    protected function doAddAd($ad)
+    {
+        $this->collAds[]= $ad;
+        $ad->setCity($this);
+    }
+
+    /**
+     * @param	Ad $ad The ad object to remove.
+     */
+    public function removeAd($ad)
+    {
+        if ($this->getAds()->contains($ad)) {
+            $this->collAds->remove($this->collAds->search($ad));
+            if (null === $this->adsScheduledForDeletion) {
+                $this->adsScheduledForDeletion = clone $this->collAds;
+                $this->adsScheduledForDeletion->clear();
+            }
+            $this->adsScheduledForDeletion[]= $ad;
+            $ad->setCity(null);
+        }
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this City is new, it will return
+     * an empty collection; or if this City has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in City.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('User', $join_behavior);
+
+        return $this->getAds($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this City is new, it will return
+     * an empty collection; or if this City has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in City.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinUserType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('UserType', $join_behavior);
+
+        return $this->getAds($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this City is new, it will return
+     * an empty collection; or if this City has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in City.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinAdType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('AdType', $join_behavior);
+
+        return $this->getAds($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this City is new, it will return
+     * an empty collection; or if this City has previously
+     * been saved, it will retrieve related Ads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in City.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Ad[] List of Ad objects
+     */
+    public function getAdsJoinCategory($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = AdQuery::create(null, $criteria);
+        $query->joinWith('Category', $join_behavior);
+
+        return $this->getAds($query, $con);
+    }
+
     /**
      * Clears the current object and sets all attributes to their default values
      */
@@ -1005,8 +1642,26 @@ abstract class BaseCity extends BaseObject implements Persistent
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collQuarters) {
+                foreach ($this->collQuarters as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collAds) {
+                foreach ($this->collAds as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        if ($this->collQuarters instanceof PropelCollection) {
+            $this->collQuarters->clearIterator();
+        }
+        $this->collQuarters = null;
+        if ($this->collAds instanceof PropelCollection) {
+            $this->collAds->clearIterator();
+        }
+        $this->collAds = null;
         $this->aArea = null;
     }
 

@@ -12,10 +12,10 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\User;
 use LeDjassa\AdsBundle\Model\UserPeer;
 use LeDjassa\AdsBundle\Model\UserQuery;
-use LeDjassa\AdsBundle\Model\UserType;
 
 /**
  * @method UserQuery orderById($order = Criteria::ASC) Order by the id column
@@ -23,22 +23,20 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method UserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method UserQuery orderByPhone($order = Criteria::ASC) Order by the phone column
  * @method UserQuery orderByIpAdress($order = Criteria::ASC) Order by the ip_adress column
- * @method UserQuery orderByUserTypeId($order = Criteria::ASC) Order by the user_type_id column
  *
  * @method UserQuery groupById() Group by the id column
  * @method UserQuery groupByName() Group by the name column
  * @method UserQuery groupByEmail() Group by the email column
  * @method UserQuery groupByPhone() Group by the phone column
  * @method UserQuery groupByIpAdress() Group by the ip_adress column
- * @method UserQuery groupByUserTypeId() Group by the user_type_id column
  *
  * @method UserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method UserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method UserQuery leftJoinUserType($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserType relation
- * @method UserQuery rightJoinUserType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserType relation
- * @method UserQuery innerJoinUserType($relationAlias = null) Adds a INNER JOIN clause to the query using the UserType relation
+ * @method UserQuery leftJoinAd($relationAlias = null) Adds a LEFT JOIN clause to the query using the Ad relation
+ * @method UserQuery rightJoinAd($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Ad relation
+ * @method UserQuery innerJoinAd($relationAlias = null) Adds a INNER JOIN clause to the query using the Ad relation
  *
  * @method User findOne(PropelPDO $con = null) Return the first User matching the query
  * @method User findOneOrCreate(PropelPDO $con = null) Return the first User matching the query, or a new User object populated from the query conditions when no match is found
@@ -47,14 +45,12 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method User findOneByEmail(string $email) Return the first User filtered by the email column
  * @method User findOneByPhone(string $phone) Return the first User filtered by the phone column
  * @method User findOneByIpAdress(string $ip_adress) Return the first User filtered by the ip_adress column
- * @method User findOneByUserTypeId(int $user_type_id) Return the first User filtered by the user_type_id column
  *
  * @method array findById(int $id) Return User objects filtered by the id column
  * @method array findByName(string $name) Return User objects filtered by the name column
  * @method array findByEmail(string $email) Return User objects filtered by the email column
  * @method array findByPhone(string $phone) Return User objects filtered by the phone column
  * @method array findByIpAdress(string $ip_adress) Return User objects filtered by the ip_adress column
- * @method array findByUserTypeId(int $user_type_id) Return User objects filtered by the user_type_id column
  */
 abstract class BaseUserQuery extends ModelCriteria
 {
@@ -65,7 +61,7 @@ abstract class BaseUserQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'ledjassa', $modelName = 'LeDjassa\\AdsBundle\\Model\\User', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = 'LeDjassa\\AdsBundle\\Model\\User', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -156,7 +152,7 @@ abstract class BaseUserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `EMAIL`, `PHONE`, `IP_ADRESS`, `USER_TYPE_ID` FROM `user` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `NAME`, `EMAIL`, `PHONE`, `IP_ADRESS` FROM `user` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -389,86 +385,41 @@ abstract class BaseUserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the user_type_id column
+     * Filter the query by a related Ad object
      *
-     * Example usage:
-     * <code>
-     * $query->filterByUserTypeId(1234); // WHERE user_type_id = 1234
-     * $query->filterByUserTypeId(array(12, 34)); // WHERE user_type_id IN (12, 34)
-     * $query->filterByUserTypeId(array('min' => 12)); // WHERE user_type_id > 12
-     * </code>
-     *
-     * @see       filterByUserType()
-     *
-     * @param     mixed $userTypeId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return UserQuery The current query, for fluid interface
-     */
-    public function filterByUserTypeId($userTypeId = null, $comparison = null)
-    {
-        if (is_array($userTypeId)) {
-            $useMinMax = false;
-            if (isset($userTypeId['min'])) {
-                $this->addUsingAlias(UserPeer::USER_TYPE_ID, $userTypeId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($userTypeId['max'])) {
-                $this->addUsingAlias(UserPeer::USER_TYPE_ID, $userTypeId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserPeer::USER_TYPE_ID, $userTypeId, $comparison);
-    }
-
-    /**
-     * Filter the query by a related UserType object
-     *
-     * @param   UserType|PropelObjectCollection $userType The related object(s) to use as filter
+     * @param   Ad|PropelObjectCollection $ad  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return   UserQuery The current query, for fluid interface
      * @throws   PropelException - if the provided filter is invalid.
      */
-    public function filterByUserType($userType, $comparison = null)
+    public function filterByAd($ad, $comparison = null)
     {
-        if ($userType instanceof UserType) {
+        if ($ad instanceof Ad) {
             return $this
-                ->addUsingAlias(UserPeer::USER_TYPE_ID, $userType->getId(), $comparison);
-        } elseif ($userType instanceof PropelObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
+                ->addUsingAlias(UserPeer::ID, $ad->getUserId(), $comparison);
+        } elseif ($ad instanceof PropelObjectCollection) {
             return $this
-                ->addUsingAlias(UserPeer::USER_TYPE_ID, $userType->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->useAdQuery()
+                ->filterByPrimaryKeys($ad->getPrimaryKeys())
+                ->endUse();
         } else {
-            throw new PropelException('filterByUserType() only accepts arguments of type UserType or PropelCollection');
+            throw new PropelException('filterByAd() only accepts arguments of type Ad or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the UserType relation
+     * Adds a JOIN clause to the query using the Ad relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return UserQuery The current query, for fluid interface
      */
-    public function joinUserType($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinAd($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('UserType');
+        $relationMap = $tableMap->getRelation('Ad');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -483,14 +434,14 @@ abstract class BaseUserQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'UserType');
+            $this->addJoinObject($join, 'Ad');
         }
 
         return $this;
     }
 
     /**
-     * Use the UserType relation UserType object
+     * Use the Ad relation Ad object
      *
      * @see       useQuery()
      *
@@ -498,13 +449,13 @@ abstract class BaseUserQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \LeDjassa\AdsBundle\Model\UserTypeQuery A secondary query class using the current class as primary query
+     * @return   \LeDjassa\AdsBundle\Model\AdQuery A secondary query class using the current class as primary query
      */
-    public function useUserTypeQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useAdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinUserType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'UserType', '\LeDjassa\AdsBundle\Model\UserTypeQuery');
+            ->joinAd($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Ad', '\LeDjassa\AdsBundle\Model\AdQuery');
     }
 
     /**

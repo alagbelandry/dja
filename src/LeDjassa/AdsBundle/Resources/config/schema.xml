@@ -6,7 +6,7 @@
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -20,7 +20,7 @@
         <reference local="category_type_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>    
     </table>
@@ -30,7 +30,7 @@
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -44,7 +44,7 @@
         <reference local="area_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>
@@ -57,7 +57,7 @@
         <reference local="city_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>
@@ -67,7 +67,7 @@
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -79,7 +79,7 @@
         <column name="phone" type="varchar" size="100" />
         <column name="ip_adress" phpName="IpAdress" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -89,7 +89,7 @@
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -126,7 +126,7 @@
             <parameter name="update_column" value="updated_at" />
         </behavior>
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -139,7 +139,7 @@
         <reference local="ad_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>

@@ -59,4 +59,4 @@ propel:
 fos_user:
     db_driver: propel
     firewall_name: main
-    user_class: LeDjassa\UserBundle\Model\User
+    user_class: FOS\UserBundle\Propel\User

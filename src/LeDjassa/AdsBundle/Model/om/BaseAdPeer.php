@@ -9,12 +9,12 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
+use FOS\UserBundle\Propel\UserPeer;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\AdPeer;
 use LeDjassa\AdsBundle\Model\AdTypePeer;
 use LeDjassa\AdsBundle\Model\CategoryPeer;
 use LeDjassa\AdsBundle\Model\CityPeer;
-use LeDjassa\AdsBundle\Model\UserPeer;
 use LeDjassa\AdsBundle\Model\UserTypePeer;
 use LeDjassa\AdsBundle\Model\map\AdTableMap;
 

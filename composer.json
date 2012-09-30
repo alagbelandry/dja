@@ -18,7 +18,10 @@
         "sensio/generator-bundle": "2.1.*",
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.x-dev",
-        "propel/propel-bundle": "1.1.*"
+        "propel/propel-bundle": "1.1.*",
+        "friendsofsymfony/user-bundle": "*",
+        "willdurand/propel-typehintable-behavior": "*"
+
     },
     "scripts": {
         "post-install-cmd": [

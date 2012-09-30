@@ -4,6 +4,72 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ---------------------------------------------------------------------
+-- fos_user
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fos_user`;
+
+CREATE TABLE `fos_user`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(255),
+    `username_canonical` VARCHAR(255),
+    `email` VARCHAR(255),
+    `email_canonical` VARCHAR(255),
+    `enabled` TINYINT(1) DEFAULT 0,
+    `salt` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `last_login` DATETIME,
+    `locked` TINYINT(1) DEFAULT 0,
+    `expired` TINYINT(1) DEFAULT 0,
+    `expires_at` DATETIME,
+    `confirmation_token` VARCHAR(255),
+    `password_requested_at` DATETIME,
+    `credentials_expired` TINYINT(1) DEFAULT 0,
+    `credentials_expire_at` DATETIME,
+    `roles` TEXT,
+    `phone` INTEGER(10),
+    `ip_adress` VARCHAR(30),
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `fos_user_U_1` (`username_canonical`),
+    UNIQUE INDEX `fos_user_U_2` (`email_canonical`)
+) ENGINE=InnoDB CHARACTER SET='utf8';
+
+-- ---------------------------------------------------------------------
+-- fos_group
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fos_group`;
+
+CREATE TABLE `fos_group`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `roles` TEXT,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARACTER SET='utf8';
+
+-- ---------------------------------------------------------------------
+-- fos_user_group
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fos_user_group`;
+
+CREATE TABLE `fos_user_group`
+(
+    `fos_user_id` INTEGER NOT NULL,
+    `fos_group_id` INTEGER NOT NULL,
+    PRIMARY KEY (`fos_user_id`,`fos_group_id`),
+    INDEX `fos_user_group_FI_2` (`fos_group_id`),
+    CONSTRAINT `fos_user_group_FK_1`
+        FOREIGN KEY (`fos_user_id`)
+        REFERENCES `fos_user` (`id`),
+    CONSTRAINT `fos_user_group_FK_2`
+        FOREIGN KEY (`fos_group_id`)
+        REFERENCES `fos_group` (`id`)
+) ENGINE=InnoDB CHARACTER SET='utf8';
+
+-- ---------------------------------------------------------------------
 -- category_type
 -- ---------------------------------------------------------------------
 
@@ -15,7 +81,7 @@ CREATE TABLE `category_type`
     `title` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='type of category';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='type of category';
 
 -- ---------------------------------------------------------------------
 -- category
@@ -34,7 +100,7 @@ CREATE TABLE `category`
     CONSTRAINT `category_FK_1`
         FOREIGN KEY (`category_type_id`)
         REFERENCES `category_type` (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='category of ad';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='category of ad';
 
 -- ---------------------------------------------------------------------
 -- area
@@ -48,7 +114,7 @@ CREATE TABLE `area`
     `name` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='area of country';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='area of country';
 
 -- ---------------------------------------------------------------------
 -- city
@@ -67,7 +133,7 @@ CREATE TABLE `city`
     CONSTRAINT `city_FK_1`
         FOREIGN KEY (`area_id`)
         REFERENCES `area` (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='city of area';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='city of area';
 
 -- ---------------------------------------------------------------------
 -- quarter
@@ -85,7 +151,7 @@ CREATE TABLE `quarter`
     CONSTRAINT `quarter_FK_1`
         FOREIGN KEY (`city_id`)
         REFERENCES `city` (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='quarter of city';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='quarter of city';
 
 -- ---------------------------------------------------------------------
 -- user_type
@@ -99,23 +165,7 @@ CREATE TABLE `user_type`
     `title` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='type of user';
-
--- ---------------------------------------------------------------------
--- user
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `user`;
-
-CREATE TABLE `user`
-(
-    `id` INTEGER(6) NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(100),
-    `email` VARCHAR(100),
-    `phone` VARCHAR(100),
-    `ip_adress` VARCHAR(20),
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='user';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='type of user';
 
 -- ---------------------------------------------------------------------
 -- ad_type
@@ -129,7 +179,7 @@ CREATE TABLE `ad_type`
     `name` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='type of ad';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='type of ad';
 
 -- ---------------------------------------------------------------------
 -- ad
@@ -148,7 +198,7 @@ CREATE TABLE `ad`
     `ad_type_id` INTEGER(5),
     `category_id` INTEGER(6),
     `user_type_id` INTEGER(6),
-    `user_id` INTEGER(6),
+    `user_id` INTEGER(11),
     `city_id` INTEGER(6),
     PRIMARY KEY (`id`),
     INDEX `ad_FI_1` (`city_id`),
@@ -161,7 +211,7 @@ CREATE TABLE `ad`
         REFERENCES `city` (`id`),
     CONSTRAINT `ad_FK_2`
         FOREIGN KEY (`user_id`)
-        REFERENCES `user` (`id`),
+        REFERENCES `fos_user` (`id`),
     CONSTRAINT `ad_FK_3`
         FOREIGN KEY (`user_type_id`)
         REFERENCES `user_type` (`id`),
@@ -171,7 +221,7 @@ CREATE TABLE `ad`
     CONSTRAINT `ad_FK_5`
         FOREIGN KEY (`category_id`)
         REFERENCES `category` (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='ad';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='ad';
 
 -- ---------------------------------------------------------------------
 -- picture_ad
@@ -189,7 +239,7 @@ CREATE TABLE `picture_ad`
     CONSTRAINT `picture_ad_FK_1`
         FOREIGN KEY (`ad_id`)
         REFERENCES `ad` (`id`)
-) ENGINE=MyISAM CHARACTER SET='utf8' COMMENT='picture of ad';
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='picture of ad';
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;

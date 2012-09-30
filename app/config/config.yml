@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: @LeDjassaUserBundle/Resources/config/services.xml }
 
 framework:
     #esi:             ~
@@ -60,3 +61,6 @@ fos_user:
     db_driver: propel
     firewall_name: main
     user_class: FOS\UserBundle\Propel\User
+    registration:
+        form:
+            type: ledjassa_user_registration

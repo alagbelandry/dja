@@ -72,6 +72,7 @@
         </vendor>
     </table>
 
+    <!-- 
     <table name="user" description="user">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" primaryString="1" size="100" />
@@ -83,7 +84,7 @@
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
-
+-->
     <table name="ad_type" description="type of ad">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
@@ -104,12 +105,12 @@
         <column name="ad_type_id" phpName="AdTypeId" type="integer" size="5" />
         <column name="category_id" phpName="CategoryId" type="integer" size="6" />
         <column name="user_type_id" phpName="UserTypeId" type="integer" size="6" />
-        <column name="user_id" phpName="UserId" type="integer" size="6" />
+        <column name="user_id" phpName="UserId" type="integer" size="11" />
         <column name="city_id" phpName="CityId" type="integer" size="6" />
         <foreign-key foreignTable="city">
             <reference local="city_id" foreign="id" />
         </foreign-key>
-        <foreign-key foreignTable="user">
+        <foreign-key foreignTable="fos_user">
             <reference local="user_id" foreign="id" />
         </foreign-key>
         <foreign-key foreignTable="user_type">

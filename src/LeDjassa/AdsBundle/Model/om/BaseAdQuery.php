@@ -12,6 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use FOS\UserBundle\Propel\User;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\AdPeer;
 use LeDjassa\AdsBundle\Model\AdQuery;
@@ -19,7 +20,6 @@ use LeDjassa\AdsBundle\Model\AdType;
 use LeDjassa\AdsBundle\Model\Category;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\PictureAd;
-use LeDjassa\AdsBundle\Model\User;
 use LeDjassa\AdsBundle\Model\UserType;
 
 /**
@@ -848,13 +848,13 @@ abstract class BaseAdQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \LeDjassa\AdsBundle\Model\UserQuery A secondary query class using the current class as primary query
+     * @return   \FOS\UserBundle\Propel\UserQuery A secondary query class using the current class as primary query
      */
     public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\LeDjassa\AdsBundle\Model\UserQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'User', '\FOS\UserBundle\Propel\UserQuery');
     }
 
     /**

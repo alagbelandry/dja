@@ -6,7 +6,7 @@
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -20,7 +20,7 @@
         <reference local="category_type_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>    
     </table>
@@ -30,7 +30,7 @@
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -44,7 +44,7 @@
         <reference local="area_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>
@@ -57,7 +57,7 @@
         <reference local="city_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>
@@ -67,11 +67,12 @@
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
 
+    <!-- 
     <table name="user" description="user">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" primaryString="1" size="100" />
@@ -79,17 +80,17 @@
         <column name="phone" type="varchar" size="100" />
         <column name="ip_adress" phpName="IpAdress" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
-
+-->
     <table name="ad_type" description="type of ad">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
         <column name="name" type="varchar" required="true" primaryString="1" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -104,12 +105,12 @@
         <column name="ad_type_id" phpName="AdTypeId" type="integer" size="5" />
         <column name="category_id" phpName="CategoryId" type="integer" size="6" />
         <column name="user_type_id" phpName="UserTypeId" type="integer" size="6" />
-        <column name="user_id" phpName="UserId" type="integer" size="6" />
+        <column name="user_id" phpName="UserId" type="integer" size="11" />
         <column name="city_id" phpName="CityId" type="integer" size="6" />
         <foreign-key foreignTable="city">
             <reference local="city_id" foreign="id" />
         </foreign-key>
-        <foreign-key foreignTable="user">
+        <foreign-key foreignTable="fos_user">
             <reference local="user_id" foreign="id" />
         </foreign-key>
         <foreign-key foreignTable="user_type">
@@ -126,7 +127,7 @@
             <parameter name="update_column" value="updated_at" />
         </behavior>
         <vendor type="mysql">
-            <parameter name="Engine" value="MyISAM"/>
+            <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
         </vendor>
     </table>
@@ -139,7 +140,7 @@
         <reference local="ad_id" foreign="id" />
     </foreign-key>
     <vendor type="mysql">
-        <parameter name="Engine" value="MyISAM"/>
+        <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
     </vendor>
     </table>

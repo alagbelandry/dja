@@ -15,6 +15,8 @@ use \PropelDateTime;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use FOS\UserBundle\Propel\User;
+use FOS\UserBundle\Propel\UserQuery;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\AdPeer;
 use LeDjassa\AdsBundle\Model\AdQuery;
@@ -26,8 +28,6 @@ use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Model\PictureAdQuery;
-use LeDjassa\AdsBundle\Model\User;
-use LeDjassa\AdsBundle\Model\UserQuery;
 use LeDjassa\AdsBundle\Model\UserType;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
 

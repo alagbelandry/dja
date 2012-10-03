@@ -100,6 +100,7 @@
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="description" type="varchar" size="500" />
         <column name="price" type="varchar" size="30" />
+        <column name="statut" type="tinyint" size="2" default="0" />
         <column name="created_at" phpName="CreatedAt" type="timestamp" />
         <column name="updated_at" phpName="UpdatedAt" type="timestamp" />
         <column name="ad_type_id" phpName="AdTypeId" type="integer" size="5" />

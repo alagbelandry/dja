@@ -47,6 +47,7 @@ class AdTableMap extends TableMap
         $this->getColumn('TITLE', false)->setPrimaryString(true);
         $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 500, null);
         $this->addColumn('PRICE', 'Price', 'VARCHAR', false, 30, null);
+        $this->addColumn('STATUT', 'Statut', 'TINYINT', false, 2, 0);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('AD_TYPE_ID', 'AdTypeId', 'INTEGER', 'ad_type', 'ID', false, 5, null);

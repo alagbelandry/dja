@@ -34,13 +34,13 @@ abstract class BaseAdPeer
     const TM_CLASS = 'AdTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 12;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 12;
 
     /** the column name for the ID field */
     const ID = 'ad.ID';
@@ -53,6 +53,9 @@ abstract class BaseAdPeer
 
     /** the column name for the PRICE field */
     const PRICE = 'ad.PRICE';
+
+    /** the column name for the STATUT field */
+    const STATUT = 'ad.STATUT';
 
     /** the column name for the CREATED_AT field */
     const CREATED_AT = 'ad.CREATED_AT';
@@ -94,12 +97,12 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[AdPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'CreatedAt', 'UpdatedAt', 'AdTypeId', 'CategoryId', 'UserTypeId', 'UserId', 'CityId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'description', 'price', 'createdAt', 'updatedAt', 'adTypeId', 'categoryId', 'userTypeId', 'userId', 'cityId', ),
-        BasePeer::TYPE_COLNAME => array (AdPeer::ID, AdPeer::TITLE, AdPeer::DESCRIPTION, AdPeer::PRICE, AdPeer::CREATED_AT, AdPeer::UPDATED_AT, AdPeer::AD_TYPE_ID, AdPeer::CATEGORY_ID, AdPeer::USER_TYPE_ID, AdPeer::USER_ID, AdPeer::CITY_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'DESCRIPTION', 'PRICE', 'CREATED_AT', 'UPDATED_AT', 'AD_TYPE_ID', 'CATEGORY_ID', 'USER_TYPE_ID', 'USER_ID', 'CITY_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'description', 'price', 'created_at', 'updated_at', 'ad_type_id', 'category_id', 'user_type_id', 'user_id', 'city_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'Statut', 'CreatedAt', 'UpdatedAt', 'AdTypeId', 'CategoryId', 'UserTypeId', 'UserId', 'CityId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'description', 'price', 'statut', 'createdAt', 'updatedAt', 'adTypeId', 'categoryId', 'userTypeId', 'userId', 'cityId', ),
+        BasePeer::TYPE_COLNAME => array (AdPeer::ID, AdPeer::TITLE, AdPeer::DESCRIPTION, AdPeer::PRICE, AdPeer::STATUT, AdPeer::CREATED_AT, AdPeer::UPDATED_AT, AdPeer::AD_TYPE_ID, AdPeer::CATEGORY_ID, AdPeer::USER_TYPE_ID, AdPeer::USER_ID, AdPeer::CITY_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'DESCRIPTION', 'PRICE', 'STATUT', 'CREATED_AT', 'UPDATED_AT', 'AD_TYPE_ID', 'CATEGORY_ID', 'USER_TYPE_ID', 'USER_ID', 'CITY_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'description', 'price', 'statut', 'created_at', 'updated_at', 'ad_type_id', 'category_id', 'user_type_id', 'user_id', 'city_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -109,12 +112,12 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, 'AdTypeId' => 6, 'CategoryId' => 7, 'UserTypeId' => 8, 'UserId' => 9, 'CityId' => 10, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'createdAt' => 4, 'updatedAt' => 5, 'adTypeId' => 6, 'categoryId' => 7, 'userTypeId' => 8, 'userId' => 9, 'cityId' => 10, ),
-        BasePeer::TYPE_COLNAME => array (AdPeer::ID => 0, AdPeer::TITLE => 1, AdPeer::DESCRIPTION => 2, AdPeer::PRICE => 3, AdPeer::CREATED_AT => 4, AdPeer::UPDATED_AT => 5, AdPeer::AD_TYPE_ID => 6, AdPeer::CATEGORY_ID => 7, AdPeer::USER_TYPE_ID => 8, AdPeer::USER_ID => 9, AdPeer::CITY_ID => 10, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'DESCRIPTION' => 2, 'PRICE' => 3, 'CREATED_AT' => 4, 'UPDATED_AT' => 5, 'AD_TYPE_ID' => 6, 'CATEGORY_ID' => 7, 'USER_TYPE_ID' => 8, 'USER_ID' => 9, 'CITY_ID' => 10, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'created_at' => 4, 'updated_at' => 5, 'ad_type_id' => 6, 'category_id' => 7, 'user_type_id' => 8, 'user_id' => 9, 'city_id' => 10, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'Statut' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, 'AdTypeId' => 7, 'CategoryId' => 8, 'UserTypeId' => 9, 'UserId' => 10, 'CityId' => 11, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'createdAt' => 5, 'updatedAt' => 6, 'adTypeId' => 7, 'categoryId' => 8, 'userTypeId' => 9, 'userId' => 10, 'cityId' => 11, ),
+        BasePeer::TYPE_COLNAME => array (AdPeer::ID => 0, AdPeer::TITLE => 1, AdPeer::DESCRIPTION => 2, AdPeer::PRICE => 3, AdPeer::STATUT => 4, AdPeer::CREATED_AT => 5, AdPeer::UPDATED_AT => 6, AdPeer::AD_TYPE_ID => 7, AdPeer::CATEGORY_ID => 8, AdPeer::USER_TYPE_ID => 9, AdPeer::USER_ID => 10, AdPeer::CITY_ID => 11, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'DESCRIPTION' => 2, 'PRICE' => 3, 'STATUT' => 4, 'CREATED_AT' => 5, 'UPDATED_AT' => 6, 'AD_TYPE_ID' => 7, 'CATEGORY_ID' => 8, 'USER_TYPE_ID' => 9, 'USER_ID' => 10, 'CITY_ID' => 11, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'created_at' => 5, 'updated_at' => 6, 'ad_type_id' => 7, 'category_id' => 8, 'user_type_id' => 9, 'user_id' => 10, 'city_id' => 11, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -192,6 +195,7 @@ abstract class BaseAdPeer
             $criteria->addSelectColumn(AdPeer::TITLE);
             $criteria->addSelectColumn(AdPeer::DESCRIPTION);
             $criteria->addSelectColumn(AdPeer::PRICE);
+            $criteria->addSelectColumn(AdPeer::STATUT);
             $criteria->addSelectColumn(AdPeer::CREATED_AT);
             $criteria->addSelectColumn(AdPeer::UPDATED_AT);
             $criteria->addSelectColumn(AdPeer::AD_TYPE_ID);
@@ -204,6 +208,7 @@ abstract class BaseAdPeer
             $criteria->addSelectColumn($alias . '.TITLE');
             $criteria->addSelectColumn($alias . '.DESCRIPTION');
             $criteria->addSelectColumn($alias . '.PRICE');
+            $criteria->addSelectColumn($alias . '.STATUT');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
             $criteria->addSelectColumn($alias . '.AD_TYPE_ID');

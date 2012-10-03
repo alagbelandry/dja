@@ -77,6 +77,13 @@ abstract class BaseAd extends BaseObject implements Persistent
     protected $price;
 
     /**
+     * The value for the statut field.
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $statut;
+
+    /**
      * The value for the created_at field.
      * @var        string
      */
@@ -170,6 +177,27 @@ abstract class BaseAd extends BaseObject implements Persistent
     protected $pictureAdsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see        __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->statut = 0;
+    }
+
+    /**
+     * Initializes internal state of BaseAd object.
+     * @see        applyDefaults()
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->applyDefaultValues();
+    }
+
+    /**
      * Get the [id] column value.
      *
      * @return int
@@ -207,6 +235,16 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Get the [statut] column value.
+     *
+     * @return int
+     */
+    public function getStatut()
+    {
+        return $this->statut;
     }
 
     /**
@@ -418,6 +456,27 @@ abstract class BaseAd extends BaseObject implements Persistent
     } // setPrice()
 
     /**
+     * Set the value of [statut] column.
+     *
+     * @param int $v new value
+     * @return Ad The current object (for fluent API support)
+     */
+    public function setStatut($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->statut !== $v) {
+            $this->statut = $v;
+            $this->modifiedColumns[] = AdPeer::STATUT;
+        }
+
+
+        return $this;
+    } // setStatut()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param mixed $v string, integer (timestamp), or DateTime value.
@@ -598,6 +657,10 @@ abstract class BaseAd extends BaseObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->statut !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -624,13 +687,14 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->description = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->price = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->created_at = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->updated_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->ad_type_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-            $this->category_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
-            $this->user_type_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
-            $this->user_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
-            $this->city_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
+            $this->statut = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+            $this->created_at = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->updated_at = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->ad_type_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+            $this->category_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+            $this->user_type_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
+            $this->user_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
+            $this->city_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -639,7 +703,7 @@ abstract class BaseAd extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = AdPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = AdPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Ad object", $e);
@@ -954,6 +1018,9 @@ abstract class BaseAd extends BaseObject implements Persistent
         if ($this->isColumnModified(AdPeer::PRICE)) {
             $modifiedColumns[':p' . $index++]  = '`PRICE`';
         }
+        if ($this->isColumnModified(AdPeer::STATUT)) {
+            $modifiedColumns[':p' . $index++]  = '`STATUT`';
+        }
         if ($this->isColumnModified(AdPeer::CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
         }
@@ -997,6 +1064,9 @@ abstract class BaseAd extends BaseObject implements Persistent
                         break;
                     case '`PRICE`':
                         $stmt->bindValue($identifier, $this->price, PDO::PARAM_STR);
+                        break;
+                    case '`STATUT`':
+                        $stmt->bindValue($identifier, $this->statut, PDO::PARAM_INT);
                         break;
                     case '`CREATED_AT`':
                         $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
@@ -1210,24 +1280,27 @@ abstract class BaseAd extends BaseObject implements Persistent
                 return $this->getPrice();
                 break;
             case 4:
-                return $this->getCreatedAt();
+                return $this->getStatut();
                 break;
             case 5:
-                return $this->getUpdatedAt();
+                return $this->getCreatedAt();
                 break;
             case 6:
-                return $this->getAdTypeId();
+                return $this->getUpdatedAt();
                 break;
             case 7:
-                return $this->getCategoryId();
+                return $this->getAdTypeId();
                 break;
             case 8:
-                return $this->getUserTypeId();
+                return $this->getCategoryId();
                 break;
             case 9:
-                return $this->getUserId();
+                return $this->getUserTypeId();
                 break;
             case 10:
+                return $this->getUserId();
+                break;
+            case 11:
                 return $this->getCityId();
                 break;
             default:
@@ -1263,13 +1336,14 @@ abstract class BaseAd extends BaseObject implements Persistent
             $keys[1] => $this->getTitle(),
             $keys[2] => $this->getDescription(),
             $keys[3] => $this->getPrice(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
-            $keys[6] => $this->getAdTypeId(),
-            $keys[7] => $this->getCategoryId(),
-            $keys[8] => $this->getUserTypeId(),
-            $keys[9] => $this->getUserId(),
-            $keys[10] => $this->getCityId(),
+            $keys[4] => $this->getStatut(),
+            $keys[5] => $this->getCreatedAt(),
+            $keys[6] => $this->getUpdatedAt(),
+            $keys[7] => $this->getAdTypeId(),
+            $keys[8] => $this->getCategoryId(),
+            $keys[9] => $this->getUserTypeId(),
+            $keys[10] => $this->getUserId(),
+            $keys[11] => $this->getCityId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aCity) {
@@ -1337,24 +1411,27 @@ abstract class BaseAd extends BaseObject implements Persistent
                 $this->setPrice($value);
                 break;
             case 4:
-                $this->setCreatedAt($value);
+                $this->setStatut($value);
                 break;
             case 5:
-                $this->setUpdatedAt($value);
+                $this->setCreatedAt($value);
                 break;
             case 6:
-                $this->setAdTypeId($value);
+                $this->setUpdatedAt($value);
                 break;
             case 7:
-                $this->setCategoryId($value);
+                $this->setAdTypeId($value);
                 break;
             case 8:
-                $this->setUserTypeId($value);
+                $this->setCategoryId($value);
                 break;
             case 9:
-                $this->setUserId($value);
+                $this->setUserTypeId($value);
                 break;
             case 10:
+                $this->setUserId($value);
+                break;
+            case 11:
                 $this->setCityId($value);
                 break;
         } // switch()
@@ -1385,13 +1462,14 @@ abstract class BaseAd extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDescription($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setPrice($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setAdTypeId($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setCategoryId($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setUserTypeId($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setUserId($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setCityId($arr[$keys[10]]);
+        if (array_key_exists($keys[4], $arr)) $this->setStatut($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setCreatedAt($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setUpdatedAt($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setAdTypeId($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setCategoryId($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setUserTypeId($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setUserId($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setCityId($arr[$keys[11]]);
     }
 
     /**
@@ -1407,6 +1485,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         if ($this->isColumnModified(AdPeer::TITLE)) $criteria->add(AdPeer::TITLE, $this->title);
         if ($this->isColumnModified(AdPeer::DESCRIPTION)) $criteria->add(AdPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(AdPeer::PRICE)) $criteria->add(AdPeer::PRICE, $this->price);
+        if ($this->isColumnModified(AdPeer::STATUT)) $criteria->add(AdPeer::STATUT, $this->statut);
         if ($this->isColumnModified(AdPeer::CREATED_AT)) $criteria->add(AdPeer::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(AdPeer::UPDATED_AT)) $criteria->add(AdPeer::UPDATED_AT, $this->updated_at);
         if ($this->isColumnModified(AdPeer::AD_TYPE_ID)) $criteria->add(AdPeer::AD_TYPE_ID, $this->ad_type_id);
@@ -1480,6 +1559,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setPrice($this->getPrice());
+        $copyObj->setStatut($this->getStatut());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         $copyObj->setAdTypeId($this->getAdTypeId());
@@ -2038,6 +2118,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         $this->title = null;
         $this->description = null;
         $this->price = null;
+        $this->statut = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->ad_type_id = null;
@@ -2048,6 +2129,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

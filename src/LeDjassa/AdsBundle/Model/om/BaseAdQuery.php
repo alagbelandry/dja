@@ -27,6 +27,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method AdQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method AdQuery orderByPrice($order = Criteria::ASC) Order by the price column
+ * @method AdQuery orderByStatut($order = Criteria::ASC) Order by the statut column
  * @method AdQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method AdQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method AdQuery orderByAdTypeId($order = Criteria::ASC) Order by the ad_type_id column
@@ -39,6 +40,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery groupByTitle() Group by the title column
  * @method AdQuery groupByDescription() Group by the description column
  * @method AdQuery groupByPrice() Group by the price column
+ * @method AdQuery groupByStatut() Group by the statut column
  * @method AdQuery groupByCreatedAt() Group by the created_at column
  * @method AdQuery groupByUpdatedAt() Group by the updated_at column
  * @method AdQuery groupByAdTypeId() Group by the ad_type_id column
@@ -81,6 +83,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method Ad findOneByTitle(string $title) Return the first Ad filtered by the title column
  * @method Ad findOneByDescription(string $description) Return the first Ad filtered by the description column
  * @method Ad findOneByPrice(string $price) Return the first Ad filtered by the price column
+ * @method Ad findOneByStatut(int $statut) Return the first Ad filtered by the statut column
  * @method Ad findOneByCreatedAt(string $created_at) Return the first Ad filtered by the created_at column
  * @method Ad findOneByUpdatedAt(string $updated_at) Return the first Ad filtered by the updated_at column
  * @method Ad findOneByAdTypeId(int $ad_type_id) Return the first Ad filtered by the ad_type_id column
@@ -93,6 +96,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method array findByTitle(string $title) Return Ad objects filtered by the title column
  * @method array findByDescription(string $description) Return Ad objects filtered by the description column
  * @method array findByPrice(string $price) Return Ad objects filtered by the price column
+ * @method array findByStatut(int $statut) Return Ad objects filtered by the statut column
  * @method array findByCreatedAt(string $created_at) Return Ad objects filtered by the created_at column
  * @method array findByUpdatedAt(string $updated_at) Return Ad objects filtered by the updated_at column
  * @method array findByAdTypeId(int $ad_type_id) Return Ad objects filtered by the ad_type_id column
@@ -201,7 +205,7 @@ abstract class BaseAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `USER_ID`, `CITY_ID` FROM `ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `STATUT`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `USER_ID`, `CITY_ID` FROM `ad` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -402,6 +406,47 @@ abstract class BaseAdQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AdPeer::PRICE, $price, $comparison);
+    }
+
+    /**
+     * Filter the query on the statut column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStatut(1234); // WHERE statut = 1234
+     * $query->filterByStatut(array(12, 34)); // WHERE statut IN (12, 34)
+     * $query->filterByStatut(array('min' => 12)); // WHERE statut > 12
+     * </code>
+     *
+     * @param     mixed $statut The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByStatut($statut = null, $comparison = null)
+    {
+        if (is_array($statut)) {
+            $useMinMax = false;
+            if (isset($statut['min'])) {
+                $this->addUsingAlias(AdPeer::STATUT, $statut['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($statut['max'])) {
+                $this->addUsingAlias(AdPeer::STATUT, $statut['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::STATUT, $statut, $comparison);
     }
 
     /**

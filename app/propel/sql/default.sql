@@ -193,6 +193,7 @@ CREATE TABLE `ad`
     `title` VARCHAR(100) NOT NULL,
     `description` VARCHAR(500),
     `price` VARCHAR(30),
+    `statut` TINYINT(2) DEFAULT 0,
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `ad_type_id` INTEGER(5),

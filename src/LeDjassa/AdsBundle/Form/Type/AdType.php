@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
-
+use LeDjassa\UserBundle\Form\Type\UserFormPseudoType;
 /**
  * Class for manage ad form
  *
@@ -68,7 +68,10 @@ class AdType extends AbstractType
                                                         'label'         => 'Photos d\'illustration',
 
         ));
-        
+
+        // User relation
+        $builder->add('user', new UserFormPseudoType, array('property_path' => false
+        ));
    
     }
    

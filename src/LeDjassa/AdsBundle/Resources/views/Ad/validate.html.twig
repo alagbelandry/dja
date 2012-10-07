@@ -13,11 +13,13 @@
 
 	Type d'annonce: {{adProperties.nameAdType}}<br/>
 
-	Nom: <br/>
+	Nom: {{user.username}}<br/>
 
-	Email: <br/>
+	Email: {{user.email}}<br/>
 
-	Téléphone: <br/>
+	Téléphone: {% if user.phone is defined %} 
+			   	{{user.phone}}
+			   {% endif %}<br/>
 
 	Titre de l'annonce: {{adProperties.title}}<br/>
 
@@ -26,5 +28,7 @@
 	Prix de l'annonce: {{adProperties.price}}<br/>
 
 	Photos d'illustration: <br/>
+
+	{% render "LeDjassaUserBundle:Registration:register" %}
 
 </section>

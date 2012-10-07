@@ -6,16 +6,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
+use LeDjassa\AdsBundle\Model\PictureAd;
+use FOS\UserBundle\Model\User;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\Quarter;
-use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\PictureAdType;
+use LeDjassa\UserBundle\Form\Type\RegistrationFormType;
+use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
 use LeDjassa\AdsBundle\Model\AdTypeQuery;
+use LeDjassa\AdsBundle\Form\Handler\AdHandler;
+
 
 /**
  * @Route("/annonces")
@@ -28,95 +34,69 @@ class AdController extends Controller
 	*/
     public function addAction()
     {
-    	
         $ad = new Ad();
-        
         $form = $this->createForm(new AdType(), $ad);
-        
+
         $request = $this->get('request');
-        if ('POST' === $request->getMethod()) { 
-        	$form->bindRequest($request);
 
-            if ($form->isValid()) {
+        $formHandler = new AdHandler($form, $request);
+        $process = $formHandler->process();
 
-                $city = $this->getCity();
+        if ($process) {
 
-                // link ad and city
-                $ad->setCity($city);
+            return $this->redirect($this->generateUrl('ad_validate'));
 
-                // quarter must be link to city
-                if ($city instanceof City) {
-                    $quarter = $this->getQuarter();
-                    if ($quarter instanceof Quarter) {
-                        $quarter->setCity($city);
-                    }
-                }
-                if(isset($quarter) && $quarter instanceof Quarter) {
-                    $quarter->save();
-                }
+        } elseif ('GET' === $request->getMethod()) {
 
-                $ad->save();
-        	}
+            return  array('form' => $form->createView(), 'ad' => $ad);
 
-        	//return $this->redirect($this->generateUrl('ad_success'));
+        } else {
+            throw new Exception("Unknow Request Method in Form Ad");  
         }
-        
-        return  array('form' => $form->createView(), 'ad' => $ad);
-		
     }
 
     /**
-     * Get post parameter of ad form
-     * @return array list parameter or false if list not exist
-     */
-    function getPostParameters() 
-    {
-        $request = $this->get('request');
-        if ('POST' === $request->getMethod()) {
-            return $request->request->get('ad');
-        }
-            return array();
-    }
+    * @Route("/valider", name="ad_validate")
+    * @Template()
+    */
+    public function validateAction()
+    {   
+            // get datas ad
+            $request = $this->get('request');
+            $session = $request->getSession();
 
-    /**
-     * Get city select in form
-     * @return City city select
-     */
-    function getCity() 
-    {
-        $parameters = $this->getPostParameters();
+            if (!$session->has('idAd')) {
+                throw $this->createNotFoundException("The ad idendifier is empty in validate ad process");  
+            }
 
-        $idCity = isset($parameters['city']['name']) ? $parameters['city']['name'] : '';
+            $ad = AdQuery::create()
+                    ->findOneById($session->get('idAd'));
 
-        return CityQuery::create()
-                ->findOneById($idCity);
-    }
+            if (!$ad instanceof Ad) {
+                throw $this->createNotFoundException('The ad does not exist');    
+            }
+            $adProperties = $ad->getProperties();
 
-    /**
-     * Get new quarter depends of name quarter parameter of form
-     * @return Quarter|false new quarter or false if it's not
-     */
-    function getQuarter()
-    {
-        $parameters = $this->getPostParameters();
-        $nameQuarter = isset($parameters['city']['quarter']['name']) ? ucfirst($parameters['city']['quarter']['name']) : '';
+            // get datas user
+            $dataUser = array();
+            if (!$session->has('username')) {
+                throw $this->createNotFoundException("User name does exist in session");  
+            }
+            $dataUser['username'] = $session->get('username');
 
-        if (empty($nameQuarter)) {
-            return false;
-        }
+            if (!$session->has('email')) {
+                throw $this->createNotFoundException("Email does exist in session");  
+            }
+            $dataUser['email'] = $session->get('email');
 
-        $quarter = QuarterQuery::create()
-                      ->findOneByName($nameQuarter);
+            if ($session->has('phone')) {
+                $dataUser['phone'] = $session->get('phone');
+            }
 
-        // not a new quarter name
-        if ($quarter instanceof Quarter) {
-            return false;
-        }
-                
-        $quarter = new Quarter();
-        $quarter->setName($nameQuarter);
-
-        return $quarter;
+            return array(
+                    'adProperties' => $adProperties,
+                    'user'         => $dataUser
+            );
     }
 
     /**
@@ -137,7 +117,7 @@ class AdController extends Controller
                                 ->find()
                                 ->toKeyValue("Id", "Name"); 
         }
- 
+        // todo _format:json pour specifier le content type
         $response = new Response(json_encode($cityList));
         $response->headers->set('Content-Type', 'application/json');
         return $response;

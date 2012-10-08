@@ -1,6 +1,20 @@
 {% block fos_user_content %}
-<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="">
-    {{ form_widget(form) }}
-    <input type="submit" value="Publier l'annonce" />
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST">
+
+	{{ form_errors(form) }}
+
+		{{ form_widget(form.username, { 'attr': {'value': username } })  }}
+		{{ form_widget(form.email, { 'attr': {'value': email } })  }}
+	<div>
+		{{ form_errors(form.plainPassword) }}
+		{{ form_widget(form.plainPassword) }}
+	</div>
+	
+    <div>
+        <input type="submit" value="Publier l'annonce" />
+    </div>
+
+    {{ form_rest(form) }}
+    
 </form>
 {% endblock fos_user_content %}

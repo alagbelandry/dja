@@ -20,6 +20,10 @@ class RegistrationFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('username', 'hidden');
+
+        $builder->add('email', 'hidden');
+
     	$builder->add('plainPassword', 'repeated', array(
                 'type' => 'password',
                 'options' => array('translation_domain' => 'FOSUserBundle'),

@@ -29,6 +29,6 @@
 
 	Photos d'illustration: <br/>
 
-	{% render "LeDjassaUserBundle:Registration:register" %}
+	{% render "LeDjassaUserBundle:Registration:register" with { 'username' : user.username, 'email': user.email, 'phone' : user.phone } %}
 
-</section>
+</section> 

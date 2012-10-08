@@ -22,7 +22,7 @@ class AppKernel extends Kernel
             new Propel\PropelBundle\PropelBundle(),
             new LeDjassa\AdsBundle\LeDjassaAdsBundle(),
             new FOS\UserBundle\FOSUserBundle(),
-            new LeDjassa\UserBundle\LeDjassaUserBundle(),
+            //new LeDjassa\UserBundle\LeDjassaUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

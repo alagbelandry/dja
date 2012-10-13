@@ -12,7 +12,6 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use FOS\UserBundle\Propel\User;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\AdPeer;
 use LeDjassa\AdsBundle\Model\AdQuery;
@@ -27,24 +26,36 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method AdQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method AdQuery orderByPrice($order = Criteria::ASC) Order by the price column
+ * @method AdQuery orderByStatut($order = Criteria::ASC) Order by the statut column
+ * @method AdQuery orderByUserName($order = Criteria::ASC) Order by the user_name column
+ * @method AdQuery orderByUserEmail($order = Criteria::ASC) Order by the user_email column
+ * @method AdQuery orderByUserPassword($order = Criteria::ASC) Order by the user_password column
+ * @method AdQuery orderByUserSalt($order = Criteria::ASC) Order by the user_salt column
+ * @method AdQuery orderByUserPhone($order = Criteria::ASC) Order by the user_phone column
+ * @method AdQuery orderByUserIpAdress($order = Criteria::ASC) Order by the user_ip_adress column
  * @method AdQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method AdQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method AdQuery orderByAdTypeId($order = Criteria::ASC) Order by the ad_type_id column
  * @method AdQuery orderByCategoryId($order = Criteria::ASC) Order by the category_id column
  * @method AdQuery orderByUserTypeId($order = Criteria::ASC) Order by the user_type_id column
- * @method AdQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  * @method AdQuery orderByCityId($order = Criteria::ASC) Order by the city_id column
  *
  * @method AdQuery groupById() Group by the id column
  * @method AdQuery groupByTitle() Group by the title column
  * @method AdQuery groupByDescription() Group by the description column
  * @method AdQuery groupByPrice() Group by the price column
+ * @method AdQuery groupByStatut() Group by the statut column
+ * @method AdQuery groupByUserName() Group by the user_name column
+ * @method AdQuery groupByUserEmail() Group by the user_email column
+ * @method AdQuery groupByUserPassword() Group by the user_password column
+ * @method AdQuery groupByUserSalt() Group by the user_salt column
+ * @method AdQuery groupByUserPhone() Group by the user_phone column
+ * @method AdQuery groupByUserIpAdress() Group by the user_ip_adress column
  * @method AdQuery groupByCreatedAt() Group by the created_at column
  * @method AdQuery groupByUpdatedAt() Group by the updated_at column
  * @method AdQuery groupByAdTypeId() Group by the ad_type_id column
  * @method AdQuery groupByCategoryId() Group by the category_id column
  * @method AdQuery groupByUserTypeId() Group by the user_type_id column
- * @method AdQuery groupByUserId() Group by the user_id column
  * @method AdQuery groupByCityId() Group by the city_id column
  *
  * @method AdQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -54,10 +65,6 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery leftJoinCity($relationAlias = null) Adds a LEFT JOIN clause to the query using the City relation
  * @method AdQuery rightJoinCity($relationAlias = null) Adds a RIGHT JOIN clause to the query using the City relation
  * @method AdQuery innerJoinCity($relationAlias = null) Adds a INNER JOIN clause to the query using the City relation
- *
- * @method AdQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method AdQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method AdQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
  *
  * @method AdQuery leftJoinUserType($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserType relation
  * @method AdQuery rightJoinUserType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserType relation
@@ -81,24 +88,36 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method Ad findOneByTitle(string $title) Return the first Ad filtered by the title column
  * @method Ad findOneByDescription(string $description) Return the first Ad filtered by the description column
  * @method Ad findOneByPrice(string $price) Return the first Ad filtered by the price column
+ * @method Ad findOneByStatut(int $statut) Return the first Ad filtered by the statut column
+ * @method Ad findOneByUserName(string $user_name) Return the first Ad filtered by the user_name column
+ * @method Ad findOneByUserEmail(string $user_email) Return the first Ad filtered by the user_email column
+ * @method Ad findOneByUserPassword(string $user_password) Return the first Ad filtered by the user_password column
+ * @method Ad findOneByUserSalt(string $user_salt) Return the first Ad filtered by the user_salt column
+ * @method Ad findOneByUserPhone(string $user_phone) Return the first Ad filtered by the user_phone column
+ * @method Ad findOneByUserIpAdress(string $user_ip_adress) Return the first Ad filtered by the user_ip_adress column
  * @method Ad findOneByCreatedAt(string $created_at) Return the first Ad filtered by the created_at column
  * @method Ad findOneByUpdatedAt(string $updated_at) Return the first Ad filtered by the updated_at column
  * @method Ad findOneByAdTypeId(int $ad_type_id) Return the first Ad filtered by the ad_type_id column
  * @method Ad findOneByCategoryId(int $category_id) Return the first Ad filtered by the category_id column
  * @method Ad findOneByUserTypeId(int $user_type_id) Return the first Ad filtered by the user_type_id column
- * @method Ad findOneByUserId(int $user_id) Return the first Ad filtered by the user_id column
  * @method Ad findOneByCityId(int $city_id) Return the first Ad filtered by the city_id column
  *
  * @method array findById(int $id) Return Ad objects filtered by the id column
  * @method array findByTitle(string $title) Return Ad objects filtered by the title column
  * @method array findByDescription(string $description) Return Ad objects filtered by the description column
  * @method array findByPrice(string $price) Return Ad objects filtered by the price column
+ * @method array findByStatut(int $statut) Return Ad objects filtered by the statut column
+ * @method array findByUserName(string $user_name) Return Ad objects filtered by the user_name column
+ * @method array findByUserEmail(string $user_email) Return Ad objects filtered by the user_email column
+ * @method array findByUserPassword(string $user_password) Return Ad objects filtered by the user_password column
+ * @method array findByUserSalt(string $user_salt) Return Ad objects filtered by the user_salt column
+ * @method array findByUserPhone(string $user_phone) Return Ad objects filtered by the user_phone column
+ * @method array findByUserIpAdress(string $user_ip_adress) Return Ad objects filtered by the user_ip_adress column
  * @method array findByCreatedAt(string $created_at) Return Ad objects filtered by the created_at column
  * @method array findByUpdatedAt(string $updated_at) Return Ad objects filtered by the updated_at column
  * @method array findByAdTypeId(int $ad_type_id) Return Ad objects filtered by the ad_type_id column
  * @method array findByCategoryId(int $category_id) Return Ad objects filtered by the category_id column
  * @method array findByUserTypeId(int $user_type_id) Return Ad objects filtered by the user_type_id column
- * @method array findByUserId(int $user_id) Return Ad objects filtered by the user_id column
  * @method array findByCityId(int $city_id) Return Ad objects filtered by the city_id column
  */
 abstract class BaseAdQuery extends ModelCriteria
@@ -201,7 +220,7 @@ abstract class BaseAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `USER_ID`, `CITY_ID` FROM `ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `STATUT`, `USER_NAME`, `USER_EMAIL`, `USER_PASSWORD`, `USER_SALT`, `USER_PHONE`, `USER_IP_ADRESS`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `CITY_ID` FROM `ad` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -402,6 +421,221 @@ abstract class BaseAdQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AdPeer::PRICE, $price, $comparison);
+    }
+
+    /**
+     * Filter the query on the statut column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStatut(1234); // WHERE statut = 1234
+     * $query->filterByStatut(array(12, 34)); // WHERE statut IN (12, 34)
+     * $query->filterByStatut(array('min' => 12)); // WHERE statut > 12
+     * </code>
+     *
+     * @param     mixed $statut The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByStatut($statut = null, $comparison = null)
+    {
+        if (is_array($statut)) {
+            $useMinMax = false;
+            if (isset($statut['min'])) {
+                $this->addUsingAlias(AdPeer::STATUT, $statut['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($statut['max'])) {
+                $this->addUsingAlias(AdPeer::STATUT, $statut['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::STATUT, $statut, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserName('fooValue');   // WHERE user_name = 'fooValue'
+     * $query->filterByUserName('%fooValue%'); // WHERE user_name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userName The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserName($userName = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userName)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userName)) {
+                $userName = str_replace('*', '%', $userName);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_NAME, $userName, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_email column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserEmail('fooValue');   // WHERE user_email = 'fooValue'
+     * $query->filterByUserEmail('%fooValue%'); // WHERE user_email LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userEmail The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserEmail($userEmail = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userEmail)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userEmail)) {
+                $userEmail = str_replace('*', '%', $userEmail);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_EMAIL, $userEmail, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_password column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserPassword('fooValue');   // WHERE user_password = 'fooValue'
+     * $query->filterByUserPassword('%fooValue%'); // WHERE user_password LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userPassword The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserPassword($userPassword = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userPassword)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userPassword)) {
+                $userPassword = str_replace('*', '%', $userPassword);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_PASSWORD, $userPassword, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_salt column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserSalt('fooValue');   // WHERE user_salt = 'fooValue'
+     * $query->filterByUserSalt('%fooValue%'); // WHERE user_salt LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userSalt The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserSalt($userSalt = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userSalt)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userSalt)) {
+                $userSalt = str_replace('*', '%', $userSalt);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_SALT, $userSalt, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_phone column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserPhone('fooValue');   // WHERE user_phone = 'fooValue'
+     * $query->filterByUserPhone('%fooValue%'); // WHERE user_phone LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userPhone The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserPhone($userPhone = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userPhone)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userPhone)) {
+                $userPhone = str_replace('*', '%', $userPhone);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_PHONE, $userPhone, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_ip_adress column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUserIpAdress('fooValue');   // WHERE user_ip_adress = 'fooValue'
+     * $query->filterByUserIpAdress('%fooValue%'); // WHERE user_ip_adress LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $userIpAdress The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterByUserIpAdress($userIpAdress = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($userIpAdress)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $userIpAdress)) {
+                $userIpAdress = str_replace('*', '%', $userIpAdress);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::USER_IP_ADRESS, $userIpAdress, $comparison);
     }
 
     /**
@@ -620,49 +854,6 @@ abstract class BaseAdQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the user_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUserId(1234); // WHERE user_id = 1234
-     * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
-     * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
-     * </code>
-     *
-     * @see       filterByUser()
-     *
-     * @param     mixed $userId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return AdQuery The current query, for fluid interface
-     */
-    public function filterByUserId($userId = null, $comparison = null)
-    {
-        if (is_array($userId)) {
-            $useMinMax = false;
-            if (isset($userId['min'])) {
-                $this->addUsingAlias(AdPeer::USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($userId['max'])) {
-                $this->addUsingAlias(AdPeer::USER_ID, $userId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AdPeer::USER_ID, $userId, $comparison);
-    }
-
-    /**
      * Filter the query on the city_id column
      *
      * Example usage:
@@ -779,82 +970,6 @@ abstract class BaseAdQuery extends ModelCriteria
         return $this
             ->joinCity($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'City', '\LeDjassa\AdsBundle\Model\CityQuery');
-    }
-
-    /**
-     * Filter the query by a related User object
-     *
-     * @param   User|PropelObjectCollection $user The related object(s) to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return   AdQuery The current query, for fluid interface
-     * @throws   PropelException - if the provided filter is invalid.
-     */
-    public function filterByUser($user, $comparison = null)
-    {
-        if ($user instanceof User) {
-            return $this
-                ->addUsingAlias(AdPeer::USER_ID, $user->getId(), $comparison);
-        } elseif ($user instanceof PropelObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(AdPeer::USER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByUser() only accepts arguments of type User or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the User relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return AdQuery The current query, for fluid interface
-     */
-    public function joinUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('User');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'User');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the User relation User object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \FOS\UserBundle\Propel\UserQuery A secondary query class using the current class as primary query
-     */
-    public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\FOS\UserBundle\Propel\UserQuery');
     }
 
     /**

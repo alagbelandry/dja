@@ -100,18 +100,21 @@
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />
         <column name="description" type="varchar" size="500" />
         <column name="price" type="varchar" size="30" />
+        <column name="statut" type="tinyint" size="2" default="0" />
+        <column name="user_name" phpName="UserName" required="true" type="varchar" size="100" />
+        <column name="user_email" phpName="UserEmail" required="true" type="varchar" size="100" />
+        <column name="user_password" phpName="UserPassword" required="true" type="varchar" size="255" />
+        <column name="user_salt" phpName="UserSalt" required="true" type="varchar" size="100" />
+        <column name="user_phone" phpName="UserPhone" type="varchar" size="50" />
+        <column name="user_ip_adress" phpName="UserIpAdress" type="varchar" size="40" />
         <column name="created_at" phpName="CreatedAt" type="timestamp" />
         <column name="updated_at" phpName="UpdatedAt" type="timestamp" />
         <column name="ad_type_id" phpName="AdTypeId" type="integer" size="5" />
         <column name="category_id" phpName="CategoryId" type="integer" size="6" />
         <column name="user_type_id" phpName="UserTypeId" type="integer" size="6" />
-        <column name="user_id" phpName="UserId" type="integer" size="11" />
         <column name="city_id" phpName="CityId" type="integer" size="6" />
         <foreign-key foreignTable="city">
             <reference local="city_id" foreign="id" />
-        </foreign-key>
-        <foreign-key foreignTable="fos_user">
-            <reference local="user_id" foreign="id" />
         </foreign-key>
         <foreign-key foreignTable="user_type">
             <reference local="user_type_id" foreign="id" />

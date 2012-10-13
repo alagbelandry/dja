@@ -28,12 +28,10 @@ CREATE TABLE `fos_user`
     `credentials_expired` TINYINT(1) DEFAULT 0,
     `credentials_expire_at` DATETIME,
     `roles` TEXT,
-    `phone` INTEGER(10),
-    `ip_adress` VARCHAR(30),
     PRIMARY KEY (`id`),
     UNIQUE INDEX `fos_user_U_1` (`username_canonical`),
     UNIQUE INDEX `fos_user_U_2` (`email_canonical`)
-) ENGINE=InnoDB CHARACTER SET='utf8';
+) ENGINE=MyISAM;
 
 -- ---------------------------------------------------------------------
 -- fos_group
@@ -47,7 +45,7 @@ CREATE TABLE `fos_group`
     `name` VARCHAR(255) NOT NULL,
     `roles` TEXT,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB CHARACTER SET='utf8';
+) ENGINE=MyISAM;
 
 -- ---------------------------------------------------------------------
 -- fos_user_group
@@ -67,7 +65,7 @@ CREATE TABLE `fos_user_group`
     CONSTRAINT `fos_user_group_FK_2`
         FOREIGN KEY (`fos_group_id`)
         REFERENCES `fos_group` (`id`)
-) ENGINE=InnoDB CHARACTER SET='utf8';
+) ENGINE=MyISAM;
 
 -- ---------------------------------------------------------------------
 -- category_type
@@ -193,32 +191,34 @@ CREATE TABLE `ad`
     `title` VARCHAR(100) NOT NULL,
     `description` VARCHAR(500),
     `price` VARCHAR(30),
+    `statut` TINYINT(2) DEFAULT 0,
+    `user_name` VARCHAR(100) NOT NULL,
+    `user_email` VARCHAR(100) NOT NULL,
+    `user_password` VARCHAR(255) NOT NULL,
+    `user_salt` VARCHAR(100) NOT NULL,
+    `user_phone` VARCHAR(50),
+    `user_ip_adress` VARCHAR(40),
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `ad_type_id` INTEGER(5),
     `category_id` INTEGER(6),
     `user_type_id` INTEGER(6),
-    `user_id` INTEGER(11),
     `city_id` INTEGER(6),
     PRIMARY KEY (`id`),
     INDEX `ad_FI_1` (`city_id`),
-    INDEX `ad_FI_2` (`user_id`),
-    INDEX `ad_FI_3` (`user_type_id`),
-    INDEX `ad_FI_4` (`ad_type_id`),
-    INDEX `ad_FI_5` (`category_id`),
+    INDEX `ad_FI_2` (`user_type_id`),
+    INDEX `ad_FI_3` (`ad_type_id`),
+    INDEX `ad_FI_4` (`category_id`),
     CONSTRAINT `ad_FK_1`
         FOREIGN KEY (`city_id`)
         REFERENCES `city` (`id`),
     CONSTRAINT `ad_FK_2`
-        FOREIGN KEY (`user_id`)
-        REFERENCES `fos_user` (`id`),
-    CONSTRAINT `ad_FK_3`
         FOREIGN KEY (`user_type_id`)
         REFERENCES `user_type` (`id`),
-    CONSTRAINT `ad_FK_4`
+    CONSTRAINT `ad_FK_3`
         FOREIGN KEY (`ad_type_id`)
         REFERENCES `ad_type` (`id`),
-    CONSTRAINT `ad_FK_5`
+    CONSTRAINT `ad_FK_4`
         FOREIGN KEY (`category_id`)
         REFERENCES `category` (`id`)
 ) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='ad';

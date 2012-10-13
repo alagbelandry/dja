@@ -1,0 +1,13 @@
+<h3>Toutes les annonces</h3>
+{% for ad in ads %}
+	<ul>
+		<li>Date</li>
+		<li>Heure</li>
+		<li>Photo</li>
+		<li>Nom : {{ad.title}}</li>
+		<li>Localisation: {{ad.nameArea}} {{ad.nameCity}}</li>
+		<li>Categorie: {{ad.titleCategory}}</li>
+		<li>Prix: {{ad.price}}</li>
+		<li><a href="{{ path('ad_show', {'idAd': ad.id}) }}">Consulter l'annonce</a></li>
+	</ul>
+{% endfor %}

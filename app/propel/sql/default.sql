@@ -180,6 +180,30 @@ CREATE TABLE `ad_type`
 ) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='type of ad';
 
 -- ---------------------------------------------------------------------
+-- interested_user
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `interested_user`;
+
+CREATE TABLE `interested_user`
+(
+    `id` INTEGER(6) NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100),
+    `email` VARCHAR(100),
+    `phone` VARCHAR(100),
+    `message` VARCHAR(500),
+    `ip_adress` VARCHAR(20),
+    `created_at` DATETIME,
+    `ad_id` INTEGER(5),
+    `updated_at` DATETIME,
+    PRIMARY KEY (`id`),
+    INDEX `interested_user_FI_1` (`ad_id`),
+    CONSTRAINT `interested_user_FK_1`
+        FOREIGN KEY (`ad_id`)
+        REFERENCES `ad` (`id`)
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='interested user by ad';
+
+-- ---------------------------------------------------------------------
 -- ad
 -- ---------------------------------------------------------------------
 

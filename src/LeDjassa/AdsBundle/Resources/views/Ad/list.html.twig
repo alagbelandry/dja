@@ -1,7 +1,15 @@
 <h3>Toutes les annonces</h3>
 {% for ad in ads %}
 	<ul>
-		<li>Date {{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}</li>
+		<li>Date 
+			{% if ad.isPublishToday %}
+				Aujourd'hui
+			{% elseif ad.isPublishYesterDay %}
+				Hier
+			{% else %}
+				{{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}
+			{% endif %}
+		</li>
 		<li>Heure {{ ad.publishedDate|date("H:i") }}</li>
 		<li>Photo</li>
 		<li>Nom : {{ad.title}}</li>

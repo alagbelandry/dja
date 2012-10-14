@@ -1,7 +1,14 @@
 </h3>Voir l'annonce</h3>
 <ul>
-	<li>Date {{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}</li>
-	<li>Heure {{ ad.publishedDate|date("H:i") }}</li>
+	<li>Date 
+		{% if ad.isPublishToday %}
+			Aujourd'hui
+		{% elseif ad.isPublishYesterDay %}
+			Hier
+		{% else %}
+			{{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}
+		{% endif %}
+	</li>
 	<li>Photo</li>
 	<li>Titre : {{ad.title}}</li>
 	<li>Localisation: {{ad.nameArea}} {{ad.nameCity}}</li>

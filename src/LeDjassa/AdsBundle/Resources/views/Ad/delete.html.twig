@@ -1,0 +1,11 @@
+<h3>Suppression de l'annonce </h3>
+Supprimer cette annonce : {{ ad.title }} 
+<form action="{{ path('ad_delete', {'idAd': ad.id}) }}" method="post" }}>
+
+	{{ form_errors(form) }}
+	{{ form_row(form.user_password) }}
+
+	{{ form_rest(form) }}
+	
+	<input type="submit" value="Supprimer"/>
+</form>

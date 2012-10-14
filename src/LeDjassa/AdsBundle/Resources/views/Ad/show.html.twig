@@ -19,6 +19,7 @@
 	<li>Nom utilisateur: {{ad.userName}}</li>
 	<li>Email utilisateur: {{ad.userEmail}}</li>
 	<li>Téléphone utilisateur: {{ad.userPhone}}</li>
+	<li><a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a></li>
 	<li><a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a></li>
 	<li><a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a></li>
 </ul>

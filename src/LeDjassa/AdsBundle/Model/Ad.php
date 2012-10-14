@@ -3,6 +3,7 @@
 namespace LeDjassa\AdsBundle\Model;
 
 use LeDjassa\AdsBundle\Model\om\BaseAd;
+use LeDjassa\AdsBundle\Utils\Date;
 
 class Ad extends BaseAd
 {
@@ -46,21 +47,24 @@ class Ad extends BaseAd
 		//$pictureAds = $this->getPictureAds();
 
 		$properties = array(
-			'id'            => $this->id,
-			'title'         => $this->title,
-			'description'   => $this->description,
-			'price'         => $this->price,
-			'createdDate'   => $this->getCreatedAt(),
-			'updatedDate'   => $this->getUpdatedAt(),
-			'userName'		=> $this->user_name,
-			'userEmail'		=> $this->user_email,
-			'userPhone'		=> $this->user_phone,
-			'nameCity'      => $nameCity,
-			'nameArea'      => $nameArea,
-			'nameQuarter'   => $nameQuarter, 
-			'titleCategory' => $titleCategory,
-			'nameAdType'    => $nameAdType,
-			'titleUserType' => $titleUserType,
+			'id'            		=> $this->id,
+			'title'         		=> $this->title,
+			'description'  	 		=> $this->description,
+			'price'         		=> $this->price,
+			'publishedDate'   		=> $this->getCreatedAt(),
+			'updatedDate'   		=> $this->getUpdatedAt(),
+			'publishMonth'   		=> Date::getMonthFrench($this->getCreatedAt()),
+			'isPublishToday'        => Date::isToday($this->getCreatedAt()),
+			'isPublishYesterDay'    => Date::isYesterday($this->getCreatedAt()),
+			'userName'				=> $this->user_name,
+			'userEmail'				=> $this->user_email,
+			'userPhone'				=> $this->user_phone,
+			'nameCity'      		=> $nameCity,
+			'nameArea'      		=> $nameArea,
+			'nameQuarter'  			=> $nameQuarter, 
+			'titleCategory' 		=> $titleCategory,
+			'nameAdType'    		=> $nameAdType,
+			'titleUserType' 		=> $titleUserType,
 		);
 
 		return $properties;

@@ -122,6 +122,10 @@
 	{{ form_row(form.category) }}
 	{{ form_row(form.user_type) }}
 	{{ form_row(form.ad_type) }}
+	{{ form_row(form.user_name) }}
+	{{ form_row(form.user_email) }}
+	{{ form_row(form.user_phone) }}
+	{{ form_row(form.user_password) }}
 
 	{{ form_row(form.title) }}
 	{{ form_row(form.description) }}
@@ -131,6 +135,9 @@
 	<a href="#" id="add_picture">Ajouter une photo</a>
 
 	{{ form_rest(form) }}
-
-	<input type="submit" />
+	<div>
+		En validant la diffusion de mon annonce, j'accepte les Règles de diffusion et d'utilisation du site auportdabidjan.com <br/>
+		et j'autorise auportdabidjan.com à diffuser mon annonce.	
+	</div>
+	<input type="submit" value="Publier l'annonce" />
 </form>

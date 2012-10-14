@@ -81,6 +81,8 @@ class AdAddHandler
 
                 $quarter->setCity($city)
                  ->save();
+
+                $ad->setQuarter($quarter);
             }
         }
 

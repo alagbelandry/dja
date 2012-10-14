@@ -20,9 +20,12 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 */
 class AdEditHandler
 {
+    const ERROR_PROCESSING_STATUT = 0;
+    const AD_SAVE_SUCCESS_STATUT = 1;
+    const INVALID_PASSWORD_STATUT = 2;
+
     protected $request;
     protected $form;
-    protected $ad;
     protected $encoder;
 
     /**
@@ -30,21 +33,19 @@ class AdEditHandler
     *
     * @param Form $form
     * @param Request $request
-    * @param Ad $ad
     *
     */
-    public function __construct(Form $form, Request $request, Ad $ad, MessageDigestPasswordEncoder $encoder)
+    public function __construct(Form $form, Request $request, MessageDigestPasswordEncoder $encoder)
     {
         $this->form = $form;
         $this->request = $request;
-        $this->ad = $ad;
         $this->encoder = $encoder;
     }
 
     /**
     * Process form
     *
-    * @return boolean
+    * @return int statut process
     */
     public function process()
     {
@@ -55,29 +56,34 @@ class AdEditHandler
 
             if ($this->form->isValid()) {
 
-                $isPasswordValid = $this->onSuccess($this->form->getData());
-                return true;
+                $parameters = $this->request->get('ad_edit');
+                $isPasswordInvalid = !$this->onSuccess($this->form->getData(), $parameters['user_password']);
+                if ($isPasswordInvalid) {
+                    return self::INVALID_PASSWORD_STATUT;
+                }
+                return self::AD_SAVE_SUCCESS_STATUT;
             }
      }
-        return false;
+        return self::ERROR_PROCESSING_STATUT;
     }
 
     /**
-    * Check if password entry by user is valid
-    * @param array $data contain password entry
+    * Check if password entry by user is valid and save form
+    * @param array $data ad object
+    * @param string $passwordEntry password entry
     * @return boolean if password is valid
     */
-    protected function onSuccess($data)
+    protected function onSuccess($ad, $passwordEntry)
     {
-        if (!$this->ad instanceof Ad) {
+        if (!$ad instanceof Ad) {
             throw new Exception("Ad not found !");
         }
 
-        $salt = $this->ad->getUserSalt();
-        $password = $this->ad->getUserPassword();
+        if ($this->encoder->isPasswordValid($ad->getUserPassword(), $passwordEntry, $ad->getUserSalt())) {
+            $ad->save();
+            return true;
+        }
 
-        $encodedPasswordEntry =  $this->encoder->encodePassword($data['user_password'], $salt);
-
-        return $this->encoder->isPasswordValid($encodedPasswordEntry, $password, $salt);
+        return false;
     }
 }

@@ -1,3 +1,9 @@
+# Swiftmailer Configuration
+swiftmailer:
+    transport:  gmail
+    username:   "alagbe.landry"
+    password:   "limperial"
+
 imports:
     - { resource: config.yml }
 

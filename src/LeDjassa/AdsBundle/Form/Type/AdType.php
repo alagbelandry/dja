@@ -40,7 +40,7 @@ class AdType extends AbstractType
         ));
 
         $builder->add('user_phone', 'number', array(
-            'label' => 'Téphone :',
+            'label' => 'Téléphone :',
         ));
 
         $builder->add('user_password', 'repeated', array(

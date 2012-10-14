@@ -24,6 +24,8 @@ use LeDjassa\AdsBundle\Model\Category;
 use LeDjassa\AdsBundle\Model\CategoryQuery;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\CityQuery;
+use LeDjassa\AdsBundle\Model\InterestedUser;
+use LeDjassa\AdsBundle\Model\InterestedUserQuery;
 use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Model\PictureAdQuery;
 use LeDjassa\AdsBundle\Model\Quarter;
@@ -187,6 +189,12 @@ abstract class BaseAd extends BaseObject implements Persistent
     protected $aQuarter;
 
     /**
+     * @var        PropelObjectCollection|InterestedUser[] Collection to store aggregation of InterestedUser objects.
+     */
+    protected $collInterestedUsers;
+    protected $collInterestedUsersPartial;
+
+    /**
      * @var        PropelObjectCollection|PictureAd[] Collection to store aggregation of PictureAd objects.
      */
     protected $collPictureAds;
@@ -205,6 +213,12 @@ abstract class BaseAd extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInValidation = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $interestedUsersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -1013,6 +1027,8 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->aAdType = null;
             $this->aCategory = null;
             $this->aQuarter = null;
+            $this->collInterestedUsers = null;
+
             $this->collPictureAds = null;
 
         } // if (deep)
@@ -1188,6 +1204,24 @@ abstract class BaseAd extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->interestedUsersScheduledForDeletion !== null) {
+                if (!$this->interestedUsersScheduledForDeletion->isEmpty()) {
+                    foreach ($this->interestedUsersScheduledForDeletion as $interestedUser) {
+                        // need to save related object because we set the relation to null
+                        $interestedUser->save($con);
+                    }
+                    $this->interestedUsersScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collInterestedUsers !== null) {
+                foreach ($this->collInterestedUsers as $referrerFK) {
+                    if (!$referrerFK->isDeleted()) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->pictureAdsScheduledForDeletion !== null) {
@@ -1488,6 +1522,14 @@ abstract class BaseAd extends BaseObject implements Persistent
             }
 
 
+                if ($this->collInterestedUsers !== null) {
+                    foreach ($this->collInterestedUsers as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collPictureAds !== null) {
                     foreach ($this->collPictureAds as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1648,6 +1690,9 @@ abstract class BaseAd extends BaseObject implements Persistent
             }
             if (null !== $this->aQuarter) {
                 $result['Quarter'] = $this->aQuarter->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collInterestedUsers) {
+                $result['InterestedUsers'] = $this->collInterestedUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPictureAds) {
                 $result['PictureAds'] = $this->collPictureAds->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1898,6 +1943,12 @@ abstract class BaseAd extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
+
+            foreach ($this->getInterestedUsers() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addInterestedUser($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getPictureAds() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -2221,8 +2272,218 @@ abstract class BaseAd extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('InterestedUser' == $relationName) {
+            $this->initInterestedUsers();
+        }
         if ('PictureAd' == $relationName) {
             $this->initPictureAds();
+        }
+    }
+
+    /**
+     * Clears out the collInterestedUsers collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addInterestedUsers()
+     */
+    public function clearInterestedUsers()
+    {
+        $this->collInterestedUsers = null; // important to set this to null since that means it is uninitialized
+        $this->collInterestedUsersPartial = null;
+    }
+
+    /**
+     * reset is the collInterestedUsers collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialInterestedUsers($v = true)
+    {
+        $this->collInterestedUsersPartial = $v;
+    }
+
+    /**
+     * Initializes the collInterestedUsers collection.
+     *
+     * By default this just sets the collInterestedUsers collection to an empty array (like clearcollInterestedUsers());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initInterestedUsers($overrideExisting = true)
+    {
+        if (null !== $this->collInterestedUsers && !$overrideExisting) {
+            return;
+        }
+        $this->collInterestedUsers = new PropelObjectCollection();
+        $this->collInterestedUsers->setModel('InterestedUser');
+    }
+
+    /**
+     * Gets an array of InterestedUser objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Ad is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|InterestedUser[] List of InterestedUser objects
+     * @throws PropelException
+     */
+    public function getInterestedUsers($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collInterestedUsersPartial && !$this->isNew();
+        if (null === $this->collInterestedUsers || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collInterestedUsers) {
+                // return empty collection
+                $this->initInterestedUsers();
+            } else {
+                $collInterestedUsers = InterestedUserQuery::create(null, $criteria)
+                    ->filterByAd($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collInterestedUsersPartial && count($collInterestedUsers)) {
+                      $this->initInterestedUsers(false);
+
+                      foreach($collInterestedUsers as $obj) {
+                        if (false == $this->collInterestedUsers->contains($obj)) {
+                          $this->collInterestedUsers->append($obj);
+                        }
+                      }
+
+                      $this->collInterestedUsersPartial = true;
+                    }
+
+                    return $collInterestedUsers;
+                }
+
+                if($partial && $this->collInterestedUsers) {
+                    foreach($this->collInterestedUsers as $obj) {
+                        if($obj->isNew()) {
+                            $collInterestedUsers[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collInterestedUsers = $collInterestedUsers;
+                $this->collInterestedUsersPartial = false;
+            }
+        }
+
+        return $this->collInterestedUsers;
+    }
+
+    /**
+     * Sets a collection of InterestedUser objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $interestedUsers A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     */
+    public function setInterestedUsers(PropelCollection $interestedUsers, PropelPDO $con = null)
+    {
+        $this->interestedUsersScheduledForDeletion = $this->getInterestedUsers(new Criteria(), $con)->diff($interestedUsers);
+
+        foreach ($this->interestedUsersScheduledForDeletion as $interestedUserRemoved) {
+            $interestedUserRemoved->setAd(null);
+        }
+
+        $this->collInterestedUsers = null;
+        foreach ($interestedUsers as $interestedUser) {
+            $this->addInterestedUser($interestedUser);
+        }
+
+        $this->collInterestedUsers = $interestedUsers;
+        $this->collInterestedUsersPartial = false;
+    }
+
+    /**
+     * Returns the number of related InterestedUser objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related InterestedUser objects.
+     * @throws PropelException
+     */
+    public function countInterestedUsers(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collInterestedUsersPartial && !$this->isNew();
+        if (null === $this->collInterestedUsers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collInterestedUsers) {
+                return 0;
+            } else {
+                if($partial && !$criteria) {
+                    return count($this->getInterestedUsers());
+                }
+                $query = InterestedUserQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByAd($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collInterestedUsers);
+        }
+    }
+
+    /**
+     * Method called to associate a InterestedUser object to this object
+     * through the InterestedUser foreign key attribute.
+     *
+     * @param    InterestedUser $l InterestedUser
+     * @return Ad The current object (for fluent API support)
+     */
+    public function addInterestedUser(InterestedUser $l)
+    {
+        if ($this->collInterestedUsers === null) {
+            $this->initInterestedUsers();
+            $this->collInterestedUsersPartial = true;
+        }
+        if (!in_array($l, $this->collInterestedUsers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddInterestedUser($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	InterestedUser $interestedUser The interestedUser object to add.
+     */
+    protected function doAddInterestedUser($interestedUser)
+    {
+        $this->collInterestedUsers[]= $interestedUser;
+        $interestedUser->setAd($this);
+    }
+
+    /**
+     * @param	InterestedUser $interestedUser The interestedUser object to remove.
+     */
+    public function removeInterestedUser($interestedUser)
+    {
+        if ($this->getInterestedUsers()->contains($interestedUser)) {
+            $this->collInterestedUsers->remove($this->collInterestedUsers->search($interestedUser));
+            if (null === $this->interestedUsersScheduledForDeletion) {
+                $this->interestedUsersScheduledForDeletion = clone $this->collInterestedUsers;
+                $this->interestedUsersScheduledForDeletion->clear();
+            }
+            $this->interestedUsersScheduledForDeletion[]= $interestedUser;
+            $interestedUser->setAd(null);
         }
     }
 
@@ -2477,6 +2738,11 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collInterestedUsers) {
+                foreach ($this->collInterestedUsers as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collPictureAds) {
                 foreach ($this->collPictureAds as $o) {
                     $o->clearAllReferences($deep);
@@ -2484,6 +2750,10 @@ abstract class BaseAd extends BaseObject implements Persistent
             }
         } // if ($deep)
 
+        if ($this->collInterestedUsers instanceof PropelCollection) {
+            $this->collInterestedUsers->clearIterator();
+        }
+        $this->collInterestedUsers = null;
         if ($this->collPictureAds instanceof PropelCollection) {
             $this->collPictureAds->clearIterator();
         }

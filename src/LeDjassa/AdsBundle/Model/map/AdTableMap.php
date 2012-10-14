@@ -74,6 +74,7 @@ class AdTableMap extends TableMap
         $this->addRelation('AdType', 'LeDjassa\\AdsBundle\\Model\\AdType', RelationMap::MANY_TO_ONE, array('ad_type_id' => 'id', ), null, null);
         $this->addRelation('Category', 'LeDjassa\\AdsBundle\\Model\\Category', RelationMap::MANY_TO_ONE, array('category_id' => 'id', ), null, null);
         $this->addRelation('Quarter', 'LeDjassa\\AdsBundle\\Model\\Quarter', RelationMap::MANY_TO_ONE, array('quarter_id' => 'id', ), null, null);
+        $this->addRelation('InterestedUser', 'LeDjassa\\AdsBundle\\Model\\InterestedUser', RelationMap::ONE_TO_MANY, array('id' => 'ad_id', ), null, null, 'InterestedUsers');
         $this->addRelation('PictureAd', 'LeDjassa\\AdsBundle\\Model\\PictureAd', RelationMap::ONE_TO_MANY, array('id' => 'ad_id', ), null, null, 'PictureAds');
     } // buildRelations()
 

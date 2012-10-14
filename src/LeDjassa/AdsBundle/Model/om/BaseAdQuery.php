@@ -18,6 +18,7 @@ use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\AdType;
 use LeDjassa\AdsBundle\Model\Category;
 use LeDjassa\AdsBundle\Model\City;
+use LeDjassa\AdsBundle\Model\InterestedUser;
 use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Model\Quarter;
 use LeDjassa\AdsBundle\Model\UserType;
@@ -84,6 +85,10 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery leftJoinQuarter($relationAlias = null) Adds a LEFT JOIN clause to the query using the Quarter relation
  * @method AdQuery rightJoinQuarter($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Quarter relation
  * @method AdQuery innerJoinQuarter($relationAlias = null) Adds a INNER JOIN clause to the query using the Quarter relation
+ *
+ * @method AdQuery leftJoinInterestedUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the InterestedUser relation
+ * @method AdQuery rightJoinInterestedUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the InterestedUser relation
+ * @method AdQuery innerJoinInterestedUser($relationAlias = null) Adds a INNER JOIN clause to the query using the InterestedUser relation
  *
  * @method AdQuery leftJoinPictureAd($relationAlias = null) Adds a LEFT JOIN clause to the query using the PictureAd relation
  * @method AdQuery rightJoinPictureAd($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PictureAd relation
@@ -1326,6 +1331,80 @@ abstract class BaseAdQuery extends ModelCriteria
         return $this
             ->joinQuarter($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Quarter', '\LeDjassa\AdsBundle\Model\QuarterQuery');
+    }
+
+    /**
+     * Filter the query by a related InterestedUser object
+     *
+     * @param   InterestedUser|PropelObjectCollection $interestedUser  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return   AdQuery The current query, for fluid interface
+     * @throws   PropelException - if the provided filter is invalid.
+     */
+    public function filterByInterestedUser($interestedUser, $comparison = null)
+    {
+        if ($interestedUser instanceof InterestedUser) {
+            return $this
+                ->addUsingAlias(AdPeer::ID, $interestedUser->getAdId(), $comparison);
+        } elseif ($interestedUser instanceof PropelObjectCollection) {
+            return $this
+                ->useInterestedUserQuery()
+                ->filterByPrimaryKeys($interestedUser->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByInterestedUser() only accepts arguments of type InterestedUser or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the InterestedUser relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function joinInterestedUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('InterestedUser');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'InterestedUser');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the InterestedUser relation InterestedUser object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \LeDjassa\AdsBundle\Model\InterestedUserQuery A secondary query class using the current class as primary query
+     */
+    public function useInterestedUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinInterestedUser($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'InterestedUser', '\LeDjassa\AdsBundle\Model\InterestedUserQuery');
     }
 
     /**

@@ -57,16 +57,11 @@ class AdController extends Controller
     /**
     * @Route("/afficher/{idAd}", name="ad_show")
     * @Template()
+    * @param int $idAd ad identifier
     */
     public function showAction($idAd)
     {   
-        $ad = AdQuery::create()
-                ->findOneById($idAd);
-
-        if (!$ad instanceof Ad) {
-            throw $this->createNotFoundException('Ad not found!');
-        }
-
+        $ad = $this->getAd($idAd);
 
         return $this->render('LeDjassaAdsBundle:Ad:show.html.twig', array(
             'ad' => $ad->getProperties()
@@ -76,31 +71,38 @@ class AdController extends Controller
    /**
     * @Route("/modifier/{idAd}", name="ad_edit")
     * @Template()
+    * @param int $idAd ad identifier
     */
     public function editAction($idAd)
     {   
-        // Todo : Factoriser dans les controlleur ou sa existe
-        $ad = AdQuery::create()
-                ->findOneById($idAd);
+        $ad = $this->getAd($idAd);
 
-        if (!$ad instanceof Ad) {
-            throw $this->createNotFoundException('Ad not found!');
-        }
-
-        $form = $this->createForm(new AdEditAccessType());
+        $form = $this->createForm(new AdEditType(), $ad);
             
         $request = $this->get('request');
-
-        $formHandler = new AdEditAccessHandler($form, $request, $ad, new MessageDigestPasswordEncoder('sha512', true, 10));
+        $formHandler = new AdEditHandler($form, $request, new MessageDigestPasswordEncoder('sha512', true, 10));
         $process = $formHandler->process();
 
-        if ($process) {
+        if ($process == AdEditHandler::AD_SAVE_SUCCESS_STATUT) {
 
-            return $this->render('LeDjassaAdsBundle:Ad:editSuccess.html.twig');
+            return $this->render('LeDjassaAdsBundle:Ad:editSuccess.html.twig', array(
+                'ad' => $ad->getProperties()
+            ));
+
+        } elseif ($process == AdEditHandler::INVALID_PASSWORD_STATUT) {
+
+            return array(
+                'form' => $form->createView(), 
+                'ad' => $ad->getProperties(), 
+                'isInvalidPassword' => true
+            );
 
         } elseif ('GET' === $request->getMethod()) {
 
-            return array('form' => $form->createView(), 'ad' => $ad);
+            return array(
+                'form'  => $form->createView(), 
+                'ad' => $ad->getProperties()
+            );
 
         } else {
             throw new Exception("An error occurs during edit ad action");
@@ -110,16 +112,11 @@ class AdController extends Controller
    /**
     * @Route("/supprimer/{idAd}", name="ad_delete")
     * @Template()
+    * @param int $idAd ad identifier
     */
     public function deleteAction($idAd)
     {   
-        // Todo : Factoriser dans les controlleur ou sa existe
-        $ad = AdQuery::create()
-                ->findOneById($idAd);
-
-        if (!$ad instanceof Ad) {
-            throw $this->createNotFoundException('Ad not found!');
-        }
+        $ad = $this->getAd($idAd);
 
         $request = $this->get('request');
 
@@ -133,11 +130,18 @@ class AdController extends Controller
              
         } elseif ($process == AdDeleteHandler::INVALID_PASSWORD_STATUT) {
 
-            return array('form' => $form->createView(), 'ad' => $ad->getProperties(), 'isInvalidPassword' => true);
+            return array(
+                'form' => $form->createView(), 
+                'ad' => $ad->getProperties(), 
+                'isInvalidPassword' => true
+            );
 
         } elseif ('GET' === $request->getMethod()) {
 
-            return array('form' => $form->createView(), 'ad' => $ad->getProperties());
+            return array(
+                'form' => $form->createView(),
+                'ad' => $ad->getProperties()
+            );
 
         } else {
 
@@ -167,11 +171,28 @@ class AdController extends Controller
 
         } elseif ('GET' === $request->getMethod()) {
 
-            return array('form' => $form->createView(), 'ad' => $ad);
-
+            return array(
+                'form' => $form->createView(),
+                'ad' => $ad
+            );
+            
         } else {
             throw new Exception("An error occurs during add ad action");
         }
     }
 
+    /**
+     * Get ad
+     * @param int $id ad identifier
+     * @return Ad $ad ad
+     */
+    public function getAd($id) {
+        $ad = AdQuery::create()
+                ->findOneById($id);
+
+        if (!$ad instanceof Ad) {
+            throw $this->createNotFoundException('Ad not found!');
+        }
+        return $ad;
+    }
 }

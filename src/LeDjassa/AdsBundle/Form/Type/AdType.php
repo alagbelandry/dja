@@ -30,6 +30,26 @@ class AdType extends AbstractType
             'required' => false, 
         ));
 
+        // User information
+        $builder->add('user_name', 'text', array(
+            'label' => 'Votre nom :',
+        ));
+
+        $builder->add('user_email', 'email', array(
+            'label' => 'Votre adresse email :',
+        ));
+
+        $builder->add('user_phone', 'number', array(
+            'label' => 'Téphone :',
+        ));
+
+        $builder->add('user_password', 'repeated', array(
+                'type' => 'password',
+                'first_options'  => array('label' => 'Mot de passe'),
+                'second_options' => array('label' => 'Confirmer le mot de passe'),
+                'attr'           => array('autocomplete' => 'off')   
+        ));
+
         // Category  relation
         $builder->add('category', 'model', array(
             'class'    => 'LeDjassa\AdsBundle\Model\Category',

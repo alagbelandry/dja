@@ -14,6 +14,7 @@ use LeDjassa\AdsBundle\Model\AdPeer;
 use LeDjassa\AdsBundle\Model\AdTypePeer;
 use LeDjassa\AdsBundle\Model\CategoryPeer;
 use LeDjassa\AdsBundle\Model\CityPeer;
+use LeDjassa\AdsBundle\Model\QuarterPeer;
 use LeDjassa\AdsBundle\Model\UserTypePeer;
 use LeDjassa\AdsBundle\Model\map\AdTableMap;
 
@@ -33,13 +34,13 @@ abstract class BaseAdPeer
     const TM_CLASS = 'AdTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 17;
+    const NUM_COLUMNS = 18;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 17;
+    const NUM_HYDRATE_COLUMNS = 18;
 
     /** the column name for the ID field */
     const ID = 'ad.ID';
@@ -92,6 +93,9 @@ abstract class BaseAdPeer
     /** the column name for the CITY_ID field */
     const CITY_ID = 'ad.CITY_ID';
 
+    /** the column name for the QUARTER_ID field */
+    const QUARTER_ID = 'ad.QUARTER_ID';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -111,12 +115,12 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[AdPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'Statut', 'UserName', 'UserEmail', 'UserPassword', 'UserSalt', 'UserPhone', 'UserIpAdress', 'CreatedAt', 'UpdatedAt', 'AdTypeId', 'CategoryId', 'UserTypeId', 'CityId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'description', 'price', 'statut', 'userName', 'userEmail', 'userPassword', 'userSalt', 'userPhone', 'userIpAdress', 'createdAt', 'updatedAt', 'adTypeId', 'categoryId', 'userTypeId', 'cityId', ),
-        BasePeer::TYPE_COLNAME => array (AdPeer::ID, AdPeer::TITLE, AdPeer::DESCRIPTION, AdPeer::PRICE, AdPeer::STATUT, AdPeer::USER_NAME, AdPeer::USER_EMAIL, AdPeer::USER_PASSWORD, AdPeer::USER_SALT, AdPeer::USER_PHONE, AdPeer::USER_IP_ADRESS, AdPeer::CREATED_AT, AdPeer::UPDATED_AT, AdPeer::AD_TYPE_ID, AdPeer::CATEGORY_ID, AdPeer::USER_TYPE_ID, AdPeer::CITY_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'DESCRIPTION', 'PRICE', 'STATUT', 'USER_NAME', 'USER_EMAIL', 'USER_PASSWORD', 'USER_SALT', 'USER_PHONE', 'USER_IP_ADRESS', 'CREATED_AT', 'UPDATED_AT', 'AD_TYPE_ID', 'CATEGORY_ID', 'USER_TYPE_ID', 'CITY_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'description', 'price', 'statut', 'user_name', 'user_email', 'user_password', 'user_salt', 'user_phone', 'user_ip_adress', 'created_at', 'updated_at', 'ad_type_id', 'category_id', 'user_type_id', 'city_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'Statut', 'UserName', 'UserEmail', 'UserPassword', 'UserSalt', 'UserPhone', 'UserIpAdress', 'CreatedAt', 'UpdatedAt', 'AdTypeId', 'CategoryId', 'UserTypeId', 'CityId', 'QuarterId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'description', 'price', 'statut', 'userName', 'userEmail', 'userPassword', 'userSalt', 'userPhone', 'userIpAdress', 'createdAt', 'updatedAt', 'adTypeId', 'categoryId', 'userTypeId', 'cityId', 'quarterId', ),
+        BasePeer::TYPE_COLNAME => array (AdPeer::ID, AdPeer::TITLE, AdPeer::DESCRIPTION, AdPeer::PRICE, AdPeer::STATUT, AdPeer::USER_NAME, AdPeer::USER_EMAIL, AdPeer::USER_PASSWORD, AdPeer::USER_SALT, AdPeer::USER_PHONE, AdPeer::USER_IP_ADRESS, AdPeer::CREATED_AT, AdPeer::UPDATED_AT, AdPeer::AD_TYPE_ID, AdPeer::CATEGORY_ID, AdPeer::USER_TYPE_ID, AdPeer::CITY_ID, AdPeer::QUARTER_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'DESCRIPTION', 'PRICE', 'STATUT', 'USER_NAME', 'USER_EMAIL', 'USER_PASSWORD', 'USER_SALT', 'USER_PHONE', 'USER_IP_ADRESS', 'CREATED_AT', 'UPDATED_AT', 'AD_TYPE_ID', 'CATEGORY_ID', 'USER_TYPE_ID', 'CITY_ID', 'QUARTER_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'description', 'price', 'statut', 'user_name', 'user_email', 'user_password', 'user_salt', 'user_phone', 'user_ip_adress', 'created_at', 'updated_at', 'ad_type_id', 'category_id', 'user_type_id', 'city_id', 'quarter_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
     );
 
     /**
@@ -126,12 +130,12 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'Statut' => 4, 'UserName' => 5, 'UserEmail' => 6, 'UserPassword' => 7, 'UserSalt' => 8, 'UserPhone' => 9, 'UserIpAdress' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, 'AdTypeId' => 13, 'CategoryId' => 14, 'UserTypeId' => 15, 'CityId' => 16, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'userName' => 5, 'userEmail' => 6, 'userPassword' => 7, 'userSalt' => 8, 'userPhone' => 9, 'userIpAdress' => 10, 'createdAt' => 11, 'updatedAt' => 12, 'adTypeId' => 13, 'categoryId' => 14, 'userTypeId' => 15, 'cityId' => 16, ),
-        BasePeer::TYPE_COLNAME => array (AdPeer::ID => 0, AdPeer::TITLE => 1, AdPeer::DESCRIPTION => 2, AdPeer::PRICE => 3, AdPeer::STATUT => 4, AdPeer::USER_NAME => 5, AdPeer::USER_EMAIL => 6, AdPeer::USER_PASSWORD => 7, AdPeer::USER_SALT => 8, AdPeer::USER_PHONE => 9, AdPeer::USER_IP_ADRESS => 10, AdPeer::CREATED_AT => 11, AdPeer::UPDATED_AT => 12, AdPeer::AD_TYPE_ID => 13, AdPeer::CATEGORY_ID => 14, AdPeer::USER_TYPE_ID => 15, AdPeer::CITY_ID => 16, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'DESCRIPTION' => 2, 'PRICE' => 3, 'STATUT' => 4, 'USER_NAME' => 5, 'USER_EMAIL' => 6, 'USER_PASSWORD' => 7, 'USER_SALT' => 8, 'USER_PHONE' => 9, 'USER_IP_ADRESS' => 10, 'CREATED_AT' => 11, 'UPDATED_AT' => 12, 'AD_TYPE_ID' => 13, 'CATEGORY_ID' => 14, 'USER_TYPE_ID' => 15, 'CITY_ID' => 16, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'user_name' => 5, 'user_email' => 6, 'user_password' => 7, 'user_salt' => 8, 'user_phone' => 9, 'user_ip_adress' => 10, 'created_at' => 11, 'updated_at' => 12, 'ad_type_id' => 13, 'category_id' => 14, 'user_type_id' => 15, 'city_id' => 16, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'Statut' => 4, 'UserName' => 5, 'UserEmail' => 6, 'UserPassword' => 7, 'UserSalt' => 8, 'UserPhone' => 9, 'UserIpAdress' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, 'AdTypeId' => 13, 'CategoryId' => 14, 'UserTypeId' => 15, 'CityId' => 16, 'QuarterId' => 17, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'userName' => 5, 'userEmail' => 6, 'userPassword' => 7, 'userSalt' => 8, 'userPhone' => 9, 'userIpAdress' => 10, 'createdAt' => 11, 'updatedAt' => 12, 'adTypeId' => 13, 'categoryId' => 14, 'userTypeId' => 15, 'cityId' => 16, 'quarterId' => 17, ),
+        BasePeer::TYPE_COLNAME => array (AdPeer::ID => 0, AdPeer::TITLE => 1, AdPeer::DESCRIPTION => 2, AdPeer::PRICE => 3, AdPeer::STATUT => 4, AdPeer::USER_NAME => 5, AdPeer::USER_EMAIL => 6, AdPeer::USER_PASSWORD => 7, AdPeer::USER_SALT => 8, AdPeer::USER_PHONE => 9, AdPeer::USER_IP_ADRESS => 10, AdPeer::CREATED_AT => 11, AdPeer::UPDATED_AT => 12, AdPeer::AD_TYPE_ID => 13, AdPeer::CATEGORY_ID => 14, AdPeer::USER_TYPE_ID => 15, AdPeer::CITY_ID => 16, AdPeer::QUARTER_ID => 17, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'DESCRIPTION' => 2, 'PRICE' => 3, 'STATUT' => 4, 'USER_NAME' => 5, 'USER_EMAIL' => 6, 'USER_PASSWORD' => 7, 'USER_SALT' => 8, 'USER_PHONE' => 9, 'USER_IP_ADRESS' => 10, 'CREATED_AT' => 11, 'UPDATED_AT' => 12, 'AD_TYPE_ID' => 13, 'CATEGORY_ID' => 14, 'USER_TYPE_ID' => 15, 'CITY_ID' => 16, 'QUARTER_ID' => 17, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'user_name' => 5, 'user_email' => 6, 'user_password' => 7, 'user_salt' => 8, 'user_phone' => 9, 'user_ip_adress' => 10, 'created_at' => 11, 'updated_at' => 12, 'ad_type_id' => 13, 'category_id' => 14, 'user_type_id' => 15, 'city_id' => 16, 'quarter_id' => 17, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
     );
 
     /**
@@ -222,6 +226,7 @@ abstract class BaseAdPeer
             $criteria->addSelectColumn(AdPeer::CATEGORY_ID);
             $criteria->addSelectColumn(AdPeer::USER_TYPE_ID);
             $criteria->addSelectColumn(AdPeer::CITY_ID);
+            $criteria->addSelectColumn(AdPeer::QUARTER_ID);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.TITLE');
@@ -240,6 +245,7 @@ abstract class BaseAdPeer
             $criteria->addSelectColumn($alias . '.CATEGORY_ID');
             $criteria->addSelectColumn($alias . '.USER_TYPE_ID');
             $criteria->addSelectColumn($alias . '.CITY_ID');
+            $criteria->addSelectColumn($alias . '.QUARTER_ID');
         }
     }
 
@@ -741,6 +747,57 @@ abstract class BaseAdPeer
 
 
     /**
+     * Returns the number of rows matching criteria, joining the related Quarter table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinQuarter(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(AdPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            AdPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(AdPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(AdPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
      * Selects a collection of Ad objects pre-filled with their City objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -1009,6 +1066,73 @@ abstract class BaseAdPeer
 
 
     /**
+     * Selects a collection of Ad objects pre-filled with their Quarter objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Ad objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinQuarter(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(AdPeer::DATABASE_NAME);
+        }
+
+        AdPeer::addSelectColumns($criteria);
+        $startcol = AdPeer::NUM_HYDRATE_COLUMNS;
+        QuarterPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = AdPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = AdPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = AdPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                AdPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = QuarterPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = QuarterPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = QuarterPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    QuarterPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Ad) to $obj2 (Quarter)
+                $obj2->addAd($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
      * Returns the number of rows matching criteria, joining all related tables
      *
      * @param      Criteria $criteria
@@ -1051,6 +1175,8 @@ abstract class BaseAdPeer
         $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1098,6 +1224,9 @@ abstract class BaseAdPeer
         CategoryPeer::addSelectColumns($criteria);
         $startcol6 = $startcol5 + CategoryPeer::NUM_HYDRATE_COLUMNS;
 
+        QuarterPeer::addSelectColumns($criteria);
+        $startcol7 = $startcol6 + QuarterPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(AdPeer::CITY_ID, CityPeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::USER_TYPE_ID, UserTypePeer::ID, $join_behavior);
@@ -1105,6 +1234,8 @@ abstract class BaseAdPeer
         $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -1195,6 +1326,24 @@ abstract class BaseAdPeer
                 $obj5->addAd($obj1);
             } // if joined row not null
 
+            // Add objects for joined Quarter rows
+
+            $key6 = QuarterPeer::getPrimaryKeyHashFromRow($row, $startcol6);
+            if ($key6 !== null) {
+                $obj6 = QuarterPeer::getInstanceFromPool($key6);
+                if (!$obj6) {
+
+                    $cls = QuarterPeer::getOMClass();
+
+                    $obj6 = new $cls();
+                    $obj6->hydrate($row, $startcol6);
+                    QuarterPeer::addInstanceToPool($obj6, $key6);
+                } // if obj6 loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj6 (Quarter)
+                $obj6->addAd($obj1);
+            } // if joined row not null
+
             $results[] = $obj1;
         }
         $stmt->closeCursor();
@@ -1244,6 +1393,8 @@ abstract class BaseAdPeer
         $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1300,6 +1451,8 @@ abstract class BaseAdPeer
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
 
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
+
         $stmt = BasePeer::doCount($criteria, $con);
 
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -1354,6 +1507,8 @@ abstract class BaseAdPeer
         $criteria->addJoin(AdPeer::USER_TYPE_ID, UserTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1410,6 +1565,65 @@ abstract class BaseAdPeer
 
         $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
 
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related Quarter table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptQuarter(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(AdPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            AdPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(AdPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(AdPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(AdPeer::CITY_ID, CityPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::USER_TYPE_ID, UserTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
         $stmt = BasePeer::doCount($criteria, $con);
 
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -1456,11 +1670,16 @@ abstract class BaseAdPeer
         CategoryPeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + CategoryPeer::NUM_HYDRATE_COLUMNS;
 
+        QuarterPeer::addSelectColumns($criteria);
+        $startcol6 = $startcol5 + QuarterPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(AdPeer::USER_TYPE_ID, UserTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1537,6 +1756,25 @@ abstract class BaseAdPeer
 
             } // if joined row is not null
 
+                // Add objects for joined Quarter rows
+
+                $key5 = QuarterPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+                if ($key5 !== null) {
+                    $obj5 = QuarterPeer::getInstanceFromPool($key5);
+                    if (!$obj5) {
+
+                        $cls = QuarterPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    QuarterPeer::addInstanceToPool($obj5, $key5);
+                } // if $obj5 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj5 (Quarter)
+                $obj5->addAd($obj1);
+
+            } // if joined row is not null
+
             $results[] = $obj1;
         }
         $stmt->closeCursor();
@@ -1578,11 +1816,16 @@ abstract class BaseAdPeer
         CategoryPeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + CategoryPeer::NUM_HYDRATE_COLUMNS;
 
+        QuarterPeer::addSelectColumns($criteria);
+        $startcol6 = $startcol5 + QuarterPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(AdPeer::CITY_ID, CityPeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1659,6 +1902,25 @@ abstract class BaseAdPeer
 
             } // if joined row is not null
 
+                // Add objects for joined Quarter rows
+
+                $key5 = QuarterPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+                if ($key5 !== null) {
+                    $obj5 = QuarterPeer::getInstanceFromPool($key5);
+                    if (!$obj5) {
+
+                        $cls = QuarterPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    QuarterPeer::addInstanceToPool($obj5, $key5);
+                } // if $obj5 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj5 (Quarter)
+                $obj5->addAd($obj1);
+
+            } // if joined row is not null
+
             $results[] = $obj1;
         }
         $stmt->closeCursor();
@@ -1700,11 +1962,16 @@ abstract class BaseAdPeer
         CategoryPeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + CategoryPeer::NUM_HYDRATE_COLUMNS;
 
+        QuarterPeer::addSelectColumns($criteria);
+        $startcol6 = $startcol5 + QuarterPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(AdPeer::CITY_ID, CityPeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::USER_TYPE_ID, UserTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1781,6 +2048,25 @@ abstract class BaseAdPeer
 
             } // if joined row is not null
 
+                // Add objects for joined Quarter rows
+
+                $key5 = QuarterPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+                if ($key5 !== null) {
+                    $obj5 = QuarterPeer::getInstanceFromPool($key5);
+                    if (!$obj5) {
+
+                        $cls = QuarterPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    QuarterPeer::addInstanceToPool($obj5, $key5);
+                } // if $obj5 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj5 (Quarter)
+                $obj5->addAd($obj1);
+
+            } // if joined row is not null
+
             $results[] = $obj1;
         }
         $stmt->closeCursor();
@@ -1822,11 +2108,16 @@ abstract class BaseAdPeer
         AdTypePeer::addSelectColumns($criteria);
         $startcol5 = $startcol4 + AdTypePeer::NUM_HYDRATE_COLUMNS;
 
+        QuarterPeer::addSelectColumns($criteria);
+        $startcol6 = $startcol5 + QuarterPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(AdPeer::CITY_ID, CityPeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::USER_TYPE_ID, UserTypePeer::ID, $join_behavior);
 
         $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::QUARTER_ID, QuarterPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1900,6 +2191,171 @@ abstract class BaseAdPeer
 
                 // Add the $obj1 (Ad) to the collection in $obj4 (AdType)
                 $obj4->addAd($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Quarter rows
+
+                $key5 = QuarterPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+                if ($key5 !== null) {
+                    $obj5 = QuarterPeer::getInstanceFromPool($key5);
+                    if (!$obj5) {
+
+                        $cls = QuarterPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    QuarterPeer::addInstanceToPool($obj5, $key5);
+                } // if $obj5 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj5 (Quarter)
+                $obj5->addAd($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of Ad objects pre-filled with all related objects except Quarter.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Ad objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptQuarter(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(AdPeer::DATABASE_NAME);
+        }
+
+        AdPeer::addSelectColumns($criteria);
+        $startcol2 = AdPeer::NUM_HYDRATE_COLUMNS;
+
+        CityPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + CityPeer::NUM_HYDRATE_COLUMNS;
+
+        UserTypePeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + UserTypePeer::NUM_HYDRATE_COLUMNS;
+
+        AdTypePeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + AdTypePeer::NUM_HYDRATE_COLUMNS;
+
+        CategoryPeer::addSelectColumns($criteria);
+        $startcol6 = $startcol5 + CategoryPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(AdPeer::CITY_ID, CityPeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::USER_TYPE_ID, UserTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::AD_TYPE_ID, AdTypePeer::ID, $join_behavior);
+
+        $criteria->addJoin(AdPeer::CATEGORY_ID, CategoryPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = AdPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = AdPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = AdPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                AdPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined City rows
+
+                $key2 = CityPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = CityPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = CityPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    CityPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj2 (City)
+                $obj2->addAd($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined UserType rows
+
+                $key3 = UserTypePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = UserTypePeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = UserTypePeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    UserTypePeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj3 (UserType)
+                $obj3->addAd($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined AdType rows
+
+                $key4 = AdTypePeer::getPrimaryKeyHashFromRow($row, $startcol4);
+                if ($key4 !== null) {
+                    $obj4 = AdTypePeer::getInstanceFromPool($key4);
+                    if (!$obj4) {
+
+                        $cls = AdTypePeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    AdTypePeer::addInstanceToPool($obj4, $key4);
+                } // if $obj4 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj4 (AdType)
+                $obj4->addAd($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined Category rows
+
+                $key5 = CategoryPeer::getPrimaryKeyHashFromRow($row, $startcol5);
+                if ($key5 !== null) {
+                    $obj5 = CategoryPeer::getInstanceFromPool($key5);
+                    if (!$obj5) {
+
+                        $cls = CategoryPeer::getOMClass();
+
+                    $obj5 = new $cls();
+                    $obj5->hydrate($row, $startcol5);
+                    CategoryPeer::addInstanceToPool($obj5, $key5);
+                } // if $obj5 already loaded
+
+                // Add the $obj1 (Ad) to the collection in $obj5 (Category)
+                $obj5->addAd($obj1);
 
             } // if joined row is not null
 

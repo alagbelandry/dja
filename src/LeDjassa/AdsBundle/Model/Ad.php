@@ -35,28 +35,14 @@ class Ad extends BaseAd
 		$city = $this->getCity();
 		if ($city instanceof City) {
 			$nameCity = $city->getName();
-
-			$area = $city->getArea();
-			if ($area instanceof Area) {
-				$nameArea = $area->getName();
-			}
+			$nameArea = $city->getArea() instanceof Area ? $city->getArea()->getName() : '';
 		}
 
-		$category = $this->getCategory();
-		if ($category instanceof Category) {
-			$titleCategory = $category->getTitle();
-		}
-
-		$adType = $this->getAdType();
-		if ($adType instanceof AdType) {
-			$nameAdType = $adType->getName();
-		}
-
-		$userType = $this->getUserType();
-		if ($userType instanceof UserType) {
-			$titleUserType = $userType->getTitle();
-		}
-
+		$titleCategory = $this->getCategory() instanceof Category ? $this->getCategory()->getTitle() : '';
+		$nameAdType = $this->getAdType() instanceof AdType ? $this->getAdType()->getName() : '';
+		$titleUserType = $this->getUserType() instanceof UserType ? $this->getUserType()->getTitle() : '';
+		$nameQuarter = $this->getQuarter() instanceof Quarter ? $this->getQuarter()->getName() : '';
+		
 		//$pictureAds = $this->getPictureAds();
 
 		$properties = array(
@@ -64,13 +50,14 @@ class Ad extends BaseAd
 			'title'         => $this->title,
 			'description'   => $this->description,
 			'price'         => $this->price,
+			'createdDate'   => $this->getCreatedAt(),
 			'updatedDate'   => $this->getUpdatedAt(),
 			'userName'		=> $this->user_name,
 			'userEmail'		=> $this->user_email,
 			'userPhone'		=> $this->user_phone,
 			'nameCity'      => $nameCity,
 			'nameArea'      => $nameArea,
-			//'nameQuarter' => $this->id, link quarter to ad
+			'nameQuarter'   => $nameQuarter, 
 			'titleCategory' => $titleCategory,
 			'nameAdType'    => $nameAdType,
 			'titleUserType' => $titleUserType,

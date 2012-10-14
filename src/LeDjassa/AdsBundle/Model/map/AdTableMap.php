@@ -60,6 +60,7 @@ class AdTableMap extends TableMap
         $this->addForeignKey('CATEGORY_ID', 'CategoryId', 'INTEGER', 'category', 'ID', false, 6, null);
         $this->addForeignKey('USER_TYPE_ID', 'UserTypeId', 'INTEGER', 'user_type', 'ID', false, 6, null);
         $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
+        $this->addForeignKey('QUARTER_ID', 'QuarterId', 'INTEGER', 'quarter', 'ID', false, 6, null);
         // validators
     } // initialize()
 
@@ -72,6 +73,7 @@ class AdTableMap extends TableMap
         $this->addRelation('UserType', 'LeDjassa\\AdsBundle\\Model\\UserType', RelationMap::MANY_TO_ONE, array('user_type_id' => 'id', ), null, null);
         $this->addRelation('AdType', 'LeDjassa\\AdsBundle\\Model\\AdType', RelationMap::MANY_TO_ONE, array('ad_type_id' => 'id', ), null, null);
         $this->addRelation('Category', 'LeDjassa\\AdsBundle\\Model\\Category', RelationMap::MANY_TO_ONE, array('category_id' => 'id', ), null, null);
+        $this->addRelation('Quarter', 'LeDjassa\\AdsBundle\\Model\\Quarter', RelationMap::MANY_TO_ONE, array('quarter_id' => 'id', ), null, null);
         $this->addRelation('PictureAd', 'LeDjassa\\AdsBundle\\Model\\PictureAd', RelationMap::ONE_TO_MANY, array('id' => 'ad_id', ), null, null, 'PictureAds');
     } // buildRelations()
 

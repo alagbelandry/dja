@@ -204,11 +204,13 @@ CREATE TABLE `ad`
     `category_id` INTEGER(6),
     `user_type_id` INTEGER(6),
     `city_id` INTEGER(6),
+    `quarter_id` INTEGER(6),
     PRIMARY KEY (`id`),
     INDEX `ad_FI_1` (`city_id`),
     INDEX `ad_FI_2` (`user_type_id`),
     INDEX `ad_FI_3` (`ad_type_id`),
     INDEX `ad_FI_4` (`category_id`),
+    INDEX `ad_FI_5` (`quarter_id`),
     CONSTRAINT `ad_FK_1`
         FOREIGN KEY (`city_id`)
         REFERENCES `city` (`id`),
@@ -220,7 +222,10 @@ CREATE TABLE `ad`
         REFERENCES `ad_type` (`id`),
     CONSTRAINT `ad_FK_4`
         FOREIGN KEY (`category_id`)
-        REFERENCES `category` (`id`)
+        REFERENCES `category` (`id`),
+    CONSTRAINT `ad_FK_5`
+        FOREIGN KEY (`quarter_id`)
+        REFERENCES `quarter` (`id`)
 ) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='ad';
 
 -- ---------------------------------------------------------------------

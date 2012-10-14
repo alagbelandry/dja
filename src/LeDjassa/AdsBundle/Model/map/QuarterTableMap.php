@@ -55,6 +55,7 @@ class QuarterTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('City', 'LeDjassa\\AdsBundle\\Model\\City', RelationMap::MANY_TO_ONE, array('city_id' => 'id', ), null, null);
+        $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'quarter_id', ), null, null, 'Ads');
     } // buildRelations()
 
 } // QuarterTableMap

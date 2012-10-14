@@ -82,6 +82,27 @@
         </vendor>
     </table>
 
+    <table name="interested_user" description="interested user by ad">
+        <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
+        <column name="name" type="varchar" primaryString="1" size="100" />
+        <column name="email" type="varchar" size="100" />
+        <column name="phone" type="varchar" size="100" />
+        <column name="message" type="varchar" size="500" />
+        <column name="ip_adress" phpName="IpAdress" type="varchar" size="20" />
+        <column name="created_at" phpName="CreatedAt" type="timestamp" />
+        <column name="ad_id" phpName="AdId" type="integer" size="5" />
+        <foreign-key foreignTable="ad">
+            <reference local="ad_id" foreign="id" />
+        </foreign-key>
+        <behavior name="timestampable">
+            <parameter name="create_column" value="created_at" />
+        </behavior>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+            <parameter name="Charset" value="utf8"/>
+        </vendor>
+    </table>
+
     <table name="ad" description="ad">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="title" type="varchar" required="true" primaryString="1" size="100" />

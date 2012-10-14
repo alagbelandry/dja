@@ -35,6 +35,7 @@ class AdDeleteHandler
     * @param Form $form
     * @param Request $request
     * @param Ad $ad
+    * @param MessageDigestPasswordEncoder $encoder
     *
     */
     public function __construct(Form $form, Request $request, Ad $ad, MessageDigestPasswordEncoder $encoder)
@@ -86,7 +87,6 @@ class AdDeleteHandler
                ->save();
             return true;
         }
-
         return false;
     }
 }

@@ -4,25 +4,16 @@ namespace LeDjassa\AdsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use LeDjassa\AdsBundle\Model\Ad;
-use LeDjassa\AdsBundle\Model\City;
-use LeDjassa\AdsBundle\Model\Quarter;
-use LeDjassa\AdsBundle\Model\PictureAd;
 use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\PictureAdType;
 use LeDjassa\AdsBundle\Form\Type\AdDeleteType;
 use LeDjassa\AdsBundle\Form\Type\AdEditType;
 use LeDjassa\AdsBundle\Model\AdQuery;
-use LeDjassa\AdsBundle\Model\CityQuery;
-use LeDjassa\AdsBundle\Model\QuarterQuery;
-use LeDjassa\AdsBundle\Model\UserTypeQuery;
-use LeDjassa\AdsBundle\Model\AdTypeQuery;
 use LeDjassa\AdsBundle\Form\Handler\AdAddHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;
@@ -172,8 +163,7 @@ class AdController extends Controller
         } elseif ('GET' === $request->getMethod()) {
 
             return array(
-                'form' => $form->createView(),
-                'ad' => $ad
+                'form' => $form->createView()
             );
             
         } else {

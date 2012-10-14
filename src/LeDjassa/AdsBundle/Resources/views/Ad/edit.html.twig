@@ -1,1 +1,18 @@
-ok modification
+<h3>Modification de l'annonce </h3>
+<h4>{{ad.title}} </h4>
+<form action="{{ path('ad_edit', {'idAd': ad.id}) }}" method="post" {{ form_enctype(form) }}>
+	
+	{{ form_errors(form) }}
+
+	{{ form_row(form.description) }}
+	{{ form_row(form.price) }}
+	{{ form_row(form.picture_ads) }}
+
+	<a href="#" id="add_picture">Ajouter une photo</a>
+
+	{{ form_row(form.user_password) }}
+
+	{{ form_rest(form) }}
+
+	<input type="submit" value="Valider" />
+</form>

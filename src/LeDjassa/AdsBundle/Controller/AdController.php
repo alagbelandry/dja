@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Form\Type\AdType;
@@ -67,11 +66,10 @@ class AdController extends Controller
     public function editAction($idAd)
     {   
         $ad = $this->getAd($idAd);
-
         $form = $this->createForm(new AdEditType(), $ad);
-            
+        
         $request = $this->get('request');
-        $formHandler = new AdEditHandler($form, $request, new MessageDigestPasswordEncoder('sha512', true, 10));
+        $formHandler = new AdEditHandler($form, $request, $this->get('password_encoder'));
         $process = $formHandler->process();
 
         if ($process == AdEditHandler::AD_SAVE_SUCCESS_STATUT) {
@@ -112,7 +110,7 @@ class AdController extends Controller
         $request = $this->get('request');
 
         $form = $this->createForm(new AdDeleteType());
-        $formHandler = new AdDeleteHandler($form, $request, $ad, new MessageDigestPasswordEncoder('sha512', true, 10));
+        $formHandler = new AdDeleteHandler($form, $request, $ad, $this->get('password_encoder'));
         $process = $formHandler->process();
 
         if ($process == AdDeleteHandler::AD_DELETE_SUCCESS_STATUT) {
@@ -151,7 +149,7 @@ class AdController extends Controller
 
         $request = $this->get('request');
 
-        $formHandler = new AdAddHandler($form, $request, new MessageDigestPasswordEncoder('sha512', true, 10));
+        $formHandler = new AdAddHandler($form, $request, $this->get('password_encoder'));
         $process = $formHandler->process();
 
         if ($process) {

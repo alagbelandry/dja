@@ -4,17 +4,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
     <parameters>
-        <parameter key="le_djassa_ads.example.class">LeDjassa\AdsBundle\Example</parameter>
+        <parameter key="password_encoder.class">Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder</parameter>
+        <parameter key="password_encoder.algorithm">sha512</parameter>
+        <parameter key="password_encoder.encodeHashAsBase64">true</parameter>
+        <parameter key="password_encoder.iterations">10</parameter>
     </parameters>
 
     <services>
-        <service id="le_djassa_ads.example" class="%le_djassa_ads.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="password_encoder" class="%password_encoder.class%">
+            <argument>%password_encoder.algorithm%</argument>
+            <argument>%password_encoder.encodeHashAsBase64%</argument>
+            <argument>%password_encoder.iterations%</argument>
         </service>
-    </services>
-    -->
+   </services>
+
 </container>

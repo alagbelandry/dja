@@ -6,6 +6,7 @@ swiftmailer:
 
 imports:
     - { resource: config.yml }
+    - { resource: @LeDjassaAdsBundle/Resources/config/services.xml }
 
 framework:
     router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }

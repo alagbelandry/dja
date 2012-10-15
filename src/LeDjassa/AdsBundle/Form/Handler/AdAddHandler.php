@@ -90,16 +90,16 @@ class AdAddHandler
             }
         }
 
-        // secure ad with a password : Todo changes this method it's maybe bad, way: implements encoder like service
+        $plainTextPassword = $ad->getUserPassword();
         $ad->setUserSalt(base_convert(sha1(uniqid(mt_rand(), true)), 16, 36));
-        $ad->setUserPassword($this->encoder->encodePassword($ad->getUserPassword(), $ad->getUserSalt()));
+        $ad->setUserPassword($this->encoder->encodePassword($plainTextPassword, $ad->getUserSalt()));
 
         // set ip adress
         $ad->setUserIpAdress($this->request->getClientIp());
         $ad->save();
 
         // send confirmtion email
-        $this->mailer->sendConfirmAdCreatedEmailMessage($ad);
+        $this->mailer->sendConfirmAdCreatedEmailMessage($ad, $plainTextPassword );
     }
 
     /**

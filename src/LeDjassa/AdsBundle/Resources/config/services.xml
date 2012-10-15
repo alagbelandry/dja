@@ -14,7 +14,7 @@
         <parameter key="ad_created.confirmation.template">LeDjassaAdsBundle:Ad:adCreatedConfirmation.txt.twig</parameter>
         <parameter key="user_contact.template">LeDjassaAdsBundle:User:contact.txt.twig</parameter>
         <parameter key="interested_user_ad_user.contact.template">LeDjassaAdsBundle:InterestedUser:adUserContact.txt.twig</parameter>
-        <parameter key="noreply_from_email">"ne.pas.repondre@auportdjadjame.com"</parameter>
+        <parameter key="noreply_from_email">"alagbe.landry@gmail.com"</parameter>
     </parameters>
 
     <services>

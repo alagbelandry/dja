@@ -21,7 +21,7 @@ class Mailer
         $this->parameters = $parameters;
     }
 
-    public function sendConfirmAdCreatedEmailMessage(Ad $ad)
+    public function sendConfirmAdCreatedEmailMessage(Ad $ad, $plainTextPassword)
     {
     	$subject = "Votre annonce ". $ad->getTitle() ." est en ligne";
 
@@ -31,13 +31,14 @@ class Mailer
 
     	$template = $this->parameters['template']['ad_created_confirmation'];
     	$rendered = $this->templating->render($template, array(
-            'ad' 	  	=> $ad,
-            'urlShow'   => $urlShow,
-            'urlEdit'   => $urlEdit,
-            'urlDelete' => $urlDelete,
+            'ad' 	  			 => $ad,
+            'plainTextPassword'  => $plainTextPassword,
+            'urlShow' 			 => $urlShow,
+            'urlEdit'   		 => $urlEdit,
+            'urlDelete' 		 => $urlDelete,
         ));
 
-        $this->sendEmailMessage($rendered, $subject, $this->parameters['noreply_from_email'], $ad->getUserEmail());
+        $this->sendEmailMessage($rendered, $subject, "alagbe.landry@gmail.com", $ad->getUserEmail());
     }
 
     protected function sendEmailMessage($body, $subject, $fromEmail, $toEmail)

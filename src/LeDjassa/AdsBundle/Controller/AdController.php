@@ -149,12 +149,10 @@ class AdController extends Controller
 
         $request = $this->get('request');
 
-        $formHandler = new AdAddHandler($form, $request, $this->get('password_encoder'));
+        $formHandler = new AdAddHandler($form, $request, $this->get('password_encoder'), $this->get('ledjassa.mailer'));
         $process = $formHandler->process();
 
         if ($process) {
-            
-            $this->sendConfirmEmailAdCreated("alagbe.landry@gmail.com", "as.landry@gmail.com", "Annonce ajoutée", "Je vous confirme que votre annonce a été ajoutée");
 
             return $this->render('LeDjassaAdsBundle:Ad:addSuccess.html.twig', array(
                 'ad' => $ad->getProperties()
@@ -169,25 +167,6 @@ class AdController extends Controller
         } else {
             throw new Exception("An error occurs during add ad action");
         }
-    }
-
-    /**
-     * Send email confirmation to user when ad is create
-     * @param string $from adresse email de l'expéditeur
-     * @param string $to adresse email de du récepteur
-     * @param string $subject sujet du message
-     * @param string $body corp du message
-     */
-    function sendConfirmEmailAdCreated($from, $to, $subject, $body) {
-        $message = \Swift_Message::newInstance();
-
-        $message
-            ->setFrom($from)
-            ->setTo($to)
-            ->setSubject($subject)
-            ->setBody($body);
-
-        $this->get('mailer')->send($message);
     }
 
     /**

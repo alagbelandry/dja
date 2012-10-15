@@ -11,6 +11,7 @@ use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+use LeDjassa\AdsBundle\Services\Mailer;
 
 /**
 * The AdAddHandler.
@@ -23,19 +24,22 @@ class AdAddHandler
     protected $request;
     protected $form;
     protected $encoder;
+    protected $mailer;
 
     /**
     * Initialize the handler with the form and the request
     *
     * @param Form $form
     * @param Request $request
-    *
+    * @param MessageDigestPasswordEncoder $encoder
+    * @param Mailer $mailer
     */
-    public function __construct(Form $form, Request $request, MessageDigestPasswordEncoder $encoder)
+    public function __construct(Form $form, Request $request, MessageDigestPasswordEncoder $encoder, Mailer $mailer)
     {
-        $this->form = $form;
+        $this->form    = $form;
         $this->request = $request;
         $this->encoder = $encoder;
+        $this->mailer  = $mailer;
     }
 
     /**
@@ -92,8 +96,10 @@ class AdAddHandler
 
         // set ip adress
         $ad->setUserIpAdress($this->request->getClientIp());
-
         $ad->save();
+
+        // send confirmtion email
+        $this->mailer->sendConfirmAdCreatedEmailMessage($ad);
     }
 
     /**

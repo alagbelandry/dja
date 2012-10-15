@@ -9,6 +9,11 @@
         <parameter key="password_encoder.algorithm">sha512</parameter>
         <parameter key="password_encoder.encodeHashAsBase64">true</parameter>
         <parameter key="password_encoder.iterations">10</parameter>
+
+        <parameter key="mailer.class">LeDjassa\AdsBundle\Services\Mailer</parameter>
+        <parameter key="ad.published_user.confirmation.template">LeDjassaAdsBundle:Ad:publishedConfirmation.txt.twig</parameter>
+        <parameter key="user.contact.template">LeDjassaAdsBundle:User:contact.txt.twig</parameter>
+        <parameter key="interested_user.ad_user.contact.template">LeDjassaAdsBundle:InterestedUser:adUserContact.txt.twig</parameter>
     </parameters>
 
     <services>
@@ -16,6 +21,17 @@
             <argument>%password_encoder.algorithm%</argument>
             <argument>%password_encoder.encodeHashAsBase64%</argument>
             <argument>%password_encoder.iterations%</argument>
+        </service>
+
+        <service id="ledjassa.mailer" class="%mailer.class%">
+            <argument type="service" id="mailer" />
+            <argument type="service" id="router" />
+            <argument type="service" id="templating" />
+            <argument type="collection">
+                <argument key="ad.published_user.confirmation.template">%ad.published_user.confirmation.template%</argument>
+                <argument key="user.contact.template">%user.contact.template%</argument>
+                <argument key="interested_user.ad_user.contact.template">%interested_user.ad_user.contact.template%</argument>
+            </argument>
         </service>
    </services>
 

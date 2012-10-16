@@ -1,0 +1,16 @@
+<h3>Envoyer un email de contact</h3>
+
+<div>Pensez à indiquer vos coordonnées téléphoniques pour que l'annonceur puisse vous contacter facilement.</div>
+<form action="{{ path('contact') }}" method="post" {{ form_enctype(form) }}>
+	
+	{{ form_errors(form) }}
+
+	{{ form_row(form.subject) }}
+	{{ form_row(form.name) }}
+	{{ form_row(form.email) }}
+	{{ form_row(form.message) }}
+
+	{{ form_rest(form) }}
+
+	<input type="submit" value="Envoyer" />
+</form>

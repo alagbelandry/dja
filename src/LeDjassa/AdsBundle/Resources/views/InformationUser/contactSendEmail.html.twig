@@ -1,0 +1,17 @@
+<h3>Envoyer un email</h3>
+<h4>{{ad.title}}</h4>
+
+Envoyer un message à {{ad.userName}}
+<div>Pensez à indiquer vos coordonnées téléphoniques pour que l'annonceur puisse vous contacter facilement.</div>
+<form action="{{ path('ad_user_send_email', {'idAd': ad.id}) }}" method="post" {{ form_enctype(form) }}>
+	
+	{{ form_errors(form) }}
+
+	{{ form_row(form.name) }}
+	{{ form_row(form.email) }}
+	{{ form_row(form.phone) }}
+
+	{{ form_rest(form) }}
+
+	<input type="submit" value="Envoyer" />
+</form>

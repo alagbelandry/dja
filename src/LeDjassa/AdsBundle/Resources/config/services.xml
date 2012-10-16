@@ -12,9 +12,10 @@
 
         <parameter key="mailer.class">LeDjassa\AdsBundle\Services\Mailer</parameter>
         <parameter key="ad_created.confirmation.template">LeDjassaAdsBundle:Ad:adCreatedConfirmation.txt.twig</parameter>
-        <parameter key="user_contact.template">LeDjassaAdsBundle:User:contact.txt.twig</parameter>
-        <parameter key="interested_user_ad_user.contact.template">LeDjassaAdsBundle:InterestedUser:adUserContact.txt.twig</parameter>
-        <parameter key="noreply_from_email">"alagbe.landry@gmail.com"</parameter>
+        <parameter key="contact.template">LeDjassaAdsBundle:InformationUser:contactSendEmail.txt.twig</parameter>
+        <parameter key="interested_user.contact.template">LeDjassaAdsBundle:InterestedUser:interestedUserContact.txt.twig</parameter>
+        <parameter key="noreply_from_email">ne.pas.repondre@auportdadjame.com</parameter>
+        <parameter key="contact_to_email">as.landry@gmail.com</parameter>
     </parameters>
 
     <services>
@@ -31,10 +32,13 @@
             <argument type="collection">
                 <argument key="template" type="collection">
                     <argument key="ad_created_confirmation">%ad_created.confirmation.template%</argument>
-                    <argument key="user_contact">%user_contact.template%</argument>
-                    <argument key="interested_user_ad_user.contact">%interested_user_ad_user.contact.template%</argument>
+                    <argument key="contact">%contact.template%</argument>
+                    <argument key="interested_user.contact">%interested_user.contact.template%</argument>
                 </argument>
-                <argument key="noreply_from_email">%noreply_from_email%</argument>
+                <argument key="email" type="collection">
+                    <argument key="noreply">%noreply_from_email%</argument>
+                    <argument key="contact">%contact_to_email%</argument>
+                </argument>
             </argument>
         </service>
    </services>

@@ -4,8 +4,10 @@ namespace LeDjassa\AdsBundle\Form\Handler;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\InterestedUser;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use LeDjassa\AdsBundle\Services\Mailer;
 
 /**
 * The InterestedUserSendEmailHandler.
@@ -17,18 +19,23 @@ class InterestedUserSendEmailHandler
 {
     protected $request;
     protected $form;
+    protected $mailer;
+    protected $ad;
 
     /**
     * Initialize the handler with the form and the request
     *
     * @param Form $form
     * @param Request $request
+    * @param Mailer $mailer
     *
     */
-    public function __construct(Form $form, Request $request)
+    public function __construct(Form $form, Request $request, Ad $ad, Mailer $mailer)
     {
         $this->form = $form;
         $this->request = $request;
+        $this->mailer  = $mailer;
+        $this->ad  = $ad;
     }
 
     /**
@@ -65,5 +72,8 @@ class InterestedUserSendEmailHandler
     {
         $interestedUser->setIpAdress($this->request->getClientIp());
         $interestedUser->save();
+
+        // send email
+        $this->mailer->sendInterestedUserEmailMessage($this->ad, $interestedUser);
     }
 }

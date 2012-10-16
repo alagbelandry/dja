@@ -98,8 +98,8 @@ class AdAddHandler
         $ad->setUserIpAdress($this->request->getClientIp());
         $ad->save();
 
-        // send confirmtion email
-        $this->mailer->sendConfirmAdCreatedEmailMessage($ad, $plainTextPassword );
+        // send confirmation email
+        $this->mailer->sendConfirmAdCreatedEmailMessage($ad, $plainTextPassword);
     }
 
     /**

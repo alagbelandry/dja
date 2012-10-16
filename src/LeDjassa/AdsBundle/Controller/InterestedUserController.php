@@ -34,7 +34,7 @@ class InterestedUserController extends Controller
 
         $request = $this->get('request');
 
-        $formHandler = new InterestedUserSendEmailHandler($form, $request);
+        $formHandler = new InterestedUserSendEmailHandler($form, $request, $ad,$this->get('ledjassa.mailer'));
         $process = $formHandler->process();
 
         if ($process) {

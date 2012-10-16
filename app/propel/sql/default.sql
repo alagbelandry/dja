@@ -204,6 +204,25 @@ CREATE TABLE `interested_user`
 ) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='interested user by ad';
 
 -- ---------------------------------------------------------------------
+-- information_user
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `information_user`;
+
+CREATE TABLE `information_user`
+(
+    `id` INTEGER(6) NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100),
+    `subject` VARCHAR(100),
+    `email` VARCHAR(100),
+    `message` VARCHAR(500),
+    `ip_adress` VARCHAR(20),
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='user who need information';
+
+-- ---------------------------------------------------------------------
 -- ad
 -- ---------------------------------------------------------------------
 

@@ -49,6 +49,6 @@ class Date
 	 */
 	static function getMonthFrench($date) 
 	{	
-		return self::$monthFrench[$date->format('n')];
+		return self::$monthFrench[$date->format('n') - 1];
 	}
 }

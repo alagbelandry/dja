@@ -1,3 +1,5 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block content %}
 <h3>Toutes les annonces</h3>
 {% for ad in ads %}
 	<ul>
@@ -16,6 +18,7 @@
 		<li>Localisation: {{ad.nameArea}} {{ad.nameCity}} {{ad.nameQuarter}}</li>
 		<li>Categorie: {{ad.titleCategory}}</li>
 		<li>Prix: {{ad.price}}</li>
-		<li><a href="{{ path('ad_show', {'idAd': ad.id}) }}">Consulter l'annonce</a></li>
+		<li><a href="{{ path('ad_show', {'idAd': ad.id}) }}" name="show_ad">Consulter l'annonce</a></li>
 	</ul>
 {% endfor %}
+{% endblock %}

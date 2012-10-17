@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Propel\PropelBundle\PropelBundle(),
             new LeDjassa\AdsBundle\LeDjassaAdsBundle(),
+            new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
             new FOS\UserBundle\FOSUserBundle(),
         );
 

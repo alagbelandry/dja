@@ -20,8 +20,8 @@
         "jms/di-extra-bundle": "1.1.x-dev",
         "propel/propel-bundle": "1.1.*",
         "friendsofsymfony/user-bundle": "*",
-        "willdurand/propel-typehintable-behavior": "*"
-
+        "willdurand/propel-typehintable-behavior": "*",
+        "punkave/symfony2-file-uploader-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [

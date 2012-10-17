@@ -3,7 +3,7 @@
 namespace LeDjassa\AdsBundle\Model;
 
 use LeDjassa\AdsBundle\Model\om\BaseAd;
-use LeDjassa\AdsBundle\Utils\Date;
+use LeDjassa\AdsBundle\Util\Date;
 
 class Ad extends BaseAd
 {

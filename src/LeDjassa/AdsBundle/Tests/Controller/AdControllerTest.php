@@ -12,22 +12,45 @@ class AdControllerTest extends WebTestCase
 	{
 		$client = static::createClient();
 
-		$crawlerListAd = $client->request('GET', '/annonces/');
+		$listAdCrawler = $client->request('GET', '/annonces/');
 
-		// page list ad
-		$this->assertEquals(1, $crawlerListAd->filter('h3:contains("Toutes les annonces")')->count());
+		// right controller
+		$this->assertEquals('LeDjassa\AdsBundle\Controller\AdController::indexAction', $client->getRequest()->attributes->get('_controller'));
+		$this->assertTrue(200 === $client->getResponse()->getStatusCode());
 
-		// at least one ad
-		$this->assertTrue($crawlerListAd->filter('ul')->count() > 0);
-		
+		// right title
+		$this->assertEquals(1, $listAdCrawler->filter('h3:contains("Toutes les annonces")')->count());
+
+		// some ad
+		$this->assertTrue($listAdCrawler->filter('ul')->count() > 0);
+
+		// todo : test max ad on home page?
+
 		// link show ad
-		$linkShowAd = $crawlerListAd->selectLink("show_ad")->first()->link();
+		// other way to get link
+		/* $showAdLink = $listAdCrawler->selectLink("Consulter l'annonce")->first()->link();
+		   $crawlerShowAd = $client->click($showAdLink);
+		 */
 
-		$crawlerShowAd = $linkShowAd->click($linkShowAd);
-		$crawlerShowAd = $client->followRedirect();
+		$showAdLink = $listAdCrawler->filter("ul:first li a");
+		$crawlerShowAd = $client->click($showAdLink->link());
 
-		$this->assertEquals(1, $crawlerShowAd->filter('body:contains("Details de l\'annonce")')->count());
+		//$crawlerShowAd = $client->followRedirect();
+
+		// right controller after routing
+		$this->assertEquals('LeDjassa\AdsBundle\Controller\AdController::showAction', $client->getRequest()->attributes->get('_controller'));
+
+		// page show ad
+		$this->assertEquals(1, $crawlerShowAd->filter('h3:contains("Details de l\'annonce")')->count());
+
+		// check it's right ad by getting most recent ad
 	}
+
+	/* Get most recent ad and test if match in list ad first
+	public function getMostRecentAd {
+
+	}
+	 */
 
 	public function testAdd()
 	{

@@ -2,16 +2,35 @@
 
 namespace LeDjassa\AdsBundle\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 
-class DefaultControllerTest extends WebTestCase
+class WebTestCase extends BaseWebTestCase
 {
-    public function testIndex()
+    private static $application;
+
+    public static function setUpBeforeClass()
     {
-        $client = static::createClient();
+        \Propel::disableInstancePooling();
 
-        $crawler = $client->request('GET', '/hello/Fabien');
+        self::runCommand('propel:build --insert-sql');
+    }
 
-        $this->assertTrue($crawler->filter('html:contains("Hello Fabien")')->count() > 0);
+    protected static function getApplication()
+    {
+        if (null === self::$application) {
+            $client = static::createClient();
+
+            self::$application = new \Symfony\Bundle\FrameworkBundle\Console\Application($client->getKernel());
+            self::$application->setAutoExit(false);
+        }
+
+        return self::$application;
+    }
+
+    protected static function runCommand($command)
+    {
+        $command = sprintf('%s --quiet', $command);
+
+        return self::getApplication()->run(new \Symfony\Component\Console\Input\StringInput($command));
     }
 }

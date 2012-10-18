@@ -1,9 +1,7 @@
 <?php
 
 namespace LeDjassa\AdsBundle\Tests\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use LeDjassa\AdsBundle\Model\Ad;
 
 class AdControllerTest extends WebTestCase
 {
@@ -29,39 +27,36 @@ class AdControllerTest extends WebTestCase
 		// link show ad
 		// other way to get link
 		/* $showAdLink = $listAdCrawler->selectLink("Consulter l'annonce")->first()->link();
-		   $crawlerShowAd = $client->click($showAdLink);
+		   $showAdCrawler = $client->click($showAdLink);
 		 */
 
 		$showAdLink = $listAdCrawler->filter("ul:first li a");
-		$crawlerShowAd = $client->click($showAdLink->link());
+		$showAdCrawler = $client->click($showAdLink->link());
 
-		//$crawlerShowAd = $client->followRedirect();
+		//$showAdCrawler = $client->followRedirect();
 
 		// right controller after routing
 		$this->assertEquals('LeDjassa\AdsBundle\Controller\AdController::showAction', $client->getRequest()->attributes->get('_controller'));
 
 		// page show ad
-		$this->assertEquals(1, $crawlerShowAd->filter('h3:contains("Details de l\'annonce")')->count());
+		$this->assertEquals(1, $showAdCrawler->filter('h3:contains("Details de l\'annonce")')->count());
 
-		// check it's right ad by getting most recent ad
+		// check it's right ad if match with title ad by exemple by getting most recent ad
 	}
-
-	/* Get most recent ad and test if match in list ad first
-	public function getMostRecentAd {
-
-	}
-	 */
 
 	public function testAdd()
 	{
 		$client = static::createClient();
 
-		$crawlerAddAd = $client->request('GET', '/annonces/ajouter');
+		$addAdCrawler = $client->request('GET', '/annonces/ajouter');
 
-		// page add ad
-		$this->assertEquals(1, $crawlerAddAd->filter('body:contains("Ajouter une annonce")')->count());
+		// right controller
+		$this->assertEquals('LeDjassa\AdsBundle\Controller\AdController::showAction', $client->getRequest()->attributes->get('_controller'));
 
-		$form = $crawlerAddAd->selectButton('submit')->form();
+		// right title
+		$this->assertEquals(1, $addAdCrawler->filter('body:contains("Ajouter une annonce")')->count());
+
+		$form = $addAdCrawler->selectButton('submit')->form();
 
 		// set form info
 		$form['ad[title]'] = 'HTC Evo';
@@ -82,13 +77,94 @@ class AdControllerTest extends WebTestCase
 		$form['ad[city][name]'] = 'Abidjan';
 		$form['ad[city][quarter]'] = 'cocody';
 
-		$form['ad[picture_ad][file]']->upload('/path/to/photo.jpg');
+		$form['ad[picture_ad][file]'] = __DIR__.'/../../../../../web/bundles/ledjassa/images/photo.jpg'
+		//$form['ad[picture_ad][file]']->upload('/path/to/photo.jpg');
 
-		$crawlerFormAddAd = $client->submit($form);
+		$formAddAdCrawler = $client->submit($form);
 
-		$crawlerFormAddAd = $client->followRedirect();
+		// right controller for add ad
+		$this->assertEquals('LeDjassa\AdsBundle\Controller\AdController::showAction', $client->getRequest()->attributes->get('_controller'));
 
-		// title match
-		$this->assertEquals(1, $crawlerFormAddAd->filter('body:contains("Nous avons bien reçu votre annonce HTC Evo.")')->count());
+		$addAdSuccessCrawler = $client->followRedirect();
+
+		// title match Todo : get most recent ad and retrieve the title
+		$this->assertEquals(1, $addAdSuccessCrawler->filter('body:contains("Nous avons bien reçu votre annonce HTC Evo.")')->count());
 	}
+
+	public function testShow()
+	{
+		$client = static::createClient();
+		// get one job active
+		$id = 1;
+		$title = '';
+		$showAdCrawler = $client->request('GET', 'annonces/afficher/'.$id);
+
+		// right controller
+		$this->assertEquals('LeDjassa\AdsBundle\Controller\AdController::showAction', $client->getRequest()->attributes->get('_controller'));
+
+		// title
+		$this->assertEquals(1, $showAdCrawler->filter('h3:contains("Details de l\'annonce")')->count());
+
+		// title ad
+		$this->assertEquals(1, $showAdCrawler->filter('html:contains(.' $title '.)')->count());
+	}
+
+	public function testDelete()
+	{
+		$client = static::createClient();
+		// get one ad actived or create
+		$id = 1;
+		$title = '';
+		$password = '';
+		$deleteAdCrawler = $client->request('GET', 'annonces/supprimer/'.$id);
+
+		// right controller
+		$this->assertEquals('LeDjassa\AdsBundle\Controller\AdController::deleteAction', $client->getRequest()->attributes->get('_controller'));
+
+		// title
+		$this->assertEquals(1, $deleteAdCrawler->filter('h3:contains("Suppression de l\'annonce")')->count());
+
+		// title ad
+		$this->assertEquals(1, $deleteAdCrawler->filter('html:contains(.' $title '.)')->count());
+
+		$form['ad_delete[user_password]'] = $password;
+
+		$form = $deleteAdCrawler->selectButton('submit')->form();
+
+		$formDeleteAdCrawler = $client->submit($form);
+
+		$formDeleteAdCrawler = $client->followRedirect();
+
+		// title match Todo : get most recent ad and retrieve the title
+		$this->assertEquals(1, $formDeleteAdCrawler->filter('body:contains("Merci bien supprimer")')->count());
+	}
+
+	/* Get most recent ad and test if match in list ad first // create ad
+	public function getMostRecentAd {
+
+	}
+
+	public function createAd() {
+		$salt = '';
+		$password = '';
+
+		$ad = new Ad();
+		$ad
+		  ->setTitle('mon titre')
+		  ->setDescription('ma description')
+		  ->setPrice('12')
+		  ->setAdTypeId(1)
+		  ->setCategoryId(1)
+		  ->setUserTypeId(1)
+		  ->setCityId(1)
+		  ->setQuarterId('cocody')
+		  ->setUserPhone('06 25 51 08 56')
+		  -setUserName('landry')
+		  ->setUserEmail('as.landry@gmail.com')
+		  ->setUserIpAdress('127.0.0.1')
+		  ->setUserSalt($salt)
+		  ->setUserPassword($password)
+		  ->save();
+	}
+	 */
 }

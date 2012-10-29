@@ -30,8 +30,7 @@ class AdController extends Controller
     {   
         $adsCollection = AdQuery::create()
                         ->filterByStatut(Ad::STATUT_CREATED)
-                        ->recentlyUpdated()
-                        ->lastUpdatedFirst()
+                        ->lastCreatedFirst()
                         ->find();
 
         $ads = array();

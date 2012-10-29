@@ -15,7 +15,9 @@ class PictureAdType extends AbstractType {
 
 	public function buildForm(FormBuilderInterface $builder, array $options)
     {   
-        $builder->add('file');
+        $builder->add('file', 'file', array(
+            'required' => true,
+        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

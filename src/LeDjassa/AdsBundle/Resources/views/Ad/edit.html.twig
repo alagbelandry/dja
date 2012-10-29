@@ -1,3 +1,12 @@
+{% block javascripts %}
+	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-1.8.1.min.js')}}"></script>
+	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-ui-1.8.23.custom.min.js')}}"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+		}
+	</script>
+{% endblock %}
 <h3>Modification de l'annonce </h3>
 <h4>{{ad.title}} </h4>
 <form action="{{ path('ad_edit', {'idAd': ad.id}) }}" method="post" {{ form_enctype(form) }}>

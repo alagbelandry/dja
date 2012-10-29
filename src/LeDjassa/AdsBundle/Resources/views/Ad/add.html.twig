@@ -4,19 +4,46 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
+			// manage picture upload
     		var $container = $('#ad_picture_ads');
-    		if ($container.children().length == 0) {
-        		addPicture();
-    		}
 	
     		$('#add_picture').click(function() {
         		addPicture();
    			 });
 
+			$('input[type=file]').live('change' ,function(){
+
+				var fileFieldId = $(this).attr('id'),
+					fileField 	= document.getElementById(fileFieldId),
+					picture     = fileField.files[0];
+
+			    if (picture.type.match('image.*') && (typeof window.FileReader !== 'undefined')) {
+			       
+			        // new instance FileReader for manage onload
+			        reader = new FileReader();
+			        reader.onload = function (event) {
+
+				        var img = document.createElement('img');
+				        img.src = event.target.result;
+				        
+				        var fileFieldIdSelector = '#'+fileFieldId;
+
+				        // remove precedent picture load
+				        $(fileFieldIdSelector).next('img').remove();
+
+				        // display picture load
+				        $(img).insertAfter(fileFieldIdSelector);
+			        }
+			        
+			        reader.readAsDataURL(picture);   
+			    }
+			 });
+
     		function addPicture() {
         		var index = $container.children().length;
         		var $newContainerPicture = $container.attr('data-prototype').replace(/__name__/g, index);
-        		var $removePicture = $('<a href="#" id="remove_picture">Supprimer cette photo</a>');
+        		console.log($('#ad_picture_ads_' + index));
+        		var $removePicture = $('<a href="#">Supprimer cette photo</a>');
 
        			$container.append(
            			 $($newContainerPicture).append($removePicture)
@@ -27,6 +54,7 @@
 			        $('#ad_picture_ads_' + index).parent('div').remove();
 			    });
   			}
+
 
 			// manage autocomplete on quarter name field
 			$("#ad_city_quarter_name").focus(function () {

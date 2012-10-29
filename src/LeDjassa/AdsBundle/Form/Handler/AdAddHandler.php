@@ -56,14 +56,14 @@ class AdAddHandler
 
             if ($this->form->isValid()) {
 
-             $ad = $this->form->getData();
-             $this->onSuccess($ad);
+                $ad = $this->form->getData();
+                $this->onSuccess($ad);
 
-             return true;
+                return true;
+            }
         }
-     }
 
-    return false;
+        return false;
     }
 
     /**

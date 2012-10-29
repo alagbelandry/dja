@@ -34,7 +34,7 @@
 				        // display picture load
 				        $(img).insertAfter(fileFieldIdSelector);
 			        }
-			        
+			   
 			        reader.readAsDataURL(picture);   
 			    }
 			 });
@@ -42,7 +42,7 @@
     		function addPicture() {
         		var index = $container.children().length;
         		var $newContainerPicture = $container.attr('data-prototype').replace(/__name__/g, index);
-        		console.log($('#ad_picture_ads_' + index));
+
         		var $removePicture = $('<a href="#">Supprimer cette photo</a>');
 
        			$container.append(

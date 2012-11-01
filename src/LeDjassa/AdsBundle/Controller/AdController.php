@@ -30,18 +30,30 @@ class AdController extends Controller
     */
     public function indexAction()
     {   
-        $adsCollection = AdQuery::create()
-                        ->filterByStatut(Ad::STATUT_CREATED)
-                        ->lastCreatedFirst()
-                        ->find();
+        $adsCollectionCriteria = AdQuery::create()
+            ->filterByStatut(Ad::STATUT_CREATED)
+            ->lastCreatedFirst();
 
-        $ads = array();
+        $adsCollection = $adsCollectionCriteria->find();
+        $adProperties = array();
         foreach ($adsCollection as $ad)  {
-            $ads [] = $ad->getProperties();
+            $adProperties [$ad->getId()] = $ad->getProperties();
         }
-        
-        return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
+
+        /*return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
             'ads' => $ads
+        ));*/
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $adsCollectionCriteria,
+            $this->get('request')->query->get('page', 1),
+            5
+        );
+    
+        return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
+            'ads'           => $pagination,
+            'adProperties' => $adProperties
         ));
     }
 

@@ -4,21 +4,24 @@
 {% for ad in ads %}
 	<ul>
 		<li>Date 
-			{% if ad.isPublishToday %}
+			{% if adProperties[ad.Id].isPublishToday %}
 				Aujourd'hui
-			{% elseif ad.isPublishYesterDay %}
+			{% elseif adProperties[ad.Id].isPublishYesterDay %}
 				Hier
 			{% else %}
-				{{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}
+				{{ adProperties[ad.Id].publishedDate|date("d") }} {{ adProperties[ad.Id].publishMonth }}
 			{% endif %}
 		</li>
-		<li>Heure {{ ad.publishedDate|date("H:i") }}</li>
+		<li>Heure {{ adProperties[ad.Id].publishedDate|date("H:i") }}</li>
 		<li>Photo</li>
-		<li>Nom : {{ad.title}}</li>
-		<li>Localisation: {{ad.nameArea}} {{ad.nameCity}} {{ad.nameQuarter}}</li>
-		<li>Categorie: {{ad.titleCategory}}</li>
-		<li>Prix: {{ad.price}}</li>
-		<li><a href="{{ path('ad_show', {'idAd': ad.id}) }}" name="show_ad">Consulter l'annonce</a></li>
+		<li>Nom : {{adProperties[ad.Id].title}}</li>
+		<li>Localisation: {{adProperties[ad.Id].nameArea}} {{adProperties[ad.Id].nameCity}} {{adProperties[ad.Id].nameQuarter}}</li>
+		<li>Categorie: {{adProperties[ad.Id].titleCategory}}</li>
+		<li>Prix: {{adProperties[ad.Id].price}}</li>
+		<li><a href="{{ path('ad_show', {'idAd': ad.Id}) }}" name="show_ad">Consulter l'annonce</a></li>
 	</ul>
 {% endfor %}
+<div class="navigation">
+    {{ ads.render()|raw }}
+</div>
 {% endblock %}

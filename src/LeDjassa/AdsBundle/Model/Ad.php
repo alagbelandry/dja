@@ -40,12 +40,15 @@ class Ad extends BaseAd
 		}
 
 		$titleCategory = $this->getCategory() instanceof Category ? $this->getCategory()->getTitle() : '';
+
 		$nameAdType = $this->getAdType() instanceof AdType ? $this->getAdType()->getName() : '';
+
 		$titleUserType = $this->getUserType() instanceof UserType ? $this->getUserType()->getTitle() : '';
+		
 		$nameQuarter = $this->getQuarter() instanceof Quarter ? $this->getQuarter()->getName() : '';
 		
-		//$pictureAds = $this->getPictureAds();
-
+		$pictureAds = $this->getPictureAds()->toArray();
+	
 		$properties = array(
 			'id'            		=> $this->id,
 			'title'         		=> $this->title,
@@ -65,6 +68,7 @@ class Ad extends BaseAd
 			'titleCategory' 		=> $titleCategory,
 			'nameAdType'    		=> $nameAdType,
 			'titleUserType' 		=> $titleUserType,
+			'pictures'				=> $pictureAds
 		);
 
 		return $properties;

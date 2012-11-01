@@ -59,6 +59,10 @@ class PictureAd extends BasePictureAd
             return false;
         }
 
+        if (!is_dir($this->getUploadRootDir())) {
+            mkdir($this->getUploadRootDir());
+        }
+
         $this->file->move($this->getUploadRootDir(), $this->path);
 
         unset($this->file);

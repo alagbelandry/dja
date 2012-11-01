@@ -1,0 +1,17 @@
+{% block content %}
+<form action="{{ path('ad_search') }}" method="post" {{ form_enctype(form) }}>
+	
+	{{ form_errors(form) }}
+
+	{{ form_errors(form.title) }}
+	{{ form_widget(form.title) }}
+	{{ form_errors(form.category) }}
+	{{ form_widget(form.category) }}
+	{{ form_errors(form.area) }}
+	{{ form_widget(form.area) }}
+
+	{{ form_rest(form) }}
+	<br>
+	<input type="submit" value="Chercher" />
+</form>
+{% endblock %}

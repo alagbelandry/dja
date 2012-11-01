@@ -10,9 +10,11 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\PictureAdType;
+use eDjassa\AdsBundle\Form\Type\PictureAd;
 use LeDjassa\AdsBundle\Form\Type\AdDeleteType;
 use LeDjassa\AdsBundle\Form\Type\AdEditType;
 use LeDjassa\AdsBundle\Model\AdQuery;
+use LeDjassa\AdsBundle\Model\PictureAdQuery;
 use LeDjassa\AdsBundle\Form\Handler\AdAddHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;
@@ -166,6 +168,29 @@ class AdController extends Controller
         } else {
             throw new Exception("An error occurs during add ad action");
         }
+    }
+
+    /**
+    * Delete picture of ad
+    * @return Response true if success otherwise false
+    * @Route("/supprimerPhotos", name="picture_delete")
+    *
+    */
+    public function pictureDeleteAction()
+    {
+        $request = $this->get('request');
+        $pictureId = $request->get('pictureId');
+
+        if ($request->isXmlHttpRequest()) {
+
+            PictureAdQuery::create()
+                ->findPk($pictureId)
+                ->delete();
+        }
+
+        $response = new Response(json_encode($pictureId));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     /**

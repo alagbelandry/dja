@@ -1,7 +1,5 @@
-{% block javascripts %}
-	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-1.8.1.min.js')}}"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
+<script type="text/javascript">
+	$(document).ready(function() {
 
 			// manage picture upload
     		var $container = $('#ad_picture_ads');
@@ -131,51 +129,4 @@
 		$('select#ad_city_name, #ad_city_quarter_name').parent('div').hide();	
 	}
 
-	</script>
-
-{% endblock %}
-<h3>Ajouter une annonce</h3>
-<form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
-	
-		{{ form_errors(form) }}
-
-	<div>
-		{{ form_errors(form.city.area) }}
-		{{ form_label(form.city.area) }}
-		{{ form_widget(form.city.area) }}
-	</div>
-	
-	<div>
-		{{ form_errors(form.city.name) }}
-		{{ form_label(form.city.name) }}
-		{{ form_widget(form.city.name) }}
-	</div>
-
-	<div>
-		{{ form_errors(form.city.quarter.name) }}
-		{{ form_label(form.city.quarter.name) }}
-		{{ form_widget(form.city.quarter.name) }}
-	</div>
-
-	{{ form_row(form.category) }}
-	{{ form_row(form.user_type) }}
-	{{ form_row(form.ad_type) }}
-	{{ form_row(form.user_name) }}
-	{{ form_row(form.user_email) }}
-	{{ form_row(form.user_phone) }}
-	{{ form_row(form.user_password) }}
-
-	{{ form_row(form.title) }}
-	{{ form_row(form.description) }}
-	{{ form_row(form.price) }}
-	{{ form_row(form.picture_ads) }}
-
-	<a href="#" id="add_picture">Ajouter une photo</a>
-
-	{{ form_rest(form) }}
-	<div>
-		En validant la diffusion de mon annonce, j'accepte les Règles de diffusion et d'utilisation du site auportdabidjan.com <br/>
-		et j'autorise auportdabidjan.com à diffuser mon annonce.	
-	</div>
-	<input type="submit" value="Publier l'annonce" />
-</form>
+</script>

@@ -1,7 +1,5 @@
-{% block javascripts %}
-	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-1.8.1.min.js')}}"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
+<script type="text/javascript">
+	$(document).ready(function() {
 
 			// manage picture upload
 			var $containerFile = $('#picture_ads');
@@ -81,36 +79,3 @@
 			});
 		})
 	</script>
-{% endblock %}
-<h3>Modification de l'annonce </h3>
-<h4>{{ad.title}} </h4>
-<form action="{{ path('ad_edit', {'idAd': ad.id}) }}" method="post" {{ form_enctype(form) }}>
-	
-	{{ form_errors(form) }}
-
-	{{ form_row(form.description) }}
-	{{ form_row(form.price) }}
-
-	<ul>
-		{% for picture in ad.pictures %}
-      		<li>
-      			<img src="{{ asset('uploads/pictures/' ~ picture.Path)}}"/>
-      			<a href="#" class="picture_delete" id="{{ picture.Id }}">Supprimer</a>
-      		</li>
-      	{% endfor %}
-	</ul>
-	<div style="display:none">
-		{{ form_row(form.picture_ads) }}
-	</div>
-
-	<div id="picture_ads">
-	</div>
-
-	<a href="#" id="add_picture">Ajouter une photo</a>
-
-	{{ form_row(form.user_password) }}
-
-	{{ form_rest(form) }}
-
-	<input type="submit" value="Valider" />
-</form>

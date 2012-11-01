@@ -26,14 +26,14 @@ class AdEditType extends AbstractType
         ));
 
         // Picture ad relation 
-        $builder->add('picture_ads', 'collection', array('type'         => new PictureAdType(),
-                                                        'prototype'     => true,
-                                                        'allow_add'     => true,
-                                                        'allow_delete'  => true,
-                                                        'required'      => false,
-                                                        'by_reference'  => false,
-                                                        'label'         => 'Photos d\'illustration',
-
+        $builder->add('picture_ads', 'collection', array(
+            'type'         => new PictureAdType(),
+            'prototype'    => true,
+            'allow_add'    => true,
+            'allow_delete' => true,
+            'required'     => false,
+            'by_reference' => false,
+            'label'        => 'Photos d\'illustration',
         ));
 
         $builder->add('user_password', 'password', array(

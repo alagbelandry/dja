@@ -12,6 +12,7 @@ use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\PictureAdType;
 use eDjassa\AdsBundle\Form\Type\PictureAd;
 use LeDjassa\AdsBundle\Form\Type\AdDeleteType;
+use LeDjassa\AdsBundle\Form\Type\AdSearchType;
 use LeDjassa\AdsBundle\Form\Type\AdEditType;
 use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\PictureAdQuery;
@@ -40,10 +41,6 @@ class AdController extends Controller
             $adProperties [$ad->getId()] = $ad->getProperties();
         }
 
-        /*return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
-            'ads' => $ads
-        ));*/
-
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $adsCollectionCriteria,
@@ -55,6 +52,61 @@ class AdController extends Controller
             'ads'           => $pagination,
             'adProperties' => $adProperties
         ));
+    }
+
+    /**
+    * @Route("/rechercher", name="ad_search")
+    * @Template()
+    * @param string $criteria criteria
+    */
+    public function searchAction()
+    {
+        $form = $this->createForm(new AdSearchType());
+        $request = $this->get('request');
+
+        if ('POST' == $request->getMethod()) {
+            // Bind value with form
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $criteria = $form->getData();
+                $title = $criteria['title'];
+                $category = $criteria['category'];
+                $area = $criteria['area'];
+
+                $adsCollectionCriteria = AdQuery::create()
+                    ->filterByStatut(Ad::STATUT_CREATED)
+                    ->lastCreatedFirst();
+
+                $adsCollection = $adsCollectionCriteria->find();
+                $adProperties = array();
+                foreach ($adsCollection as $ad)  {
+                    $adProperties [$ad->getId()] = $ad->getProperties();
+                }
+
+                $paginator = $this->get('knp_paginator');
+                $pagination = $paginator->paginate(
+                    $adsCollectionCriteria,
+                    $request->query->get('page', 1),
+                    5
+                );
+            
+                return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
+                    'ads'           => $pagination,
+                    'adProperties'  => $adProperties
+                ));
+            }
+
+        } elseif ('GET' == $request->getMethod()) {
+
+            return array(
+                'form'  => $form->createView(), 
+            );
+
+        } else {
+            throw new Exception("An error occurs during edit ad action");
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 {
-    "hash": "ab8f8bd20388e7c7ac257a7471228f3f",
+    "hash": "02d67f43ac06154abcc0e0b2dd40c713",
     "packages": [
         {
             "name": "doctrine/common",
@@ -545,6 +545,108 @@
                 "security",
                 "secure",
                 "expression"
+            ]
+        },
+        {
+            "name": "knplabs/knp-components",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KnpLabs/knp-components",
+                "reference": "99ea408dc2a7c3616e688ffe67e3248ece69ff0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/KnpLabs/knp-components/zipball/99ea408dc2a7c3616e688ffe67e3248ece69ff0e",
+                "reference": "99ea408dc2a7c3616e688ffe67e3248ece69ff0e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "time": "1339767068",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Knp\\Component": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KnpLabs Team",
+                    "homepage": "http://knplabs.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://github.com/KnpLabs/knp-components/contributors"
+                }
+            ],
+            "description": "Knplabs component library",
+            "homepage": "http://github.com/KnpLabs/knp-components",
+            "keywords": [
+                "pager",
+                "components",
+                "knp",
+                "knplabs",
+                "paginator"
+            ]
+        },
+        {
+            "name": "knplabs/knp-paginator-bundle",
+            "version": "dev-master",
+            "target-dir": "Knp/Bundle/PaginatorBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KnpLabs/KnpPaginatorBundle",
+                "reference": "de439d2816fe984dbe0c438fd4d0d7c67748c5ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/KnpLabs/KnpPaginatorBundle/zipball/de439d2816fe984dbe0c438fd4d0d7c67748c5ff",
+                "reference": "de439d2816fe984dbe0c438fd4d0d7c67748c5ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "2.*,<2.2",
+                "knplabs/knp-components": ">=1.1",
+                "twig/twig": ">=1.5"
+            },
+            "time": "1343676956",
+            "type": "symfony-bundle",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Knp\\Bundle\\PaginatorBundle": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KnpLabs Team",
+                    "homepage": "http://knplabs.com"
+                },
+                {
+                    "name": "Symfony2 Community",
+                    "homepage": "http://github.com/KnpLabs/KnpPaginatorBundle/contributors"
+                }
+            ],
+            "description": "Paginator bundle for Symfony2 to automate pagination and simplify sorting and other features",
+            "homepage": "http://github.com/KnpLabs/KnpPaginatorBundle",
+            "keywords": [
+                "Symfony2",
+                "pager",
+                "knp",
+                "knplabs",
+                "paginator",
+                "pagination",
+                "bundle"
             ]
         },
         {
@@ -1404,6 +1506,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "jms/di-extra-bundle": 20
+        "jms/di-extra-bundle": 20,
+        "knplabs/knp-paginator-bundle": 20
     }
 }

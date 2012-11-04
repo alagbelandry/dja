@@ -5,6 +5,7 @@ namespace LeDjassa\AdsBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
@@ -16,6 +17,8 @@ use LeDjassa\AdsBundle\Form\Type\AdSearchType;
 use LeDjassa\AdsBundle\Form\Type\AdEditType;
 use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\PictureAdQuery;
+use LeDjassa\AdsBundle\Model\CategoryQuery;
+use LeDjassa\AdsBundle\Model\AreaQuery;
 use LeDjassa\AdsBundle\Form\Handler\AdAddHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;
@@ -30,9 +33,9 @@ class AdController extends Controller
     * @Template()
     */
     public function indexAction()
-    {   
+    { 
         $adsCollectionCriteria = AdQuery::create()
-            ->filterByStatut(Ad::STATUT_CREATED)
+            ->filterByLive()
             ->lastCreatedFirst();
 
         $adsCollection = $adsCollectionCriteria->find();
@@ -41,61 +44,79 @@ class AdController extends Controller
             $adProperties [$ad->getId()] = $ad->getProperties();
         }
 
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $adsCollectionCriteria,
-            $this->get('request')->query->get('page', 1),
-            5
-        );
+        $paginator = $this->get('ledjassa.paginator');
+        $page = $this->get('request')->query->get('page', 1);
+        $limit = $this->container->getParameter('limit_ads');
+        
+        $pagination = $paginator->getPagination($adsCollectionCriteria, $page, $limit);
     
         return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
             'ads'           => $pagination,
-            'adProperties' => $adProperties
+            'adProperties'  => $adProperties
         ));
     }
 
     /**
-    * @Route("/rechercher", name="ad_search")
+    * @Route("/rechercher/{categoryTitle}/{areaName}", name="ad_search")
     * @Template()
-    * @param string $criteria criteria
+    * @param string $categoryTitle criteria on category
+    * @param string $areaName criteria on area
     */
-    public function searchAction()
+    public function searchAction($categoryTitle, $areaName)
+    {   
+        $query = $this->get('request')->query;
+
+        $title = $query->get('title');
+        $category = CategoryQuery::create()->findOneByTitle($categoryTitle);
+        $area = AreaQuery::create()->findOneByName($areaName);
+
+        $adsCollectionCriteria = AdQuery::create()
+            ->filterByLive()
+            ->searchByCategoryAndAreaAndTitleOrDescription($category, $area, '%'.$title.'%')
+            ->lastCreatedFirst();
+
+        $adsCollection = $adsCollectionCriteria->find();
+        $adProperties = array();
+        foreach ($adsCollection as $ad)  {
+            $adProperties [$ad->getId()] = $ad->getProperties();
+        }
+
+        $paginator = $this->get('ledjassa.paginator');
+        $page = $query->get('page', 1);
+        $limit = $this->container->getParameter('limit_ads');
+
+        $pagination = $paginator->getPagination($adsCollectionCriteria, $page, $limit);
+
+        return $this->render('LeDjassaAdsBundle:Ad:search.html.twig', array(
+            'ads'           => $pagination,
+            'adProperties'  => $adProperties,
+        ));
+    }
+
+    /**
+    * @Route("/formulaireRechercher", name="ad_search_form")
+    * @Template()
+    */
+    public function searchFormAction()
     {
         $form = $this->createForm(new AdSearchType());
         $request = $this->get('request');
 
         if ('POST' == $request->getMethod()) {
-            // Bind value with form
+
             $form->bindRequest($request);
 
             if ($form->isValid()) {
 
                 $criteria = $form->getData();
-                $title = $criteria['title'];
-                $category = $criteria['category'];
-                $area = $criteria['area'];
-
-                $adsCollectionCriteria = AdQuery::create()
-                    ->filterByStatut(Ad::STATUT_CREATED)
-                    ->lastCreatedFirst();
-
-                $adsCollection = $adsCollectionCriteria->find();
-                $adProperties = array();
-                foreach ($adsCollection as $ad)  {
-                    $adProperties [$ad->getId()] = $ad->getProperties();
-                }
-
-                $paginator = $this->get('knp_paginator');
-                $pagination = $paginator->paginate(
-                    $adsCollectionCriteria,
-                    $request->query->get('page', 1),
-                    5
+                return $this->redirect(
+                    $this->generateUrl('ad_search', array(
+                        'categoryTitle' => empty($criteria['category']) ? 'toutes-categories' : $criteria['category']->getTitle(),
+                        'areaName'      => empty($criteria['area']) ? 'toutes-regions' : $criteria['area']->getName(),
+                        'title'         => $criteria['title'],
+                    )), 
+                    301
                 );
-            
-                return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
-                    'ads'           => $pagination,
-                    'adProperties'  => $adProperties
-                ));
             }
 
         } elseif ('GET' == $request->getMethod()) {
@@ -105,18 +126,21 @@ class AdController extends Controller
             );
 
         } else {
-            throw new Exception("An error occurs during edit ad action");
+            throw new Exception("An error occurs during search form action");
         }
     }
 
     /**
     * @Route("/afficher/{idAd}", name="ad_show")
+    * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
     * @Template()
-    * @param int $idAd ad identifier
+    * @param Ad $ad ad
     */
-    public function showAction($idAd)
+    public function showAction(Ad $ad)
     {   
-        $ad = $this->getAd($idAd);
+        if (!$ad->isLive()) {
+            return $this->render('LeDjassaAdsBundle:Ad:notFound.html.twig');   
+        }
 
         return $this->render('LeDjassaAdsBundle:Ad:show.html.twig', array(
             'ad' => $ad->getProperties()
@@ -125,12 +149,16 @@ class AdController extends Controller
     
    /**
     * @Route("/modifier/{idAd}", name="ad_edit")
+    * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
     * @Template()
-    * @param int $idAd ad identifier
+    * @param Ad $ad
     */
-    public function editAction($idAd)
+    public function editAction(Ad $ad)
     {   
-        $ad = $this->getAd($idAd);
+        if (!$ad->isLive()) {
+            return $this->render('LeDjassaAdsBundle:Ad:notFound.html.twig');   
+        }
+
         $form = $this->createForm(new AdEditType(), $ad);
         
         $request = $this->get('request');
@@ -146,8 +174,8 @@ class AdController extends Controller
         } elseif ($process == AdEditHandler::INVALID_PASSWORD_STATUT) {
 
             return array(
-                'form' => $form->createView(), 
-                'ad' => $ad->getProperties(), 
+                'form'              => $form->createView(), 
+                'ad'                => $ad->getProperties(), 
                 'isInvalidPassword' => true
             );
 
@@ -165,12 +193,15 @@ class AdController extends Controller
 
    /**
     * @Route("/supprimer/{idAd}", name="ad_delete")
+    * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
     * @Template()
-    * @param int $idAd ad identifier
+    * @param Ad $ad Ad
     */
-    public function deleteAction($idAd)
+    public function deleteAction(Ad $ad)
     {   
-        $ad = $this->getAd($idAd);
+        if (!$ad->isLive()) {
+            return $this->render('LeDjassaAdsBundle:Ad:notFound.html.twig');   
+        }
 
         $request = $this->get('request');
 
@@ -255,20 +286,5 @@ class AdController extends Controller
         $response = new Response(json_encode($pictureId));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-    }
-
-    /**
-     * Get ad
-     * @param int $id ad identifier
-     * @return Ad $ad ad
-     */
-    public function getAd($id) {
-        $ad = AdQuery::create()
-                ->findOneById($id);
-
-        if (!$ad instanceof Ad) {
-            throw $this->createNotFoundException('Ad not found!');
-        }
-        return $ad;
     }
 }

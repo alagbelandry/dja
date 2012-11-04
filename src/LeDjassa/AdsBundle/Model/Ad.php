@@ -28,6 +28,14 @@ class Ad extends BaseAd
 	const STATUT_ERASED = 3;
 
 	/**
+	 * Check if ad is live
+	 * @return boolean true if ad is live otherwise false
+	 */
+	function isLive() {
+		return $this->getStatut() == self::STATUT_CREATED;
+	}
+
+	/**
 	* Return ad property list
 	* @return array property list
 	*/

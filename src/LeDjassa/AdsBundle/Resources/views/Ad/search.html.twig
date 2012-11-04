@@ -1,17 +1,15 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
 {% block content %}
-<form action="{{ path('ad_search') }}" method="post" {{ form_enctype(form) }}>
-	
-	{{ form_errors(form) }}
+<div id="search">
+    {% render "LeDjassaAdsBundle:Ad:searchForm" %}
+</div>
+<h3>Toutes les annonces</h3>
 
-	{{ form_errors(form.title) }}
-	{{ form_widget(form.title) }}
-	{{ form_errors(form.category) }}
-	{{ form_widget(form.category) }}
-	{{ form_errors(form.area) }}
-	{{ form_widget(form.area) }}
+{% for ad in ads %}
+{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
+{% endfor %}
 
-	{{ form_rest(form) }}
-	<br>
-	<input type="submit" value="Chercher" />
-</form>
+<div class="navigation">
+    {{ ads.render()|raw }}
+</div>
 {% endblock %}

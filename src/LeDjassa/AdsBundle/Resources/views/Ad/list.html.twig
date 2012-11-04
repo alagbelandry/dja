@@ -4,26 +4,11 @@
     {% render "LeDjassaAdsBundle:Ad:searchForm" %}
 </div>
 <h3>Toutes les annonces</h3>
+
 {% for ad in ads %}
-	<ul>
-		<li>Date 
-			{% if adProperties[ad.Id].isPublishToday %}
-				Aujourd'hui
-			{% elseif adProperties[ad.Id].isPublishYesterDay %}
-				Hier
-			{% else %}
-				{{ adProperties[ad.Id].publishedDate|date("d") }} {{ adProperties[ad.Id].publishMonth }}
-			{% endif %}
-		</li>
-		<li>Heure {{ adProperties[ad.Id].publishedDate|date("H:i") }}</li>
-		<li>Photo</li>
-		<li>Nom : {{adProperties[ad.Id].title}}</li>
-		<li>Localisation: {{adProperties[ad.Id].nameArea}} {{adProperties[ad.Id].nameCity}} {{adProperties[ad.Id].nameQuarter}}</li>
-		<li>Categorie: {{adProperties[ad.Id].titleCategory}}</li>
-		<li>Prix: {{adProperties[ad.Id].price}}</li>
-		<li><a href="{{ path('ad_show', {'idAd': ad.Id}) }}" name="show_ad">Consulter l'annonce</a></li>
-	</ul>
+{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
 {% endfor %}
+
 <div class="navigation">
     {{ ads.render()|raw }}
 </div>

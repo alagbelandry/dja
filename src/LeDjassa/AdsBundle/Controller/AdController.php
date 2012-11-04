@@ -11,7 +11,6 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\PictureAdType;
-use eDjassa\AdsBundle\Form\Type\PictureAd;
 use LeDjassa\AdsBundle\Form\Type\AdDeleteType;
 use LeDjassa\AdsBundle\Form\Type\AdSearchType;
 use LeDjassa\AdsBundle\Form\Type\AdEditType;
@@ -38,16 +37,12 @@ class AdController extends Controller
             ->filterByLive()
             ->lastCreatedFirst();
 
-        $adsCollection = $adsCollectionCriteria->find();
-        $adProperties = array();
-        foreach ($adsCollection as $ad)  {
-            $adProperties [$ad->getId()] = $ad->getProperties();
-        }
+        $adProperties = $adsCollectionCriteria->getProperties();
 
         $paginator = $this->get('ledjassa.paginator');
         $page = $this->get('request')->query->get('page', 1);
         $limit = $this->container->getParameter('limit_ads');
-        
+
         $pagination = $paginator->getPagination($adsCollectionCriteria, $page, $limit);
     
         return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
@@ -75,11 +70,7 @@ class AdController extends Controller
             ->searchByCategoryAndAreaAndTitleOrDescription($category, $area, '%'.$title.'%')
             ->lastCreatedFirst();
 
-        $adsCollection = $adsCollectionCriteria->find();
-        $adProperties = array();
-        foreach ($adsCollection as $ad)  {
-            $adProperties [$ad->getId()] = $ad->getProperties();
-        }
+        $adProperties = $adsCollectionCriteria->getProperties();
 
         $paginator = $this->get('ledjassa.paginator');
         $page = $query->get('page', 1);

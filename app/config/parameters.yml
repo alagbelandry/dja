@@ -8,6 +8,7 @@ propel:
        options:              {}
        attributes:           {}
 
+# Database Configuration
 parameters:
     database_driver:   mysql
     database_host:     localhost

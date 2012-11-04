@@ -82,6 +82,8 @@
 		})
 	</script>
 {% endblock %}
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_main %}
 <h3>Modification de l'annonce </h3>
 <h4>{{ad.title}} </h4>
 <form action="{{ path('ad_edit', {'idAd': ad.id}) }}" method="post" {{ form_enctype(form) }}>
@@ -114,3 +116,4 @@
 
 	<input type="submit" value="Valider" />
 </form>
+{% endblock %}

@@ -122,6 +122,8 @@
 	}
 	</script>
 {% endblock %}
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_main %}
 <h3>Ajouter une annonce</h3>
 <form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
 	
@@ -167,3 +169,4 @@
 	</div>
 	<input type="submit" value="Publier l'annonce" />
 </form>
+{% endblock %}

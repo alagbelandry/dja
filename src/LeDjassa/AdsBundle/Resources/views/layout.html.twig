@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Le Djassa Bundle{% endblock %}</title>
-        <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block content %}
-        {% endblock %}
+{% extends "OryzoneBoilerplateBundle::html5.html.twig" %}
 
-    </body>
-</html>
+{% block head_title %}Annonces gratuites Cote d'ivoire{% endblock %}
+{% block body_container_header %}<h1>Annonces gratuites Cote d'ivoire</h1>{% endblock %}
+{% block body_container_footer %}Informations Copyright{% endblock %}

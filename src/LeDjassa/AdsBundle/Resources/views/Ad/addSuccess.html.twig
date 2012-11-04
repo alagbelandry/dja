@@ -1,3 +1,5 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_main %}
 <h3>Nous avons bien reçu votre annonce {{ad.title}}.</h3>
 <h4>Un email de confirmation vient de vous être envoyé</h4>
 <h5>Après vérification de son contenu par notre équipe éditoriale, elle sera mise en ligne dans un délai de 12 heures maximum.</h5>
@@ -12,3 +14,4 @@
     <li>- l'adresse email indiquée n'est pas valide</li>
     <li>- l'email a été bloqué par votre filtre antispam. Dans ce dernier cas, pas besoin de ressaisir votre annonce, il vous suffit de retrouver l'email dans votre boîte de réception anti-spam.</li>
 </ul>
+{% endblock %}

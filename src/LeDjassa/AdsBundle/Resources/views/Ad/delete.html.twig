@@ -1,3 +1,5 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_main %}
 <h3>Suppression de l'annonce </h3>
 Supprimer cette annonce : {{ ad.title }} 
 <form action="{{ path('ad_delete', {'idAd': ad.id}) }}" method="post" }}>
@@ -9,3 +11,4 @@ Supprimer cette annonce : {{ ad.title }}
 	
 	<input type="submit" value="Supprimer"/>
 </form>
+{% endblock %}

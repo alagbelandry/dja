@@ -1,3 +1,5 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_main %}
 </h3>Details de l'annonce</h3>
 <ul>
 	<li>Date 
@@ -23,3 +25,4 @@
 	<li><a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a></li>
 	<li><a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a></li>
 </ul>
+{% endblock %}

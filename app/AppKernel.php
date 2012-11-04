@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new LeDjassa\AdsBundle\LeDjassaAdsBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new Oryzone\Bundle\BoilerplateBundle\OryzoneBoilerplateBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

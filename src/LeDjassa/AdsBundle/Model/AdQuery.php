@@ -41,7 +41,22 @@ class AdQuery extends BaseAdQuery
     /**
      * Filter by ad live (available)
      */
-    public function filterByLive() {
+    public function filterByLive() 
+    {
         return $this->filterByStatut(Ad::STATUT_CREATED);
+    }
+
+    /**
+     * Return list of ad property
+     */
+    public function getProperties() 
+    {
+        $adsCollection = $this->find();
+        $adProperties = array();
+        foreach ($adsCollection as $ad)  {
+            $adProperties [$ad->getId()] = $ad->getProperties();
+        }
+
+        return $adProperties;
     }
 }

@@ -16,6 +16,8 @@
         <parameter key="interested_user.contact.template">LeDjassaAdsBundle:InterestedUser:interestedUserContact.txt.twig</parameter>
         <parameter key="noreply_from_email">ne.pas.repondre@auportdadjame.com</parameter>
         <parameter key="contact_to_email">as.landry@gmail.com</parameter>
+
+        <parameter key="paginator.class">LeDjassa\AdsBundle\Services\Paginator</parameter>
     </parameters>
 
     <services>
@@ -41,6 +43,11 @@
                 </argument>
             </argument>
         </service>
+
+        <service id="ledjassa.paginator" class="%paginator.class%">
+            <argument type="service" id="knp_paginator" />
+        </service>
+
    </services>
 
 </container>

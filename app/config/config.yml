@@ -28,7 +28,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [OryzoneBoilerplateBundle]
+    bundles:        [OryzoneBoilerplateBundle, LeDjassaAdsBundle]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~

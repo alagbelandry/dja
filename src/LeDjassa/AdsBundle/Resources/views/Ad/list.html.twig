@@ -1,13 +1,24 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_intro %}
+	{% render "LeDjassaAdsBundle:Ad:searchForm" %}
+{% endblock %}
 {% block body_container_main %}
-<div id="search">
-    {% render "LeDjassaAdsBundle:Ad:searchForm" %}
-</div>
-{% for ad in ads %}
-{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
-{% endfor %}
 
-<div class="navigation">
+<div class="clear" style="opacity: 1;"></div>
+
+<div id="category" class="grid_9">
+	<ul class="s_listing s_list_view clearfix">
+		{% for ad in ads %}
+			<li class="s_item clearfix" style="opacity: 1;">
+				{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
+			</li>
+			<div class="clear" style="opacity: 1;"></div>
+		{% endfor %}
+	</ul>
+</div>
+<div id="right_col" class="grid_3">
+</div>
+<div class="pagination">
     {{ ads.render()|raw }}
 </div>
 {% endblock %}

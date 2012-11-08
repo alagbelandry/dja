@@ -5,7 +5,7 @@ body.s_layout_fixed {
 	background-color: #fffbe5;
 	background-image: url(../images/texture_1.png);
 }
-.s_main_color, #twitter li span a, .s_item .s_button_add_to_cart, .s_box h2, .box .top {
+.s_main_color, #twitter li span a, .s_item .s_button_add_to_cart, .s_box h2, .box .top, .s_date {
 	color: #7ebd1e;
 }
 .s_main_color_bgr, #cart .s_icon, #shop_contacts .s_icon, .s_list_1 li, .s_item .s_button_add_to_cart .s_icon, #intro .s_button_prev, #intro .s_button_next, .buttons .button, #cart_menu .s_icon {

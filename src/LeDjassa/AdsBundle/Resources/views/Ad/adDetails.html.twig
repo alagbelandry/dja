@@ -4,10 +4,9 @@
 	{% set thumbnailSrc = "images/product_180x180.jpg" %}
 {% endif %}
 
-<div>
 	<div class="grid_3 alpha">
 		<a class="s_thumb" href="{{ path('ad_show', {'idAd': ad.Id}) }}">
-			<img alt="{{adProperties[ad.Id].title}}" title="{{adProperties[ad.Id].title}}" width="180px" height="180px" 
+			<img alt="{{adProperties[ad.Id].title}}" title="{{adProperties[ad.Id].title}}" width="150px" height="150px" 
 		
 			{% if adProperties[ad.Id].pictures %}
 				src = "{{ asset('uploads/pictures/' ~ adProperties[ad.Id].pictures.0.Path)}}"
@@ -21,7 +20,21 @@
 		<h3>
 			<a href="{{ path('ad_show', {'idAd': ad.Id}) }}">{{adProperties[ad.Id].title}}</a>
 		</h3>
-		<div>Date 
+		{% if adProperties[ad.Id].price %}
+		<p class="s_price s_promo_price">
+			{{adProperties[ad.Id].price}}
+			<span class="s_currency s_before">F CFA</span>
+		</p>
+		{% endif %}
+		<p class="s_description">
+			<span class="s_category">{{adProperties[ad.Id].titleCategory}}</span>
+			<span class="s_location">{{adProperties[ad.Id].nameArea}} / {{adProperties[ad.Id].nameCity}} 
+				{% if adProperties[ad.Id].nameQuarter %}
+				- {{adProperties[ad.Id].nameQuarter}}
+				{% endif %}
+			</span>
+		</p>
+		<span class="s_date">
 			{% if adProperties[ad.Id].isPublishToday %}
 				Aujourd'hui
 			{% elseif adProperties[ad.Id].isPublishYesterDay %}
@@ -29,11 +42,6 @@
 			{% else %}
 				{{ adProperties[ad.Id].publishedDate|date("d") }} {{ adProperties[ad.Id].publishMonth }}
 			{% endif %}
-		</div>
-		<div>Heure {{ adProperties[ad.Id].publishedDate|date("H:i") }}</div>
-		<div>Photo</div>
-		<div>Localisation: {{adProperties[ad.Id].nameArea}} {{adProperties[ad.Id].nameCity}} {{adProperties[ad.Id].nameQuarter}}</div>
-		<div>Categorie: {{adProperties[ad.Id].titleCategory}}</div>
-		<div>Prix: {{adProperties[ad.Id].price}}</div>
+			à {{ adProperties[ad.Id].publishedDate|date("H:i") }}
+		</span>
 	</div>		
-</div>

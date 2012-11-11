@@ -776,7 +776,7 @@ label.s_radio
   height: 24px;
   padding: 20px 0 30px 0;
   line-height: 24px;
-  border-top: 1px solid #ddd;
+  float: right;
 }
 .pagination .links {
   float: left;
@@ -797,10 +797,16 @@ label.s_radio
   text-align: center;
 }
 .pagination a {
-  font-size: 12px;
+  font-size: 15px;
   color: #666;
   background: #eee;
 }
+
+.pagination .current {
+  font-size: 16px;
+  color: #FF7700;
+}
+
 .pagination .links a:hover,
 #content .pagination .links a:hover
 {

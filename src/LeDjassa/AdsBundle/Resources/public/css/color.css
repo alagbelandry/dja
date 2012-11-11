@@ -20,6 +20,7 @@ body.s_layout_fixed {
 .s_secondary_color_bgr, #show_search, #view_mode .s_selected .s_icon, #view_mode a:hover .s_icon, #menu_home a:hover, .pagination a:hover, .s_item .s_button_add_to_cart:hover .s_icon, .s_cart_item .s_button_remove:hover {
 	background-color: #ff7700;
 }
+
 #intro, #contact_form_icon {
 	background-color: #def5d0;
 }

@@ -15,10 +15,9 @@
 			<div class="clear" style="opacity: 1;"></div>
 		{% endfor %}
 	</ul>
+	{{ ads.render()|raw }}
 </div>
+<div class="clear" style="opacity: 1;"></div>
 <div id="right_col" class="grid_3">
-</div>
-<div class="pagination">
-    {{ ads.render()|raw }}
 </div>
 {% endblock %}

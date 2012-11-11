@@ -1589,6 +1589,7 @@ body.s_layout_fixed #wrapper {
   letter-spacing: -1px;
   font-size: 16px;
   font-family: "Ubuntu Regular", sans-serif;
+  text-transform: uppercase;
 }
 #categories > ul > li.s_selected > a {
 }
@@ -1775,6 +1776,37 @@ body.s_layout_fixed #wrapper {
 }
 #intro .slideItem {
 }
+
+#search_form {
+  padding-left: 140px;
+  padding-bottom: 55px;
+  margin-top: -15px;
+}
+
+#search_form input, textarea, select {
+  padding: 7px;
+  width: 200px;
+}
+
+#search_form input[type=search] {
+  padding: 5px;
+  width: 250px;
+}
+
+#search_form input[type=submit] {
+  background-color: #FF9900;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: "Ubuntu Regular",sans-serif;
+  border: 0 none;
+  border-radius: 7px 7px 7px 7px;
+  font-weight: bold;
+  text-transform: uppercase;
+  float: right;
+  margin-right: 145px;
+  margin-top: 12px;
+}
+
 #product_intro {
   position: relative;
   height: 370px;

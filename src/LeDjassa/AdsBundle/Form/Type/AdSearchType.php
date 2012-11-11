@@ -29,7 +29,7 @@ class AdSearchType extends AbstractType
         $builder->add('area', 'model', array(
             'class'         => 'LeDjassa\AdsBundle\Model\Area',
             'required'      => false,
-            'empty_value'   => 'Toutes la cote d\'ivoire ',
+            'empty_value'   => 'Toutes la Cote D\'ivoire ',
         ));
     }
 

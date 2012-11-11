@@ -21,6 +21,10 @@ body.s_layout_fixed {
 	background-color: #ff7700;
 }
 
+#category > ul > li > a:hover {
+  color: #333333 !important;
+}
+
 #intro, #contact_form_icon {
 	background-color: #def5d0;
 }

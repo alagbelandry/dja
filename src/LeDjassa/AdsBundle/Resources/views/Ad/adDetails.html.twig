@@ -1,11 +1,5 @@
-{% if adProperties[ad.Id].pictures %}
-	{% set thumbnailSrc = "{{ asset('uploads/pictures/' ~ adProperties[ad.Id].pictures.0.Path)}}" %}
-{% else %}
-	{% set thumbnailSrc = "images/product_180x180.jpg" %}
-{% endif %}
-
+  <a href="{{ path('ad_show', {'idAd': ad.Id}) }}" title="{{adProperties[ad.Id].title}}">
 	<div class="grid_3 alpha">
-		<a class="s_thumb" href="{{ path('ad_show', {'idAd': ad.Id}) }}">
 			<img alt="{{adProperties[ad.Id].title}}" title="{{adProperties[ad.Id].title}}" width="150px" height="150px" 
 		
 			{% if adProperties[ad.Id].pictures %}
@@ -14,11 +8,10 @@
 				src="images/product_180x180.jpg"
 			{% endif %}
 			>
-		</a>
 	</div>
 	<div class="grid_6 omega">
 		<h3>
-			<a href="{{ path('ad_show', {'idAd': ad.Id}) }}">{{adProperties[ad.Id].title}}</a>
+			{{adProperties[ad.Id].title}}
 		</h3>
 		{% if adProperties[ad.Id].price %}
 		<p class="s_price s_promo_price">
@@ -44,4 +37,5 @@
 			{% endif %}
 			à {{ adProperties[ad.Id].publishedDate|date("H:i") }}
 		</span>
-	</div>		
+	</div>
+	</a>		

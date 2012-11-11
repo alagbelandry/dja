@@ -488,6 +488,7 @@ input[type=hidden] {
 }
 input[type=text],
 input[type=password],
+input[type=email],
 textarea,
 select
 {
@@ -501,6 +502,7 @@ select
 }
 input[type=text].inline,
 input[type=password].inline,
+input[type=email].inline,
 textarea.inline,
 select.inline
 {
@@ -515,6 +517,7 @@ input[type=radio]
 
 input[type=text]:hover,
 input[type=password]:hover,
+input[type=email]:hover,
 textarea:hover,
 select:hover
 {
@@ -523,6 +526,7 @@ select:hover
 
 input[type=text]:focus,
 input[type=password]:focus,
+input[type=email]:focus,
 textarea:focus,
 select:focus
 {
@@ -555,6 +559,7 @@ label .s_legend {
 
 .s_full input[type=text],
 .s_full input[type=password],
+.s_full input[type=email],
 .s_full textarea,
 .s_full select
 {
@@ -579,6 +584,7 @@ label .s_legend {
 .s_row_1 label,
 .s_row_1 input[type=text],
 .s_row_1 input[type=password],
+.s_row_1 input[type=email],
 .s_row_1 textarea,
 .s_row_1 select
 {
@@ -608,6 +614,7 @@ label .s_legend {
 .s_row_2 label,
 .s_row_2 input[type=text],
 .s_row_2 input[type=password],
+.s_row_2 input[type=email],
 .s_row_2 textarea,
 .s_row_2 select
 {
@@ -635,6 +642,7 @@ label .s_legend {
 }
 .s_row_3 input[type=text],
 .s_row_3 input[type=password],
+.s_row_3 input[type=email],
 .s_row_3 textarea,
 .s_row_3 select,
 .s_row_3 .uploader
@@ -654,6 +662,7 @@ label .s_legend {
 }
 .s_row_4 input[type=text],
 .s_row_4 input[type=password],
+.s_row_4 input[type=email],
 .s_row_4 textarea,
 .s_row_4 select,
 .s_row_4 .uploader
@@ -682,6 +691,7 @@ label.s_radio
 
 .s_error_row input[type=text],
 .s_error_row input[type=password],
+.s_error_row input[type=email],
 .s_error_row textarea,
 .s_error_row select
 {

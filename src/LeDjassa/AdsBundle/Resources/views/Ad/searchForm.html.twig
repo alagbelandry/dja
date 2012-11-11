@@ -1,5 +1,5 @@
 {% block body_container_main %}
-<form action="{{ path('ad_search_form') }}" method="post" {{ form_enctype(form) }}>
+<form id="search_form" action="{{ path('ad_search_form') }}" method="post" {{ form_enctype(form) }}>
 	
 	{{ form_errors(form) }}
 

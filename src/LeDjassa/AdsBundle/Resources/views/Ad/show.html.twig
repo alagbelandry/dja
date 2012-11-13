@@ -30,11 +30,17 @@
 		</div>
 
 		<ul id="carousel">
-			{% for picture in ad.pictures %}
-      	<li>
-      		<img src="{{ asset('uploads/pictures/' ~ picture.Path)}}"  width="320" height="200"/>
-      	</li>
-      {% endfor %}
+			{% if ad.pictures %}
+				{% for picture in ad.pictures %}
+	      	<li>
+	      		<img src="{{ asset('uploads/pictures/' ~ picture.Path)}}"  width="320px" height="300px"/>
+	      	</li>
+	      {% endfor %}
+	    {% else %}
+	    	  <li>
+	      		<img src="{{ asset('bundles/ledjassaads/images/pas-d-image-dispo.jpg')}}"  width="320px" height="300px"/>
+	      	</li>
+	    {% endif %}
     </ul>
 		</div>
 		<div>Description : {{ad.description}}</div>
@@ -67,16 +73,12 @@
     	$('#carousel').infiniteCarousel({
     		imagePath: "{{ asset('bundles/ledjassaads/images/')}}",
 				transitionSpeed:450,
-				displayTime: 6000,
 				internalThumbnails: false,
+				displayProgressRing: false, 
 				thumbnailType: 'images',
 				customClass: 'myCarousel',
 				progressRingColorOpacity: '0,0,0,.9',
 				progressRingBackgroundOn: false,
-				easeLeft: 'easeOutExpo',
-				easeRight:'easeOutQuad',
-				inView: 1,
-				advance: 1,
 				autoPilot: true,
 				prevNextInternal: false,
 				autoHideCaptions: false

@@ -6,8 +6,9 @@ div.ic_myCarousel {
 	float: left;
 	height: 37px;
 	line-height: 25px;
-	margin: 0 4px 0 2px;
-	width: 90px;
+	margin: 8px 4px 0 2px;
+	width: 140px;
+	height: 100px;
 	border: 2px solid #eee;
 	background: #ddd;
 }
@@ -16,8 +17,13 @@ div.ic_myCarousel {
 	margin: 0 auto !important;
 }
 
+.infiniteCarousel_item img{
+	width: 320px;
+	height: 300px;
+}
+
 .ic_wrapper {
-	width: 500px !important;
+	width: 450px !important;
 }
 
 .ic_myCarousel .ic_active {
@@ -26,5 +32,5 @@ div.ic_myCarousel {
 }
 
 .ic_peek_padding {
-	padding: 0 20px;
+	padding: 0;
 }

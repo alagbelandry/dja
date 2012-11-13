@@ -1,28 +1,85 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
-{% block body_container_main %}
-</h3>Details de l'annonce</h3>
-<ul>
-	<li>Date 
-		{% if ad.isPublishToday %}
-			Aujourd'hui
-		{% elseif ad.isPublishYesterDay %}
-			Hier
-		{% else %}
-			{{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}
-		{% endif %}
-	</li>
-	<li>Photo</li>
-	<li>Titre : {{ad.title}}</li>
-	<li>Localisation: {{ad.nameArea}} {{ad.nameCity}}</li>
-	<li>Categorie: {{ad.titleCategory}}</li>
-	<li>Prix: {{ad.price}}</li>
-
-	<li>Description : {{ad.description}}</li>
-	<li>Nom utilisateur: {{ad.userName}}</li>
-	<li>Email utilisateur: {{ad.userEmail}}</li>
-	<li>Téléphone utilisateur: {{ad.userPhone}}</li>
-	<li><a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a></li>
-	<li><a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a></li>
-	<li><a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a></li>
-</ul>
+{% block head_css %}
+	{{ parent() }}
+	{% stylesheets filter='cssrewrite'
+	'bundles/ledjassaads/css/slider.css'  
+	 %}
+	 <link media="all" rel="stylesheet" type="text/css" href="{{ asset_url }}">
+	{% endstylesheets %}
 {% endblock %}
+
+{% block body_container_intro %}
+	breadcrumbs navigation
+{% endblock %}
+{% block body_container_main %}
+<div id="content" class="product_view container_12">
+	<div id="product" class="grid_12">
+
+		<h3>{{ad.title}}</h3>
+
+		<div class="publish_by">
+		Mise en ligne par {{ad.userName}}
+		{% if ad.isPublishToday %}
+				aujourd'hui
+			{% elseif ad.isPublishYesterDay %}
+				hier
+			{% else %}
+				le {{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}
+			{% endif %}
+			à {{ ad.publishedDate|date("H:i") }}
+		</div>
+
+		<ul id="carousel">
+			{% for picture in ad.pictures %}
+      	<li>
+      		<img src="{{ asset('uploads/pictures/' ~ picture.Path)}}"  width="320" height="200"/>
+      	</li>
+      {% endfor %}
+    </ul>
+		</div>
+		<div>Description : {{ad.description}}</div>
+		<div id="product_info" class="grid_4">
+			<ul>
+				<li>Localisation: {{ad.nameArea}} {{ad.nameCity}}</li>
+				<li>Categorie: {{ad.titleCategory}}</li>
+				<li>Prix: {{ad.price}}</li>
+				<li>Nom utilisateur: {{ad.userName}}</li>
+				<li>Email utilisateur: {{ad.userEmail}}</li>
+				<li>Téléphone utilisateur: {{ad.userPhone}}</li>
+				<li><a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a></li>
+				<li><a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a></li>
+				<li><a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a></li>
+			</ul>
+		</div>
+
+  </div>
+<div>
+{% endblock %}
+{% block body_js %}
+  {{ parent() }}
+    {% javascripts 
+    'bundles/ledjassaads/js/jquery.infinitecarousel3.js' 
+    %}
+    <script src="{{ asset_url }}" type="text/javascript"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+    	$('#carousel').infiniteCarousel({
+    		imagePath: "{{ asset('bundles/ledjassaads/images/')}}",
+				transitionSpeed:450,
+				displayTime: 6000,
+				internalThumbnails: false,
+				thumbnailType: 'images',
+				customClass: 'myCarousel',
+				progressRingColorOpacity: '0,0,0,.9',
+				progressRingBackgroundOn: false,
+				easeLeft: 'easeOutExpo',
+				easeRight:'easeOutQuad',
+				inView: 1,
+				advance: 1,
+				autoPilot: true,
+				prevNextInternal: false,
+				autoHideCaptions: false
+			});
+    </script>
+ {% endblock body_js %}

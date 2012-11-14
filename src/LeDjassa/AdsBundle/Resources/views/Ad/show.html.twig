@@ -42,7 +42,7 @@
 	      	</li>
 	    {% endif %}
     </ul>
-		</div>
+
 		<div id="product_info" class="grid_4">
 			<span class="s_info_price">
 				<span class="s_info_title">Prix:</span>
@@ -60,16 +60,18 @@
 				<span class="s_info_title">Description: </span>
 				<span class="s_info_description_value">{{ad.description}}</span> 
 			  </span>
-			<div class="s_description_show">
-				Localisation: {{ad.nameArea}} {{ad.nameCity}}
-				Categorie: {{ad.titleCategory}}
-				Nom utilisateur: {{ad.userName}}
-				Email utilisateur: {{ad.userEmail}}
-				Téléphone utilisateur: {{ad.userPhone}}
-				<a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a>
+		</div>
+
+		</div>
+
+		<div id="product_user_info" class="grid_4">
+			<h4 class="">Contactez l'annonceur</h4>
+			<a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a>
+			{{ad.userName}}: {{ad.userPhone}}
+
+			<h5 class⁼"">Gérer votre annonce</h5>
 				<a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a>
 				<a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a>
-			</div>
 		</div>
 
   </div>

@@ -18,17 +18,17 @@ div.ic_myCarousel {
 }
 
 .infiniteCarousel_item img{
-	width: 320px;
-	height: 300px;
+	width: 400px;
+	height: 330px;
 }
 
 .ic_wrapper {
-	width: 450px !important;
+	width: 550px !important;
 }
 
 .ic_myCarousel .ic_active {
 	background: #fff;
-	border: 2px solid #800;
+	border: 2px solid #FF9900;
 }
 
 .ic_peek_padding {

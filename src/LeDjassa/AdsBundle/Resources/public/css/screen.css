@@ -1923,6 +1923,63 @@ body.s_layout_fixed #wrapper {
 #product_intro .s_price .s_currency.s_before, #product_info .s_currency.s_before {text-indent: -1px; font-size: 26px;}
 #product_intro .s_price .s_currency.s_after, #product_info .s_currency.s_after {padding-top: 8px; font-size: 18px;}
 
+#product_user_info {
+  width: 290px;
+  border: 1px solid #FF9900;
+  margin-top: 60px;
+  font-weight: bold;
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+#product_user_info .s_product_user_info_title {
+  color: #FF9900;
+  font-size: 19px;
+  padding-bottom: 12px;
+  letter-spacing: -1px;
+  word-spacing: 2px;
+  font-family: "Ubuntu Regular",sans-serif;
+}
+
+#product_user_info .s_product_user_info_email {
+  padding-bottom: 25px;
+}
+
+#product_user_info .s_product_user_info_phone {
+  padding-bottom: 20px;
+}
+
+#product_user_info .s_send_email_icon {
+  background-image: url(../images/i_mail_32.png);
+  background-repeat: no-repeat;
+  padding: 7px 10px 20px 30px;
+}
+
+#product_user_info .s_user_phone_icon {
+  background-image: url(../images/i_phone_32.png);
+  background-repeat: no-repeat;
+  padding: 10px 5px 20px 35px;
+}
+
+#product_user_info  .s_product_user_update {
+  padding-bottom: 20px;
+}
+
+#product_user_info .s_update_icon {
+  background-image: url(../images/i_mail_32.png);
+  background-repeat: no-repeat;
+  padding: 7px 10px 20px 30px;
+}
+
+#product_user_info  .s_product_user_delete {
+
+}
+
+#product_user_info .s_delete_icon {
+  background-image: url(../images/i_mail_32.png);
+  background-repeat: no-repeat;
+  padding: 7px 10px 20px 30px;
+}
 
 #image_intro {
   padding-bottom: 30px;

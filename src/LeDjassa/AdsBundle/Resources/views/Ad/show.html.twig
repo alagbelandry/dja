@@ -15,7 +15,7 @@
 <div id="content" class="product_view container_12">
 	<div id="product" class="grid_12">
 
-		<h3>{{ad.title}}</h3>
+		<h1>{{ad.title}}</h1>
 
 		<div class="publish_by">
 		Mise en ligne par {{ad.userName}}
@@ -65,13 +65,27 @@
 		</div>
 
 		<div id="product_user_info" class="grid_4">
-			<h4 class="">Contactez l'annonceur</h4>
-			<a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a>
-			{{ad.userName}}: {{ad.userPhone}}
 
-			<h5 class⁼"">Gérer votre annonce</h5>
+			<div class="s_product_user_info_title">Contactez l'annonceur</div>
+			<div class="s_product_user_info_email">
+				<span class="s_send_email_icon"></span>
+				<a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a>
+			</div>
+			<div class="s_product_user_info_phone">
+				<span class="s_user_phone_icon"></span>
+				<span>{{ad.userName}}: {{ad.userPhone}}</span>
+			</div>
+
+			<div class="s_product_user_info_title">Gérer votre annonce</div>
+			<div class="s_product_user_update">
+				<span class="s_update_icon"></span>
 				<a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a>
+			</div>
+			<div class="s_product_user_delete">
+				<span class="s_delete_icon"></span>
 				<a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a>
+			</div>
+
 		</div>
 
   </div>

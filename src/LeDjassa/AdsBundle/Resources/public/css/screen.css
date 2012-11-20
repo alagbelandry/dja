@@ -418,6 +418,12 @@ h2.s_title_1 {
   border-bottom: 1px solid #ddd;
 }
 
+.s_border {
+  border: 1px solid #7EBD1E;
+  width: 940px;
+  margin: 5px 0 5px 30px;
+}
+
 .s_thumb {
   position: relative;
   display: block;
@@ -2338,6 +2344,22 @@ body.s_layout_fixed #wrapper {
   margin: 0 10px 10px 0;
 }
 
+.s_add_ad_title_block {
+  background-color: #FF9900;
+  border: 0 none;
+  color: #FFFFFF;
+  font-family: "Ubuntu Regular",sans-serif;
+  text-transform: uppercase;
+  width: 250px;
+  height: 30px;
+  letter-spacing: 0.5px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.s_add_ad_block {
+  padding-left: 50px;
+}
 
 #related_products {
   margin-bottom: 10px;

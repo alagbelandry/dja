@@ -1,27 +1,33 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_pre_intro %}
+	<div class="s_border"></div>
+{% endblock %}
 {% block body_container_main %}
-<h3>Ajouter une annonce</h3>
-<form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
+<div id="content" class="container_16">
+	<h2><span class="s_secondary_color">Déposer</span> une annonce</h2>
+	lbalblalbalblalbalbalblabblablasfqfqfqfsfqsfkjhqsjkfhqskfhqskjfhqsf
+	fsqfsjfqsfjqslfjqslnflsqkjfiejfjoqieflqsghlshfsqfqsnngfvsnvgsnfdsqf
+	fsqfvqskjfqmsoifjmljflsvsqldfsqlnslfjslmkf. Règles de diffusion
+	<form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
 	
-		{{ form_errors(form) }}
-
-	<div>
+	{{ form_errors(form) }}
+	
+	<h3 class="s_add_ad_title_block">Localisation</h3>
+	<div class="s_add_ad_block">
 		{{ form_errors(form.city.area) }}
 		{{ form_label(form.city.area) }}
 		{{ form_widget(form.city.area) }}
-	</div>
-	
-	<div>
-		{{ form_errors(form.city.name) }}
-		{{ form_label(form.city.name) }}
-		{{ form_widget(form.city.name) }}
+
 	</div>
 
-	<div>
-		{{ form_errors(form.city.quarter.name) }}
-		{{ form_label(form.city.quarter.name) }}
-		{{ form_widget(form.city.quarter.name) }}
-	</div>
+	  {{ form_errors(form.city.quarter.name) }}
+	  {{ form_label(form.city.quarter.name) }}
+	  {{ form_widget(form.city.quarter.name) }}
+	  
+		{{ form_errors(form.city.name) }}
+	  {{ form_label(form.city.name) }}
+	  {{ form_widget(form.city.name) }}
+
 
 	{{ form_row(form.category) }}
 	{{ form_row(form.user_type) }}
@@ -29,15 +35,14 @@
 	{{ form_row(form.user_name) }}
 	{{ form_row(form.user_email) }}
 	{{ form_row(form.user_phone) }}
-	{{ form_row(form.user_password) }}
-
+	
 	{{ form_row(form.title) }}
 	{{ form_row(form.description) }}
 	{{ form_row(form.price) }}
 	{{ form_row(form.picture_ads) }}
 
 	<a href="#" id="add_picture">Ajouter une photo</a>
-
+ {{ form_row(form.user_password) }}
 	{{ form_rest(form) }}
 	<div>
 		En validant la diffusion de mon annonce, j'accepte les Règles de diffusion et d'utilisation du site auportdabidjan.com <br/>
@@ -45,6 +50,7 @@
 	</div>
 	<input type="submit" value="Publier l'annonce" />
 </form>
+</div>
 {% endblock %}
 {% block body_js %}
 	{{ parent() }}

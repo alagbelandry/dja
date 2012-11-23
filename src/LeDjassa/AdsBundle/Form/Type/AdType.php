@@ -45,9 +45,12 @@ class AdType extends AbstractType
 
         $builder->add('user_password', 'repeated', array(
                 'type' => 'password',
-                'first_options'  => array('label' => 'Mot de passe'),
-                'second_options' => array('label' => 'Confirmer le mot de passe'),
-                'attr'           => array('autocomplete' => 'off')   
+                'first_options'  => array(
+                    'label' => 'Mot de passe'),
+                'second_options' => array(
+                    'label' => 'Confirmer le mot de passe'),
+                'attr'           => array(
+                    'autocomplete' => 'off')   
         ));
 
         // Category  relation
@@ -64,6 +67,8 @@ class AdType extends AbstractType
             'expanded' => true,
             'multiple' => false,
             'query'    => UserTypeQuery::create()->orderByTitle(UserTypeQuery::ASC),
+            'attr'     => array(
+                'class' => 's_form_add_field_radio'),
         ));
 
         // Ad type relation 
@@ -73,6 +78,8 @@ class AdType extends AbstractType
             'property' => 'name',
             'expanded' => true,
             'multiple' => false,
+            'attr'     => array(
+                'class' => 's_form_add_field_radio'),
         ));
 
         // City relation

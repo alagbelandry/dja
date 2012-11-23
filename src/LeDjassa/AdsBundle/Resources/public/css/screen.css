@@ -2361,6 +2361,38 @@ body.s_layout_fixed #wrapper {
   padding-left: 50px;
 }
 
+.s_add_ad_block input {
+  width: 265px;
+}
+
+.s_add_ad_block label {
+  font-weight: bold;
+  margin: 10px 0 10px -20px;
+}
+
+.s_form_add_field_radio label {
+  display: inline;
+  margin: 5px 10px;
+}
+
+.s_add_ad_block button {
+ float: none;
+ margin-left: 0px;
+}
+
+#ad_price {
+  width: 150px;
+}
+
+#ad_description {
+  width: 350px;
+  height: 150px;
+}
+
+#add_form_validation_info {
+  margin: 20px 0 10px;
+}
+
 #related_products {
   margin-bottom: 10px;
 }

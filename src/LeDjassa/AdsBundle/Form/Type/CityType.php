@@ -28,11 +28,19 @@ class CityType extends AbstractType {
             'class'         => 'LeDjassa\AdsBundle\Model\City',
             'label'         => 'Ville :',
             'empty_value'   => 'Choisir une ville',
+            'attr'          => array(
+                'class' => 's_form_add_name'),
+            'label_attr'    => array(
+                'class' => 's_form_add_name')
         ));
 
         // City relation
         $builder->add('quarter', new QuarterType(), array(
             'property_path' => false,
+            'attr'          => array(
+                'class' => 's_form_add_quarter'),
+            'label_attr'    => array(
+                'class' => 's_form_add_quarter')
         ));
     }
 

@@ -1,4 +1,37 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block head_js %}
+	{{ parent() }}
+<script type="text/javascript">
+$(document).ready(function () {
+														
+	jQuery.validator.setDefaults({
+			errorElement: "p",
+			errorClass: "s_error_msg",
+			errorPlacement: function(error, element) {
+					error.insertAfter(element);
+			},
+			highlight: function(element, errorClass, validClass) {
+					$(element).addClass("error_element").removeClass(validClass);
+					$(element).parent("div").addClass("s_error_row");
+			},
+			unhighlight: function(element, errorClass, validClass) {
+					$(element).removeClass("error_element").addClass(validClass);
+					$(element).parent("div").removeClass("s_error_row");
+			}
+	});
+	
+	$("#add_form").validate({
+		rules: {
+			enquiry: {
+					required: true,
+					minlength: 10
+			}
+		}
+	});
+	
+});
+</script>
+{% endblock %}
 {% block body_container_pre_intro %}
 	<div class="s_border"></div>
 {% endblock %}
@@ -8,7 +41,7 @@
 	lbalblalbalblalbalbalblabblablasfqfqfqfsfqsfkjhqsjkfhqskfhqskjfhqsf
 	fsqfsjfqsfjqslfjqslnflsqkjfiejfjoqieflqsghlshfsqfqsnngfvsnvgsnfdsqf
 	fsqfvqskjfqmsoifjmljflsvsqldfsqlnslfjslmkf. Règles de diffusion
-	<form action="{{ path('ad_add') }}" method="post" {{ form_enctype(form) }}>
+	<form action="{{ path('ad_add') }}" id="add_form" method="post" {{ form_enctype(form) }}>
 	
 	{{ form_errors(form) }}
 	

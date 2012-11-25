@@ -1,37 +1,4 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
-{% block head_js %}
-	{{ parent() }}
-<script type="text/javascript">
-$(document).ready(function () {
-														
-	jQuery.validator.setDefaults({
-			errorElement: "p",
-			errorClass: "s_error_msg",
-			errorPlacement: function(error, element) {
-					error.insertAfter(element);
-			},
-			highlight: function(element, errorClass, validClass) {
-					$(element).addClass("error_element").removeClass(validClass);
-					$(element).parent("div").addClass("s_error_row");
-			},
-			unhighlight: function(element, errorClass, validClass) {
-					$(element).removeClass("error_element").addClass(validClass);
-					$(element).parent("div").removeClass("s_error_row");
-			}
-	});
-	
-	$("#add_form").validate({
-		rules: {
-			enquiry: {
-					required: true,
-					minlength: 10
-			}
-		}
-	});
-	
-});
-</script>
-{% endblock %}
 {% block body_container_pre_intro %}
 	<div class="s_border"></div>
 {% endblock %}
@@ -116,12 +83,129 @@ $(document).ready(function () {
 {% endblock %}
 {% block body_js %}
 	{{ parent() }}
-	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-1.8.1.min.js')}}"></script>
-	<script type="text/javascript" src="{{ asset('bundles/ledjassaads/js/jquery-ui-1.8.23.custom.min.js')}}"></script>
 	<script type="text/javascript">
 
 		$(document).ready(function() {
 
+		// manage validation form		
+		$("#add_form").validate({
+			errorElement: "p",
+			errorClass: "s_error_msg",
+			errorPlacement: function(error, element) {
+				error.insertAfter(element);
+			},
+			highlight: function(element, errorClass, validClass) {
+				$(element).addClass("error_element").removeClass(validClass);
+				$(element).parent("div").addClass("s_error_row");
+			},
+			unhighlight: function(element, errorClass, validClass) {
+				$(element).removeClass("error_element").addClass(validClass);
+				$(element).parent("div").removeClass("s_error_row");
+			},
+			rules: {
+				"ad[city][area]": {
+					required: true,
+				},
+				"ad[city][name]": {
+					required: true,
+				},
+				"ad[city][quarter][name]": {
+					minlength: 2,
+				},
+				"ad[category]": {
+					required: true,
+				},
+				"ad[user_type]": {
+					required: true,
+				},
+				"ad[ad_type]": {
+					required: true,
+				},
+				"ad[user_name]": {
+					required: true,
+					minlength: 2,
+				},
+				"ad[user_email]": {
+					required: true,
+				  email: true
+				},
+				"ad[user_phone]": {
+					minlength: 4,
+					digits: true,
+				},
+				"ad[user_password][first]": {
+					required: true,
+					rangelength: [3, 12]
+				},
+				"ad[user_password][second]": {
+					required: true,
+					rangelength: [3, 12]
+				},
+				"ad[title]": {
+					required: true,
+					minlength: 2,
+				},
+				"ad[description]": {
+					required: true,
+					minlength: 5,
+				},
+				"ad[price]": {
+					digits: true,
+				},
+			},
+      messages: {
+        "ad[city][area]": {
+          required: "Veuillez choisir une région.",
+        },
+        "ad[city][name]": {
+          required: "Veuillez choisir une ville.",
+        },
+        "ad[city][quarter][name]": {
+          minlength: jQuery.format("Veuillez saisir au moins {0} caractères !"),
+        },
+        "ad[category]": {
+          required: "Veuillez choisir une catégorie.",
+        },
+        "ad[user_type]": {
+          required: "Veuillez choisir un type d'annonceur.",
+        },
+        "ad[ad_type]": {
+          required: "Veuillez choisir un type d'annonce.",
+        },
+        "ad[user_name]": {
+          required: "Veuillez choisir un nom.",
+          minlength: jQuery.format("Veuillez saisir au moins {0} caractères !"),
+        },
+        "ad[user_email]": {
+          required: "Veuillez saisir une addresse email.",
+          email: "L'email doit etre au format \"nom@nomsite.fr\""
+        },
+        "ad[user_phone]": {
+        	minlength: jQuery.format("Veuillez saisir au moins {0} chiffres !"),
+          digits: "Veuillez saisir uniquement des chiffres.",
+        },
+        "ad[user_password][first]": {
+          required: "Veuillez choisir un mot de passe.",
+          rangelength: jQuery.validator.format("Le mot de passe doit etre compris entre {0} et {1} caractères.")
+        },
+        "ad[user_password][second]": {
+          required: "Veuillez confirmer le mot de passe.",
+          rangelength: jQuery.validator.format("Le mot de passe doit etre compris entre {0} et {1} caractères.")
+        },
+        "ad[title]": {
+          required: "Veuillez saisir le titre de l'annonce",
+          minlength: jQuery.format("Veuillez saisir au moins {0} caractères !"),
+        },
+        "ad[description]": {
+          required: "Veuillez saisir la description de l'annonce.",
+          minlength: jQuery.format("Veuillez saisir au moins {0} caractères !"),
+        },
+        "ad[price]": {
+          digits: "Veuillez saisir uniquement des chiffres.",
+        },
+      }
+		});
+										
 			// manage picture upload
     		var $container = $('#ad_picture_ads');
 	

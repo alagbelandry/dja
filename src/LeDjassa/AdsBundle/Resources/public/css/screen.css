@@ -712,12 +712,12 @@ label.s_radio
   height: 18px;
   padding: 0 5px 0 0;
   line-height: 18px;
-  font-size: 11px;
+  font-size: 12px;
   color: red;
 }
 .s_error_msg {
-  float: left;
-  margin: 3px 0 0 10px;
+  float: right;
+  margin: 0 220px 0 0;
 }
 .s_full .s_error_msg {
   margin: 10px 0 0 0;
@@ -2358,7 +2358,7 @@ body.s_layout_fixed #wrapper {
 }
 
 .s_add_ad_block {
-  padding-left: 50px;
+  padding-left: 140px;
 }
 
 .s_add_ad_block input {

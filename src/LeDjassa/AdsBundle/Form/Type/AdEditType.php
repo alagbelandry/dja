@@ -20,9 +20,10 @@ class AdEditType extends AbstractType
         ));
 
         $builder->add('price', 'money', array(
-            'label'    => 'Prix :',
-            'currency' => 'CFA',
-            'required' => false, 
+            'label'     => 'Prix :',
+            'currency'  => 'CFA',
+            'precision' => 0,
+            'required'  => false, 
         ));
 
         // Picture ad relation 

@@ -2378,13 +2378,14 @@ body.s_layout_fixed #wrapper {
 .s_add_ad_block button {
  float: none;
  margin-left: 0px;
+ margin-top: 10px;
 }
 
-#ad_price {
+#ad_price, #ad_edit_price {
   width: 150px;
 }
 
-#ad_description {
+#ad_description, #ad_edit_description {
   width: 350px;
   height: 150px;
 }

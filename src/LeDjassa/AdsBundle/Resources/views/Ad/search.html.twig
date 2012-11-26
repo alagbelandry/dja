@@ -3,13 +3,22 @@
 	{% render "LeDjassaAdsBundle:Ad:searchForm" %}
 {% endblock %}
 {% block body_container_main %}
-<h3>Toutes les annonces</h3>
+<div id="content" class="container_12" role="main">
+<div class="clear" style="opacity: 1;"></div>
 
-{% for ad in ads %}
-{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
-{% endfor %}
-
-<div class="navigation">
-    {{ ads.render()|raw }}
+<div id="category" class="grid_9">
+	<ul class="s_listing s_list_view clearfix">
+		{% for ad in ads %}
+			<li class="s_item clearfix" style="opacity: 1;">
+				{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
+			</li>
+			<div class="clear" style="opacity: 1;"></div>
+		{% endfor %}
+    </ul>
+{{ ads.render()|raw }}
+</div>
+<div class="clear" style="opacity: 1;"></div>
+<div id="right_col" class="grid_3">
+</div>
 </div>
 {% endblock %}

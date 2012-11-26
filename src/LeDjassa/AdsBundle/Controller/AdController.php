@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
+use LeDjassa\AdsBundle\Model\AdType as TypeAd;
 use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\PictureAdType;
 use LeDjassa\AdsBundle\Form\Type\AdDeleteType;
@@ -29,13 +30,24 @@ class AdController extends Controller
 {
     /**
     * @Route("/", name="ad_list")
+    * @Route("/offres", name="ad_list_offers")
+    * @Route("/demandes", name="ad_list_demands")
     * @Template()
     */
     public function indexAction()
-    { 
+    {  
         $adsCollectionCriteria = AdQuery::create()
             ->filterByLive()
             ->lastCreatedFirst();
+
+        $routeName = ($this->get('request')->get('_route'));
+        if ($routeName == 'ad_list_offers') {
+           $adsCollectionCriteria->filterByAdTypeId(TypeAd::ID_OFFERS); 
+        } elseif ($routeName == 'ad_list_demands') {
+            $adsCollectionCriteria->filterByAdTypeId(TypeAd::ID_DEMANDS); 
+        } else {
+            // no need more filter
+        }
 
         $adProperties = $adsCollectionCriteria->getProperties();
 

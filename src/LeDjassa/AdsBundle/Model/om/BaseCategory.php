@@ -67,6 +67,12 @@ abstract class BaseCategory extends BaseObject implements Persistent
     protected $category_type_id;
 
     /**
+     * The value for the slug field.
+     * @var        string
+     */
+    protected $slug;
+
+    /**
      * @var        CategoryType
      */
     protected $aCategoryType;
@@ -135,6 +141,16 @@ abstract class BaseCategory extends BaseObject implements Persistent
     public function getCategoryTypeId()
     {
         return $this->category_type_id;
+    }
+
+    /**
+     * Get the [slug] column value.
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
@@ -226,6 +242,27 @@ abstract class BaseCategory extends BaseObject implements Persistent
     } // setCategoryTypeId()
 
     /**
+     * Set the value of [slug] column.
+     *
+     * @param string $v new value
+     * @return Category The current object (for fluent API support)
+     */
+    public function setSlug($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->slug !== $v) {
+            $this->slug = $v;
+            $this->modifiedColumns[] = CategoryPeer::SLUG;
+        }
+
+
+        return $this;
+    } // setSlug()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -261,6 +298,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->code = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->category_type_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->slug = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -268,8 +306,8 @@ abstract class BaseCategory extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
-            return $startcol + 4; // 4 = CategoryPeer::NUM_HYDRATE_COLUMNS.
+            $this->postHydrate($row, $startcol, $rehydrate);
+            return $startcol + 5; // 5 = CategoryPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Category object", $e);
@@ -407,6 +445,13 @@ abstract class BaseCategory extends BaseObject implements Persistent
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
+            // sluggable behavior
+
+            if ($this->isColumnModified(CategoryPeer::SLUG) && $this->getSlug()) {
+                $this->setSlug($this->makeSlugUnique($this->getSlug()));
+            } else {
+                $this->setSlug($this->createSlug());
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -529,6 +574,9 @@ abstract class BaseCategory extends BaseObject implements Persistent
         if ($this->isColumnModified(CategoryPeer::CATEGORY_TYPE_ID)) {
             $modifiedColumns[':p' . $index++]  = '`CATEGORY_TYPE_ID`';
         }
+        if ($this->isColumnModified(CategoryPeer::SLUG)) {
+            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `category` (%s) VALUES (%s)',
@@ -551,6 +599,9 @@ abstract class BaseCategory extends BaseObject implements Persistent
                         break;
                     case '`CATEGORY_TYPE_ID`':
                         $stmt->bindValue($identifier, $this->category_type_id, PDO::PARAM_INT);
+                        break;
+                    case '`SLUG`':
+                        $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -718,6 +769,9 @@ abstract class BaseCategory extends BaseObject implements Persistent
             case 3:
                 return $this->getCategoryTypeId();
                 break;
+            case 4:
+                return $this->getSlug();
+                break;
             default:
                 return null;
                 break;
@@ -751,6 +805,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $keys[1] => $this->getTitle(),
             $keys[2] => $this->getCode(),
             $keys[3] => $this->getCategoryTypeId(),
+            $keys[4] => $this->getSlug(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aCategoryType) {
@@ -805,6 +860,9 @@ abstract class BaseCategory extends BaseObject implements Persistent
             case 3:
                 $this->setCategoryTypeId($value);
                 break;
+            case 4:
+                $this->setSlug($value);
+                break;
         } // switch()
     }
 
@@ -833,6 +891,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setCode($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setCategoryTypeId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setSlug($arr[$keys[4]]);
     }
 
     /**
@@ -848,6 +907,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
         if ($this->isColumnModified(CategoryPeer::TITLE)) $criteria->add(CategoryPeer::TITLE, $this->title);
         if ($this->isColumnModified(CategoryPeer::CODE)) $criteria->add(CategoryPeer::CODE, $this->code);
         if ($this->isColumnModified(CategoryPeer::CATEGORY_TYPE_ID)) $criteria->add(CategoryPeer::CATEGORY_TYPE_ID, $this->category_type_id);
+        if ($this->isColumnModified(CategoryPeer::SLUG)) $criteria->add(CategoryPeer::SLUG, $this->slug);
 
         return $criteria;
     }
@@ -914,6 +974,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
         $copyObj->setTitle($this->getTitle());
         $copyObj->setCode($this->getCode());
         $copyObj->setCategoryTypeId($this->getCategoryTypeId());
+        $copyObj->setSlug($this->getSlug());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1051,13 +1112,15 @@ abstract class BaseCategory extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return Category The current object (for fluent API support)
      * @see        addAds()
      */
     public function clearAds()
     {
         $this->collAds = null; // important to set this to null since that means it is uninitialized
         $this->collAdsPartial = null;
+
+        return $this;
     }
 
     /**
@@ -1156,6 +1219,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
      *
      * @param PropelCollection $ads A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return Category The current object (for fluent API support)
      */
     public function setAds(PropelCollection $ads, PropelPDO $con = null)
     {
@@ -1172,6 +1236,8 @@ abstract class BaseCategory extends BaseObject implements Persistent
 
         $this->collAds = $ads;
         $this->collAdsPartial = false;
+
+        return $this;
     }
 
     /**
@@ -1238,6 +1304,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
 
     /**
      * @param	Ad $ad The ad object to remove.
+     * @return Category The current object (for fluent API support)
      */
     public function removeAd($ad)
     {
@@ -1250,6 +1317,8 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $this->adsScheduledForDeletion[]= $ad;
             $ad->setCategory(null);
         }
+
+        return $this;
     }
 
 
@@ -1361,6 +1430,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
         $this->title = null;
         $this->code = null;
         $this->category_type_id = null;
+        $this->slug = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -1398,11 +1468,11 @@ abstract class BaseCategory extends BaseObject implements Persistent
     /**
      * return the string representation of this object
      *
-     * @return string
+     * @return string The value of the 'title' column
      */
     public function __toString()
     {
-        return (string) $this->exportTo(CategoryPeer::DEFAULT_STRING_FORMAT);
+        return (string) $this->getTitle();
     }
 
     /**
@@ -1413,6 +1483,112 @@ abstract class BaseCategory extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
+    }
+
+    // sluggable behavior
+
+    /**
+     * Create a unique slug based on the object
+     *
+     * @return string The object slug
+     */
+    protected function createSlug()
+    {
+        $slug = $this->createRawSlug();
+        $slug = $this->limitSlugSize($slug);
+        $slug = $this->makeSlugUnique($slug);
+
+        return $slug;
+    }
+
+    /**
+     * Create the slug from the appropriate columns
+     *
+     * @return string
+     */
+    protected function createRawSlug()
+    {
+        return $this->cleanupSlugPart($this->__toString());
+    }
+
+    /**
+     * Cleanup a string to make a slug of it
+     * Removes special characters, replaces blanks with a separator, and trim it
+     *
+     * @param     string $slug        the text to slugify
+     * @param     string $replacement the separator used by slug
+     * @return    string               the slugified text
+     */
+    protected static function cleanupSlugPart($slug, $replacement = '-')
+    {
+        // transliterate
+        if (function_exists('iconv')) {
+            $slug = iconv('utf-8', 'us-ascii//TRANSLIT', $slug);
+        }
+
+        // lowercase
+        if (function_exists('mb_strtolower')) {
+            $slug = mb_strtolower($slug);
+        } else {
+            $slug = strtolower($slug);
+        }
+
+        // remove accents resulting from OSX's iconv
+        $slug = str_replace(array('\'', '`', '^'), '', $slug);
+
+        // replace non letter or digits with separator
+        $slug = preg_replace('/\W+/', $replacement, $slug);
+
+        // trim
+        $slug = trim($slug, $replacement);
+
+        if (empty($slug)) {
+            return 'n-a';
+        }
+
+        return $slug;
+    }
+
+
+    /**
+     * Make sure the slug is short enough to accomodate the column size
+     *
+     * @param	string $slug                   the slug to check
+     * @param	int    $incrementReservedSpace the number of characters to keep empty
+     *
+     * @return string						the truncated slug
+     */
+    protected static function limitSlugSize($slug, $incrementReservedSpace = 3)
+    {
+        // check length, as suffix could put it over maximum
+        if (strlen($slug) > (255 - $incrementReservedSpace)) {
+            $slug = substr($slug, 0, 255 - $incrementReservedSpace);
+        }
+
+        return $slug;
+    }
+
+
+    /**
+     * Get the slug, ensuring its uniqueness
+     *
+     * @param	string $slug			the slug to check
+     * @param	string $separator the separator used by slug
+     * @param	int    $increment the count of occurences of the slug
+     * @return string						the unique slug
+     */
+    protected function makeSlugUnique($slug, $separator = '-', $increment = 0)
+    {
+        $slug2 = empty($increment) ? $slug : $slug . $separator . $increment;
+        $slugAlreadyExists = CategoryQuery::create()
+            ->filterBySlug($slug2)
+            ->prune($this)
+            ->count();
+        if ($slugAlreadyExists) {
+            return $this->makeSlugUnique($slug, $separator, ++$increment);
+        } else {
+            return $slug2;
+        }
     }
 
 }

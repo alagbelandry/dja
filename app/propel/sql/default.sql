@@ -93,7 +93,9 @@ CREATE TABLE `category`
     `title` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     `category_type_id` INTEGER(5) NOT NULL,
+    `slug` VARCHAR(255),
     PRIMARY KEY (`id`),
+    UNIQUE INDEX `category_slug` (`slug`(255)),
     INDEX `category_FI_1` (`category_type_id`),
     CONSTRAINT `category_FK_1`
         FOREIGN KEY (`category_type_id`)
@@ -111,7 +113,9 @@ CREATE TABLE `area`
     `id` INTEGER(5) NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
-    PRIMARY KEY (`id`)
+    `slug` VARCHAR(255),
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `area_slug` (`slug`(255))
 ) ENGINE=InnoDB CHARACTER SET='utf8' COMMENT='area of country';
 
 -- ---------------------------------------------------------------------
@@ -126,7 +130,9 @@ CREATE TABLE `city`
     `name` VARCHAR(100) NOT NULL,
     `code` VARCHAR(20),
     `area_id` INTEGER(5) NOT NULL,
+    `slug` VARCHAR(255),
     PRIMARY KEY (`id`),
+    UNIQUE INDEX `city_slug` (`slug`(255)),
     INDEX `city_FI_1` (`area_id`),
     CONSTRAINT `city_FK_1`
         FOREIGN KEY (`area_id`)
@@ -144,7 +150,9 @@ CREATE TABLE `quarter`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
     `city_id` INTEGER(6),
+    `slug` VARCHAR(255),
     PRIMARY KEY (`id`),
+    UNIQUE INDEX `quarter_slug` (`slug`(255)),
     INDEX `quarter_FI_1` (`city_id`),
     CONSTRAINT `quarter_FK_1`
         FOREIGN KEY (`city_id`)
@@ -248,7 +256,9 @@ CREATE TABLE `ad`
     `user_type_id` INTEGER(6),
     `city_id` INTEGER(6),
     `quarter_id` INTEGER(6),
+    `slug` VARCHAR(255),
     PRIMARY KEY (`id`),
+    UNIQUE INDEX `ad_slug` (`slug`(255)),
     INDEX `ad_FI_1` (`city_id`),
     INDEX `ad_FI_2` (`user_type_id`),
     INDEX `ad_FI_3` (`ad_type_id`),

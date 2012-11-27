@@ -164,6 +164,12 @@ abstract class BaseAd extends BaseObject implements Persistent
     protected $quarter_id;
 
     /**
+     * The value for the slug field.
+     * @var        string
+     */
+    protected $slug;
+
+    /**
      * @var        City
      */
     protected $aCity;
@@ -479,6 +485,16 @@ abstract class BaseAd extends BaseObject implements Persistent
     public function getQuarterId()
     {
         return $this->quarter_id;
+    }
+
+    /**
+     * Get the [slug] column value.
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
@@ -884,6 +900,27 @@ abstract class BaseAd extends BaseObject implements Persistent
     } // setQuarterId()
 
     /**
+     * Set the value of [slug] column.
+     *
+     * @param string $v new value
+     * @return Ad The current object (for fluent API support)
+     */
+    public function setSlug($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->slug !== $v) {
+            $this->slug = $v;
+            $this->modifiedColumns[] = AdPeer::SLUG;
+        }
+
+
+        return $this;
+    } // setSlug()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -937,6 +974,7 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->user_type_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
             $this->city_id = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
             $this->quarter_id = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
+            $this->slug = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -944,8 +982,8 @@ abstract class BaseAd extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
-            return $startcol + 18; // 18 = AdPeer::NUM_HYDRATE_COLUMNS.
+            $this->postHydrate($row, $startcol, $rehydrate);
+            return $startcol + 19; // 19 = AdPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Ad object", $e);
@@ -1101,6 +1139,13 @@ abstract class BaseAd extends BaseObject implements Persistent
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
+            // sluggable behavior
+
+            if ($this->isColumnModified(AdPeer::SLUG) && $this->getSlug()) {
+                $this->setSlug($this->makeSlugUnique($this->getSlug()));
+            } else {
+                $this->setSlug($this->createSlug());
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
@@ -1322,6 +1367,9 @@ abstract class BaseAd extends BaseObject implements Persistent
         if ($this->isColumnModified(AdPeer::QUARTER_ID)) {
             $modifiedColumns[':p' . $index++]  = '`QUARTER_ID`';
         }
+        if ($this->isColumnModified(AdPeer::SLUG)) {
+            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `ad` (%s) VALUES (%s)',
@@ -1386,6 +1434,9 @@ abstract class BaseAd extends BaseObject implements Persistent
                         break;
                     case '`QUARTER_ID`':
                         $stmt->bindValue($identifier, $this->quarter_id, PDO::PARAM_INT);
+                        break;
+                    case '`SLUG`':
+                        $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1627,6 +1678,9 @@ abstract class BaseAd extends BaseObject implements Persistent
             case 17:
                 return $this->getQuarterId();
                 break;
+            case 18:
+                return $this->getSlug();
+                break;
             default:
                 return null;
                 break;
@@ -1674,6 +1728,7 @@ abstract class BaseAd extends BaseObject implements Persistent
             $keys[15] => $this->getUserTypeId(),
             $keys[16] => $this->getCityId(),
             $keys[17] => $this->getQuarterId(),
+            $keys[18] => $this->getSlug(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aCity) {
@@ -1785,6 +1840,9 @@ abstract class BaseAd extends BaseObject implements Persistent
             case 17:
                 $this->setQuarterId($value);
                 break;
+            case 18:
+                $this->setSlug($value);
+                break;
         } // switch()
     }
 
@@ -1827,6 +1885,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         if (array_key_exists($keys[15], $arr)) $this->setUserTypeId($arr[$keys[15]]);
         if (array_key_exists($keys[16], $arr)) $this->setCityId($arr[$keys[16]]);
         if (array_key_exists($keys[17], $arr)) $this->setQuarterId($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setSlug($arr[$keys[18]]);
     }
 
     /**
@@ -1856,6 +1915,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         if ($this->isColumnModified(AdPeer::USER_TYPE_ID)) $criteria->add(AdPeer::USER_TYPE_ID, $this->user_type_id);
         if ($this->isColumnModified(AdPeer::CITY_ID)) $criteria->add(AdPeer::CITY_ID, $this->city_id);
         if ($this->isColumnModified(AdPeer::QUARTER_ID)) $criteria->add(AdPeer::QUARTER_ID, $this->quarter_id);
+        if ($this->isColumnModified(AdPeer::SLUG)) $criteria->add(AdPeer::SLUG, $this->slug);
 
         return $criteria;
     }
@@ -1936,6 +1996,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         $copyObj->setUserTypeId($this->getUserTypeId());
         $copyObj->setCityId($this->getCityId());
         $copyObj->setQuarterId($this->getQuarterId());
+        $copyObj->setSlug($this->getSlug());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2286,13 +2347,15 @@ abstract class BaseAd extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return Ad The current object (for fluent API support)
      * @see        addInterestedUsers()
      */
     public function clearInterestedUsers()
     {
         $this->collInterestedUsers = null; // important to set this to null since that means it is uninitialized
         $this->collInterestedUsersPartial = null;
+
+        return $this;
     }
 
     /**
@@ -2391,6 +2454,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      *
      * @param PropelCollection $interestedUsers A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return Ad The current object (for fluent API support)
      */
     public function setInterestedUsers(PropelCollection $interestedUsers, PropelPDO $con = null)
     {
@@ -2407,6 +2471,8 @@ abstract class BaseAd extends BaseObject implements Persistent
 
         $this->collInterestedUsers = $interestedUsers;
         $this->collInterestedUsersPartial = false;
+
+        return $this;
     }
 
     /**
@@ -2473,6 +2539,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
     /**
      * @param	InterestedUser $interestedUser The interestedUser object to remove.
+     * @return Ad The current object (for fluent API support)
      */
     public function removeInterestedUser($interestedUser)
     {
@@ -2485,6 +2552,8 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->interestedUsersScheduledForDeletion[]= $interestedUser;
             $interestedUser->setAd(null);
         }
+
+        return $this;
     }
 
     /**
@@ -2493,13 +2562,15 @@ abstract class BaseAd extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return Ad The current object (for fluent API support)
      * @see        addPictureAds()
      */
     public function clearPictureAds()
     {
         $this->collPictureAds = null; // important to set this to null since that means it is uninitialized
         $this->collPictureAdsPartial = null;
+
+        return $this;
     }
 
     /**
@@ -2598,6 +2669,7 @@ abstract class BaseAd extends BaseObject implements Persistent
      *
      * @param PropelCollection $pictureAds A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return Ad The current object (for fluent API support)
      */
     public function setPictureAds(PropelCollection $pictureAds, PropelPDO $con = null)
     {
@@ -2614,6 +2686,8 @@ abstract class BaseAd extends BaseObject implements Persistent
 
         $this->collPictureAds = $pictureAds;
         $this->collPictureAdsPartial = false;
+
+        return $this;
     }
 
     /**
@@ -2680,6 +2754,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
     /**
      * @param	PictureAd $pictureAd The pictureAd object to remove.
+     * @return Ad The current object (for fluent API support)
      */
     public function removePictureAd($pictureAd)
     {
@@ -2692,6 +2767,8 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->pictureAdsScheduledForDeletion[]= $pictureAd;
             $pictureAd->setAd(null);
         }
+
+        return $this;
     }
 
     /**
@@ -2717,6 +2794,7 @@ abstract class BaseAd extends BaseObject implements Persistent
         $this->user_type_id = null;
         $this->city_id = null;
         $this->quarter_id = null;
+        $this->slug = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -2797,6 +2875,112 @@ abstract class BaseAd extends BaseObject implements Persistent
         $this->modifiedColumns[] = AdPeer::UPDATED_AT;
 
         return $this;
+    }
+
+    // sluggable behavior
+
+    /**
+     * Create a unique slug based on the object
+     *
+     * @return string The object slug
+     */
+    protected function createSlug()
+    {
+        $slug = $this->createRawSlug();
+        $slug = $this->limitSlugSize($slug);
+        $slug = $this->makeSlugUnique($slug);
+
+        return $slug;
+    }
+
+    /**
+     * Create the slug from the appropriate columns
+     *
+     * @return string
+     */
+    protected function createRawSlug()
+    {
+        return $this->cleanupSlugPart($this->__toString());
+    }
+
+    /**
+     * Cleanup a string to make a slug of it
+     * Removes special characters, replaces blanks with a separator, and trim it
+     *
+     * @param     string $slug        the text to slugify
+     * @param     string $replacement the separator used by slug
+     * @return    string               the slugified text
+     */
+    protected static function cleanupSlugPart($slug, $replacement = '-')
+    {
+        // transliterate
+        if (function_exists('iconv')) {
+            $slug = iconv('utf-8', 'us-ascii//TRANSLIT', $slug);
+        }
+
+        // lowercase
+        if (function_exists('mb_strtolower')) {
+            $slug = mb_strtolower($slug);
+        } else {
+            $slug = strtolower($slug);
+        }
+
+        // remove accents resulting from OSX's iconv
+        $slug = str_replace(array('\'', '`', '^'), '', $slug);
+
+        // replace non letter or digits with separator
+        $slug = preg_replace('/\W+/', $replacement, $slug);
+
+        // trim
+        $slug = trim($slug, $replacement);
+
+        if (empty($slug)) {
+            return 'n-a';
+        }
+
+        return $slug;
+    }
+
+
+    /**
+     * Make sure the slug is short enough to accomodate the column size
+     *
+     * @param	string $slug                   the slug to check
+     * @param	int    $incrementReservedSpace the number of characters to keep empty
+     *
+     * @return string						the truncated slug
+     */
+    protected static function limitSlugSize($slug, $incrementReservedSpace = 3)
+    {
+        // check length, as suffix could put it over maximum
+        if (strlen($slug) > (255 - $incrementReservedSpace)) {
+            $slug = substr($slug, 0, 255 - $incrementReservedSpace);
+        }
+
+        return $slug;
+    }
+
+
+    /**
+     * Get the slug, ensuring its uniqueness
+     *
+     * @param	string $slug			the slug to check
+     * @param	string $separator the separator used by slug
+     * @param	int    $increment the count of occurences of the slug
+     * @return string						the unique slug
+     */
+    protected function makeSlugUnique($slug, $separator = '-', $increment = 0)
+    {
+        $slug2 = empty($increment) ? $slug : $slug . $separator . $increment;
+        $slugAlreadyExists = AdQuery::create()
+            ->filterBySlug($slug2)
+            ->prune($this)
+            ->count();
+        if ($slugAlreadyExists) {
+            return $this->makeSlugUnique($slug, $separator, ++$increment);
+        } else {
+            return $slug2;
+        }
     }
 
 }

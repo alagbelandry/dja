@@ -3,7 +3,7 @@
 
     <table name="category_type" description="type of category">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="title" type="varchar" required="true" primaryString="true" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
@@ -13,12 +13,13 @@
 
     <table name="category" description="category of ad">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" required="true" size="100" />
+        <column name="title" type="varchar" primaryString="true" required="true" size="100" />
         <column name="code" type="varchar" size="20" />
         <column name="category_type_id" required="true" phpName="CategoryTypeId" type="integer" size="5" />
     <foreign-key foreignTable="category_type">
         <reference local="category_type_id" foreign="id" />
     </foreign-key>
+    <behavior name="sluggable" />
     <vendor type="mysql">
         <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
@@ -27,8 +28,9 @@
 
     <table name="area" description="area of country">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="name" type="varchar" required="true" primaryString="true" size="100" />
         <column name="code" type="varchar" size="20" />
+        <behavior name="sluggable" />
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>
@@ -37,12 +39,13 @@
 
     <table name="city" description="city of area">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="name" type="varchar" required="true" primaryString="true" size="100" />
         <column name="code" type="varchar" size="20" />
         <column name="area_id" phpName="AreaId" required="true" type="integer" size="5" />
     <foreign-key foreignTable="area">
         <reference local="area_id" foreign="id" />
     </foreign-key>
+    <behavior name="sluggable" />
     <vendor type="mysql">
         <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
@@ -51,11 +54,12 @@
 
     <table name="quarter" description="quarter of city">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="name" type="varchar" required="true" primaryString="true" size="100" />
         <column name="city_id" phpName="CityId" type="integer" size="6" />
     <foreign-key foreignTable="city">
         <reference local="city_id" foreign="id" />
     </foreign-key>
+    <behavior name="sluggable" />
     <vendor type="mysql">
         <parameter name="Engine" value="InnoDB"/>
         <parameter name="Charset" value="utf8"/>
@@ -64,7 +68,7 @@
 
     <table name="user_type" description="type of user">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="title" type="varchar" required="true" primaryString="true" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
@@ -74,7 +78,7 @@
 
     <table name="ad_type" description="type of ad">
         <column name="id" type="integer" required="true" size="5" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="name" type="varchar" required="true" primaryString="true" size="100" />
         <column name="code" type="varchar" size="20" />
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
@@ -84,7 +88,7 @@
 
     <table name="interested_user" description="interested user by ad">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" primaryString="1" size="100" />
+        <column name="name" type="varchar" primaryString="true" size="100" />
         <column name="email" type="varchar" size="100" />
         <column name="phone" type="varchar" size="100" />
         <column name="message" type="varchar" size="500" />
@@ -105,7 +109,7 @@
 
     <table name="information_user" description="user who need information">
         <column name="id" type="integer" required="true" size="6" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" primaryString="1" size="100" />
+        <column name="name" type="varchar" primaryString="true" size="100" />
         <column name="subject" type="varchar" size="100" />
         <column name="email" type="varchar" size="100" />
         <column name="message" type="varchar" size="500" />
@@ -122,7 +126,7 @@
 
     <table name="ad" description="ad">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-        <column name="title" type="varchar" required="true" primaryString="1" size="100" />
+        <column name="title" type="varchar" required="true" primaryString="true" size="100" />
         <column name="description" type="varchar" size="500" />
         <column name="price" type="varchar" size="30" />
         <column name="statut" type="tinyint" size="2" default="0" />
@@ -158,6 +162,7 @@
             <parameter name="create_column" value="created_at" />
             <parameter name="update_column" value="updated_at" />
         </behavior>
+        <behavior name="sluggable" />
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
             <parameter name="Charset" value="utf8"/>

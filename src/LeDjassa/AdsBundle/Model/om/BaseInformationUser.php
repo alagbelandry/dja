@@ -453,7 +453,7 @@ abstract class BaseInformationUser extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 8; // 8 = InformationUserPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {

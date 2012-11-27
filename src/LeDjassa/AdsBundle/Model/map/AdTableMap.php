@@ -61,6 +61,7 @@ class AdTableMap extends TableMap
         $this->addForeignKey('USER_TYPE_ID', 'UserTypeId', 'INTEGER', 'user_type', 'ID', false, 6, null);
         $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
         $this->addForeignKey('QUARTER_ID', 'QuarterId', 'INTEGER', 'quarter', 'ID', false, 6, null);
+        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -88,6 +89,7 @@ class AdTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_updated_at' => 'false', ),
+            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
         );
     } // getBehaviors()
 

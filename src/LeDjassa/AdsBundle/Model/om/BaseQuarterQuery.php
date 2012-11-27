@@ -22,10 +22,12 @@ use LeDjassa\AdsBundle\Model\QuarterQuery;
  * @method QuarterQuery orderById($order = Criteria::ASC) Order by the id column
  * @method QuarterQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method QuarterQuery orderByCityId($order = Criteria::ASC) Order by the city_id column
+ * @method QuarterQuery orderBySlug($order = Criteria::ASC) Order by the slug column
  *
  * @method QuarterQuery groupById() Group by the id column
  * @method QuarterQuery groupByName() Group by the name column
  * @method QuarterQuery groupByCityId() Group by the city_id column
+ * @method QuarterQuery groupBySlug() Group by the slug column
  *
  * @method QuarterQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method QuarterQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -44,10 +46,12 @@ use LeDjassa\AdsBundle\Model\QuarterQuery;
  *
  * @method Quarter findOneByName(string $name) Return the first Quarter filtered by the name column
  * @method Quarter findOneByCityId(int $city_id) Return the first Quarter filtered by the city_id column
+ * @method Quarter findOneBySlug(string $slug) Return the first Quarter filtered by the slug column
  *
  * @method array findById(int $id) Return Quarter objects filtered by the id column
  * @method array findByName(string $name) Return Quarter objects filtered by the name column
  * @method array findByCityId(int $city_id) Return Quarter objects filtered by the city_id column
+ * @method array findBySlug(string $slug) Return Quarter objects filtered by the slug column
  */
 abstract class BaseQuarterQuery extends ModelCriteria
 {
@@ -149,7 +153,7 @@ abstract class BaseQuarterQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `CITY_ID` FROM `quarter` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `NAME`, `CITY_ID`, `SLUG` FROM `quarter` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -338,6 +342,35 @@ abstract class BaseQuarterQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the slug column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySlug('fooValue');   // WHERE slug = 'fooValue'
+     * $query->filterBySlug('%fooValue%'); // WHERE slug LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $slug The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return QuarterQuery The current query, for fluid interface
+     */
+    public function filterBySlug($slug = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($slug)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $slug)) {
+                $slug = str_replace('*', '%', $slug);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(QuarterPeer::SLUG, $slug, $comparison);
+    }
+
+    /**
      * Filter the query by a related City object
      *
      * @param   City|PropelObjectCollection $city The related object(s) to use as filter
@@ -501,6 +534,21 @@ abstract class BaseQuarterQuery extends ModelCriteria
         }
 
         return $this;
+    }
+
+    // sluggable behavior
+
+    /**
+     * Find one object based on its slug
+     *
+     * @param     string $slug The value to use as filter.
+     * @param     PropelPDO $con The optional connection object
+     *
+     * @return    Quarter the result, formatted by the current formatter
+     */
+    public function findOneBySlug($slug, $con = null)
+    {
+        return $this->filterBySlug($slug)->findOne($con);
     }
 
 }

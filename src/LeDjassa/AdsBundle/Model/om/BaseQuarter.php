@@ -61,6 +61,12 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     protected $city_id;
 
     /**
+     * The value for the slug field.
+     * @var        string
+     */
+    protected $slug;
+
+    /**
      * @var        City
      */
     protected $aCity;
@@ -119,6 +125,16 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     public function getCityId()
     {
         return $this->city_id;
+    }
+
+    /**
+     * Get the [slug] column value.
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
@@ -189,6 +205,27 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     } // setCityId()
 
     /**
+     * Set the value of [slug] column.
+     *
+     * @param string $v new value
+     * @return Quarter The current object (for fluent API support)
+     */
+    public function setSlug($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->slug !== $v) {
+            $this->slug = $v;
+            $this->modifiedColumns[] = QuarterPeer::SLUG;
+        }
+
+
+        return $this;
+    } // setSlug()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -223,6 +260,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->city_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->slug = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -230,8 +268,8 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
-            return $startcol + 3; // 3 = QuarterPeer::NUM_HYDRATE_COLUMNS.
+            $this->postHydrate($row, $startcol, $rehydrate);
+            return $startcol + 4; // 4 = QuarterPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Quarter object", $e);
@@ -369,6 +407,13 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
+            // sluggable behavior
+
+            if ($this->isColumnModified(QuarterPeer::SLUG) && $this->getSlug()) {
+                $this->setSlug($this->makeSlugUnique($this->getSlug()));
+            } else {
+                $this->setSlug($this->createSlug());
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -488,6 +533,9 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         if ($this->isColumnModified(QuarterPeer::CITY_ID)) {
             $modifiedColumns[':p' . $index++]  = '`CITY_ID`';
         }
+        if ($this->isColumnModified(QuarterPeer::SLUG)) {
+            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `quarter` (%s) VALUES (%s)',
@@ -507,6 +555,9 @@ abstract class BaseQuarter extends BaseObject implements Persistent
                         break;
                     case '`CITY_ID`':
                         $stmt->bindValue($identifier, $this->city_id, PDO::PARAM_INT);
+                        break;
+                    case '`SLUG`':
+                        $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -671,6 +722,9 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             case 2:
                 return $this->getCityId();
                 break;
+            case 3:
+                return $this->getSlug();
+                break;
             default:
                 return null;
                 break;
@@ -703,6 +757,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
             $keys[2] => $this->getCityId(),
+            $keys[3] => $this->getSlug(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aCity) {
@@ -754,6 +809,9 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             case 2:
                 $this->setCityId($value);
                 break;
+            case 3:
+                $this->setSlug($value);
+                break;
         } // switch()
     }
 
@@ -781,6 +839,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setCityId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setSlug($arr[$keys[3]]);
     }
 
     /**
@@ -795,6 +854,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         if ($this->isColumnModified(QuarterPeer::ID)) $criteria->add(QuarterPeer::ID, $this->id);
         if ($this->isColumnModified(QuarterPeer::NAME)) $criteria->add(QuarterPeer::NAME, $this->name);
         if ($this->isColumnModified(QuarterPeer::CITY_ID)) $criteria->add(QuarterPeer::CITY_ID, $this->city_id);
+        if ($this->isColumnModified(QuarterPeer::SLUG)) $criteria->add(QuarterPeer::SLUG, $this->slug);
 
         return $criteria;
     }
@@ -860,6 +920,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     {
         $copyObj->setName($this->getName());
         $copyObj->setCityId($this->getCityId());
+        $copyObj->setSlug($this->getSlug());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -997,13 +1058,15 @@ abstract class BaseQuarter extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return Quarter The current object (for fluent API support)
      * @see        addAds()
      */
     public function clearAds()
     {
         $this->collAds = null; // important to set this to null since that means it is uninitialized
         $this->collAdsPartial = null;
+
+        return $this;
     }
 
     /**
@@ -1102,6 +1165,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
      *
      * @param PropelCollection $ads A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return Quarter The current object (for fluent API support)
      */
     public function setAds(PropelCollection $ads, PropelPDO $con = null)
     {
@@ -1118,6 +1182,8 @@ abstract class BaseQuarter extends BaseObject implements Persistent
 
         $this->collAds = $ads;
         $this->collAdsPartial = false;
+
+        return $this;
     }
 
     /**
@@ -1184,6 +1250,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
 
     /**
      * @param	Ad $ad The ad object to remove.
+     * @return Quarter The current object (for fluent API support)
      */
     public function removeAd($ad)
     {
@@ -1196,6 +1263,8 @@ abstract class BaseQuarter extends BaseObject implements Persistent
             $this->adsScheduledForDeletion[]= $ad;
             $ad->setQuarter(null);
         }
+
+        return $this;
     }
 
 
@@ -1306,6 +1375,7 @@ abstract class BaseQuarter extends BaseObject implements Persistent
         $this->id = null;
         $this->name = null;
         $this->city_id = null;
+        $this->slug = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->clearAllReferences();
@@ -1358,6 +1428,112 @@ abstract class BaseQuarter extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
+    }
+
+    // sluggable behavior
+
+    /**
+     * Create a unique slug based on the object
+     *
+     * @return string The object slug
+     */
+    protected function createSlug()
+    {
+        $slug = $this->createRawSlug();
+        $slug = $this->limitSlugSize($slug);
+        $slug = $this->makeSlugUnique($slug);
+
+        return $slug;
+    }
+
+    /**
+     * Create the slug from the appropriate columns
+     *
+     * @return string
+     */
+    protected function createRawSlug()
+    {
+        return $this->cleanupSlugPart($this->__toString());
+    }
+
+    /**
+     * Cleanup a string to make a slug of it
+     * Removes special characters, replaces blanks with a separator, and trim it
+     *
+     * @param     string $slug        the text to slugify
+     * @param     string $replacement the separator used by slug
+     * @return    string               the slugified text
+     */
+    protected static function cleanupSlugPart($slug, $replacement = '-')
+    {
+        // transliterate
+        if (function_exists('iconv')) {
+            $slug = iconv('utf-8', 'us-ascii//TRANSLIT', $slug);
+        }
+
+        // lowercase
+        if (function_exists('mb_strtolower')) {
+            $slug = mb_strtolower($slug);
+        } else {
+            $slug = strtolower($slug);
+        }
+
+        // remove accents resulting from OSX's iconv
+        $slug = str_replace(array('\'', '`', '^'), '', $slug);
+
+        // replace non letter or digits with separator
+        $slug = preg_replace('/\W+/', $replacement, $slug);
+
+        // trim
+        $slug = trim($slug, $replacement);
+
+        if (empty($slug)) {
+            return 'n-a';
+        }
+
+        return $slug;
+    }
+
+
+    /**
+     * Make sure the slug is short enough to accomodate the column size
+     *
+     * @param	string $slug                   the slug to check
+     * @param	int    $incrementReservedSpace the number of characters to keep empty
+     *
+     * @return string						the truncated slug
+     */
+    protected static function limitSlugSize($slug, $incrementReservedSpace = 3)
+    {
+        // check length, as suffix could put it over maximum
+        if (strlen($slug) > (255 - $incrementReservedSpace)) {
+            $slug = substr($slug, 0, 255 - $incrementReservedSpace);
+        }
+
+        return $slug;
+    }
+
+
+    /**
+     * Get the slug, ensuring its uniqueness
+     *
+     * @param	string $slug			the slug to check
+     * @param	string $separator the separator used by slug
+     * @param	int    $increment the count of occurences of the slug
+     * @return string						the unique slug
+     */
+    protected function makeSlugUnique($slug, $separator = '-', $increment = 0)
+    {
+        $slug2 = empty($increment) ? $slug : $slug . $separator . $increment;
+        $slugAlreadyExists = QuarterQuery::create()
+            ->filterBySlug($slug2)
+            ->prune($this)
+            ->count();
+        if ($slugAlreadyExists) {
+            return $this->makeSlugUnique($slug, $separator, ++$increment);
+        } else {
+            return $slug2;
+        }
     }
 
 }

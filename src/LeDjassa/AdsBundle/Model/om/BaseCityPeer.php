@@ -30,13 +30,13 @@ abstract class BaseCityPeer
     const TM_CLASS = 'CityTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /** the column name for the ID field */
     const ID = 'city.ID';
@@ -49,6 +49,9 @@ abstract class BaseCityPeer
 
     /** the column name for the AREA_ID field */
     const AREA_ID = 'city.AREA_ID';
+
+    /** the column name for the SLUG field */
+    const SLUG = 'city.SLUG';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -69,12 +72,12 @@ abstract class BaseCityPeer
      * e.g. CityPeer::$fieldNames[CityPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Code', 'AreaId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'code', 'areaId', ),
-        BasePeer::TYPE_COLNAME => array (CityPeer::ID, CityPeer::NAME, CityPeer::CODE, CityPeer::AREA_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CODE', 'AREA_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'code', 'area_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Code', 'AreaId', 'Slug', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'code', 'areaId', 'slug', ),
+        BasePeer::TYPE_COLNAME => array (CityPeer::ID, CityPeer::NAME, CityPeer::CODE, CityPeer::AREA_ID, CityPeer::SLUG, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CODE', 'AREA_ID', 'SLUG', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'code', 'area_id', 'slug', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -84,12 +87,12 @@ abstract class BaseCityPeer
      * e.g. CityPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Code' => 2, 'AreaId' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'code' => 2, 'areaId' => 3, ),
-        BasePeer::TYPE_COLNAME => array (CityPeer::ID => 0, CityPeer::NAME => 1, CityPeer::CODE => 2, CityPeer::AREA_ID => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CODE' => 2, 'AREA_ID' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'code' => 2, 'area_id' => 3, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Code' => 2, 'AreaId' => 3, 'Slug' => 4, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'code' => 2, 'areaId' => 3, 'slug' => 4, ),
+        BasePeer::TYPE_COLNAME => array (CityPeer::ID => 0, CityPeer::NAME => 1, CityPeer::CODE => 2, CityPeer::AREA_ID => 3, CityPeer::SLUG => 4, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CODE' => 2, 'AREA_ID' => 3, 'SLUG' => 4, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'code' => 2, 'area_id' => 3, 'slug' => 4, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -167,11 +170,13 @@ abstract class BaseCityPeer
             $criteria->addSelectColumn(CityPeer::NAME);
             $criteria->addSelectColumn(CityPeer::CODE);
             $criteria->addSelectColumn(CityPeer::AREA_ID);
+            $criteria->addSelectColumn(CityPeer::SLUG);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.NAME');
             $criteria->addSelectColumn($alias . '.CODE');
             $criteria->addSelectColumn($alias . '.AREA_ID');
+            $criteria->addSelectColumn($alias . '.SLUG');
         }
     }
 

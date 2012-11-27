@@ -34,13 +34,13 @@ abstract class BaseAdPeer
     const TM_CLASS = 'AdTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 18;
+    const NUM_COLUMNS = 19;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 18;
+    const NUM_HYDRATE_COLUMNS = 19;
 
     /** the column name for the ID field */
     const ID = 'ad.ID';
@@ -96,6 +96,9 @@ abstract class BaseAdPeer
     /** the column name for the QUARTER_ID field */
     const QUARTER_ID = 'ad.QUARTER_ID';
 
+    /** the column name for the SLUG field */
+    const SLUG = 'ad.SLUG';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -115,12 +118,12 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[AdPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'Statut', 'UserName', 'UserEmail', 'UserPassword', 'UserSalt', 'UserPhone', 'UserIpAdress', 'CreatedAt', 'UpdatedAt', 'AdTypeId', 'CategoryId', 'UserTypeId', 'CityId', 'QuarterId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'description', 'price', 'statut', 'userName', 'userEmail', 'userPassword', 'userSalt', 'userPhone', 'userIpAdress', 'createdAt', 'updatedAt', 'adTypeId', 'categoryId', 'userTypeId', 'cityId', 'quarterId', ),
-        BasePeer::TYPE_COLNAME => array (AdPeer::ID, AdPeer::TITLE, AdPeer::DESCRIPTION, AdPeer::PRICE, AdPeer::STATUT, AdPeer::USER_NAME, AdPeer::USER_EMAIL, AdPeer::USER_PASSWORD, AdPeer::USER_SALT, AdPeer::USER_PHONE, AdPeer::USER_IP_ADRESS, AdPeer::CREATED_AT, AdPeer::UPDATED_AT, AdPeer::AD_TYPE_ID, AdPeer::CATEGORY_ID, AdPeer::USER_TYPE_ID, AdPeer::CITY_ID, AdPeer::QUARTER_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'DESCRIPTION', 'PRICE', 'STATUT', 'USER_NAME', 'USER_EMAIL', 'USER_PASSWORD', 'USER_SALT', 'USER_PHONE', 'USER_IP_ADRESS', 'CREATED_AT', 'UPDATED_AT', 'AD_TYPE_ID', 'CATEGORY_ID', 'USER_TYPE_ID', 'CITY_ID', 'QUARTER_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'description', 'price', 'statut', 'user_name', 'user_email', 'user_password', 'user_salt', 'user_phone', 'user_ip_adress', 'created_at', 'updated_at', 'ad_type_id', 'category_id', 'user_type_id', 'city_id', 'quarter_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Description', 'Price', 'Statut', 'UserName', 'UserEmail', 'UserPassword', 'UserSalt', 'UserPhone', 'UserIpAdress', 'CreatedAt', 'UpdatedAt', 'AdTypeId', 'CategoryId', 'UserTypeId', 'CityId', 'QuarterId', 'Slug', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'description', 'price', 'statut', 'userName', 'userEmail', 'userPassword', 'userSalt', 'userPhone', 'userIpAdress', 'createdAt', 'updatedAt', 'adTypeId', 'categoryId', 'userTypeId', 'cityId', 'quarterId', 'slug', ),
+        BasePeer::TYPE_COLNAME => array (AdPeer::ID, AdPeer::TITLE, AdPeer::DESCRIPTION, AdPeer::PRICE, AdPeer::STATUT, AdPeer::USER_NAME, AdPeer::USER_EMAIL, AdPeer::USER_PASSWORD, AdPeer::USER_SALT, AdPeer::USER_PHONE, AdPeer::USER_IP_ADRESS, AdPeer::CREATED_AT, AdPeer::UPDATED_AT, AdPeer::AD_TYPE_ID, AdPeer::CATEGORY_ID, AdPeer::USER_TYPE_ID, AdPeer::CITY_ID, AdPeer::QUARTER_ID, AdPeer::SLUG, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'DESCRIPTION', 'PRICE', 'STATUT', 'USER_NAME', 'USER_EMAIL', 'USER_PASSWORD', 'USER_SALT', 'USER_PHONE', 'USER_IP_ADRESS', 'CREATED_AT', 'UPDATED_AT', 'AD_TYPE_ID', 'CATEGORY_ID', 'USER_TYPE_ID', 'CITY_ID', 'QUARTER_ID', 'SLUG', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'description', 'price', 'statut', 'user_name', 'user_email', 'user_password', 'user_salt', 'user_phone', 'user_ip_adress', 'created_at', 'updated_at', 'ad_type_id', 'category_id', 'user_type_id', 'city_id', 'quarter_id', 'slug', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, )
     );
 
     /**
@@ -130,12 +133,12 @@ abstract class BaseAdPeer
      * e.g. AdPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'Statut' => 4, 'UserName' => 5, 'UserEmail' => 6, 'UserPassword' => 7, 'UserSalt' => 8, 'UserPhone' => 9, 'UserIpAdress' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, 'AdTypeId' => 13, 'CategoryId' => 14, 'UserTypeId' => 15, 'CityId' => 16, 'QuarterId' => 17, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'userName' => 5, 'userEmail' => 6, 'userPassword' => 7, 'userSalt' => 8, 'userPhone' => 9, 'userIpAdress' => 10, 'createdAt' => 11, 'updatedAt' => 12, 'adTypeId' => 13, 'categoryId' => 14, 'userTypeId' => 15, 'cityId' => 16, 'quarterId' => 17, ),
-        BasePeer::TYPE_COLNAME => array (AdPeer::ID => 0, AdPeer::TITLE => 1, AdPeer::DESCRIPTION => 2, AdPeer::PRICE => 3, AdPeer::STATUT => 4, AdPeer::USER_NAME => 5, AdPeer::USER_EMAIL => 6, AdPeer::USER_PASSWORD => 7, AdPeer::USER_SALT => 8, AdPeer::USER_PHONE => 9, AdPeer::USER_IP_ADRESS => 10, AdPeer::CREATED_AT => 11, AdPeer::UPDATED_AT => 12, AdPeer::AD_TYPE_ID => 13, AdPeer::CATEGORY_ID => 14, AdPeer::USER_TYPE_ID => 15, AdPeer::CITY_ID => 16, AdPeer::QUARTER_ID => 17, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'DESCRIPTION' => 2, 'PRICE' => 3, 'STATUT' => 4, 'USER_NAME' => 5, 'USER_EMAIL' => 6, 'USER_PASSWORD' => 7, 'USER_SALT' => 8, 'USER_PHONE' => 9, 'USER_IP_ADRESS' => 10, 'CREATED_AT' => 11, 'UPDATED_AT' => 12, 'AD_TYPE_ID' => 13, 'CATEGORY_ID' => 14, 'USER_TYPE_ID' => 15, 'CITY_ID' => 16, 'QUARTER_ID' => 17, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'user_name' => 5, 'user_email' => 6, 'user_password' => 7, 'user_salt' => 8, 'user_phone' => 9, 'user_ip_adress' => 10, 'created_at' => 11, 'updated_at' => 12, 'ad_type_id' => 13, 'category_id' => 14, 'user_type_id' => 15, 'city_id' => 16, 'quarter_id' => 17, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Description' => 2, 'Price' => 3, 'Statut' => 4, 'UserName' => 5, 'UserEmail' => 6, 'UserPassword' => 7, 'UserSalt' => 8, 'UserPhone' => 9, 'UserIpAdress' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, 'AdTypeId' => 13, 'CategoryId' => 14, 'UserTypeId' => 15, 'CityId' => 16, 'QuarterId' => 17, 'Slug' => 18, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'userName' => 5, 'userEmail' => 6, 'userPassword' => 7, 'userSalt' => 8, 'userPhone' => 9, 'userIpAdress' => 10, 'createdAt' => 11, 'updatedAt' => 12, 'adTypeId' => 13, 'categoryId' => 14, 'userTypeId' => 15, 'cityId' => 16, 'quarterId' => 17, 'slug' => 18, ),
+        BasePeer::TYPE_COLNAME => array (AdPeer::ID => 0, AdPeer::TITLE => 1, AdPeer::DESCRIPTION => 2, AdPeer::PRICE => 3, AdPeer::STATUT => 4, AdPeer::USER_NAME => 5, AdPeer::USER_EMAIL => 6, AdPeer::USER_PASSWORD => 7, AdPeer::USER_SALT => 8, AdPeer::USER_PHONE => 9, AdPeer::USER_IP_ADRESS => 10, AdPeer::CREATED_AT => 11, AdPeer::UPDATED_AT => 12, AdPeer::AD_TYPE_ID => 13, AdPeer::CATEGORY_ID => 14, AdPeer::USER_TYPE_ID => 15, AdPeer::CITY_ID => 16, AdPeer::QUARTER_ID => 17, AdPeer::SLUG => 18, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'DESCRIPTION' => 2, 'PRICE' => 3, 'STATUT' => 4, 'USER_NAME' => 5, 'USER_EMAIL' => 6, 'USER_PASSWORD' => 7, 'USER_SALT' => 8, 'USER_PHONE' => 9, 'USER_IP_ADRESS' => 10, 'CREATED_AT' => 11, 'UPDATED_AT' => 12, 'AD_TYPE_ID' => 13, 'CATEGORY_ID' => 14, 'USER_TYPE_ID' => 15, 'CITY_ID' => 16, 'QUARTER_ID' => 17, 'SLUG' => 18, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'description' => 2, 'price' => 3, 'statut' => 4, 'user_name' => 5, 'user_email' => 6, 'user_password' => 7, 'user_salt' => 8, 'user_phone' => 9, 'user_ip_adress' => 10, 'created_at' => 11, 'updated_at' => 12, 'ad_type_id' => 13, 'category_id' => 14, 'user_type_id' => 15, 'city_id' => 16, 'quarter_id' => 17, 'slug' => 18, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, )
     );
 
     /**
@@ -227,6 +230,7 @@ abstract class BaseAdPeer
             $criteria->addSelectColumn(AdPeer::USER_TYPE_ID);
             $criteria->addSelectColumn(AdPeer::CITY_ID);
             $criteria->addSelectColumn(AdPeer::QUARTER_ID);
+            $criteria->addSelectColumn(AdPeer::SLUG);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.TITLE');
@@ -246,6 +250,7 @@ abstract class BaseAdPeer
             $criteria->addSelectColumn($alias . '.USER_TYPE_ID');
             $criteria->addSelectColumn($alias . '.CITY_ID');
             $criteria->addSelectColumn($alias . '.QUARTER_ID');
+            $criteria->addSelectColumn($alias . '.SLUG');
         }
     }
 

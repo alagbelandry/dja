@@ -30,13 +30,13 @@ abstract class BaseQuarterPeer
     const TM_CLASS = 'QuarterTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the ID field */
     const ID = 'quarter.ID';
@@ -46,6 +46,9 @@ abstract class BaseQuarterPeer
 
     /** the column name for the CITY_ID field */
     const CITY_ID = 'quarter.CITY_ID';
+
+    /** the column name for the SLUG field */
+    const SLUG = 'quarter.SLUG';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -66,12 +69,12 @@ abstract class BaseQuarterPeer
      * e.g. QuarterPeer::$fieldNames[QuarterPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'CityId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'cityId', ),
-        BasePeer::TYPE_COLNAME => array (QuarterPeer::ID, QuarterPeer::NAME, QuarterPeer::CITY_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CITY_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'city_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'CityId', 'Slug', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'cityId', 'slug', ),
+        BasePeer::TYPE_COLNAME => array (QuarterPeer::ID, QuarterPeer::NAME, QuarterPeer::CITY_ID, QuarterPeer::SLUG, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CITY_ID', 'SLUG', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'city_id', 'slug', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -81,12 +84,12 @@ abstract class BaseQuarterPeer
      * e.g. QuarterPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'CityId' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'cityId' => 2, ),
-        BasePeer::TYPE_COLNAME => array (QuarterPeer::ID => 0, QuarterPeer::NAME => 1, QuarterPeer::CITY_ID => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CITY_ID' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'city_id' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'CityId' => 2, 'Slug' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'cityId' => 2, 'slug' => 3, ),
+        BasePeer::TYPE_COLNAME => array (QuarterPeer::ID => 0, QuarterPeer::NAME => 1, QuarterPeer::CITY_ID => 2, QuarterPeer::SLUG => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CITY_ID' => 2, 'SLUG' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'city_id' => 2, 'slug' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -163,10 +166,12 @@ abstract class BaseQuarterPeer
             $criteria->addSelectColumn(QuarterPeer::ID);
             $criteria->addSelectColumn(QuarterPeer::NAME);
             $criteria->addSelectColumn(QuarterPeer::CITY_ID);
+            $criteria->addSelectColumn(QuarterPeer::SLUG);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.NAME');
             $criteria->addSelectColumn($alias . '.CITY_ID');
+            $criteria->addSelectColumn($alias . '.SLUG');
         }
     }
 

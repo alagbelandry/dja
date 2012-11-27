@@ -42,6 +42,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery orderByUserTypeId($order = Criteria::ASC) Order by the user_type_id column
  * @method AdQuery orderByCityId($order = Criteria::ASC) Order by the city_id column
  * @method AdQuery orderByQuarterId($order = Criteria::ASC) Order by the quarter_id column
+ * @method AdQuery orderBySlug($order = Criteria::ASC) Order by the slug column
  *
  * @method AdQuery groupById() Group by the id column
  * @method AdQuery groupByTitle() Group by the title column
@@ -61,6 +62,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method AdQuery groupByUserTypeId() Group by the user_type_id column
  * @method AdQuery groupByCityId() Group by the city_id column
  * @method AdQuery groupByQuarterId() Group by the quarter_id column
+ * @method AdQuery groupBySlug() Group by the slug column
  *
  * @method AdQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AdQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -114,6 +116,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method Ad findOneByUserTypeId(int $user_type_id) Return the first Ad filtered by the user_type_id column
  * @method Ad findOneByCityId(int $city_id) Return the first Ad filtered by the city_id column
  * @method Ad findOneByQuarterId(int $quarter_id) Return the first Ad filtered by the quarter_id column
+ * @method Ad findOneBySlug(string $slug) Return the first Ad filtered by the slug column
  *
  * @method array findById(int $id) Return Ad objects filtered by the id column
  * @method array findByTitle(string $title) Return Ad objects filtered by the title column
@@ -133,6 +136,7 @@ use LeDjassa\AdsBundle\Model\UserType;
  * @method array findByUserTypeId(int $user_type_id) Return Ad objects filtered by the user_type_id column
  * @method array findByCityId(int $city_id) Return Ad objects filtered by the city_id column
  * @method array findByQuarterId(int $quarter_id) Return Ad objects filtered by the quarter_id column
+ * @method array findBySlug(string $slug) Return Ad objects filtered by the slug column
  */
 abstract class BaseAdQuery extends ModelCriteria
 {
@@ -234,7 +238,7 @@ abstract class BaseAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `STATUT`, `USER_NAME`, `USER_EMAIL`, `USER_PASSWORD`, `USER_SALT`, `USER_PHONE`, `USER_IP_ADRESS`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `CITY_ID`, `QUARTER_ID` FROM `ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `STATUT`, `USER_NAME`, `USER_EMAIL`, `USER_PASSWORD`, `USER_SALT`, `USER_PHONE`, `USER_IP_ADRESS`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `CITY_ID`, `QUARTER_ID`, `SLUG` FROM `ad` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -954,6 +958,35 @@ abstract class BaseAdQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the slug column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySlug('fooValue');   // WHERE slug = 'fooValue'
+     * $query->filterBySlug('%fooValue%'); // WHERE slug LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $slug The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AdQuery The current query, for fluid interface
+     */
+    public function filterBySlug($slug = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($slug)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $slug)) {
+                $slug = str_replace('*', '%', $slug);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AdPeer::SLUG, $slug, $comparison);
+    }
+
+    /**
      * Filter the query by a related City object
      *
      * @param   City|PropelObjectCollection $city The related object(s) to use as filter
@@ -1562,4 +1595,19 @@ abstract class BaseAdQuery extends ModelCriteria
     {
         return $this->addAscendingOrderByColumn(AdPeer::CREATED_AT);
     }
+    // sluggable behavior
+
+    /**
+     * Find one object based on its slug
+     *
+     * @param     string $slug The value to use as filter.
+     * @param     PropelPDO $con The optional connection object
+     *
+     * @return    Ad the result, formatted by the current formatter
+     */
+    public function findOneBySlug($slug, $con = null)
+    {
+        return $this->filterBySlug($slug)->findOne($con);
+    }
+
 }

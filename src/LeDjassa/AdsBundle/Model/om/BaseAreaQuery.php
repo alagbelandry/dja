@@ -21,10 +21,12 @@ use LeDjassa\AdsBundle\Model\City;
  * @method AreaQuery orderById($order = Criteria::ASC) Order by the id column
  * @method AreaQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method AreaQuery orderByCode($order = Criteria::ASC) Order by the code column
+ * @method AreaQuery orderBySlug($order = Criteria::ASC) Order by the slug column
  *
  * @method AreaQuery groupById() Group by the id column
  * @method AreaQuery groupByName() Group by the name column
  * @method AreaQuery groupByCode() Group by the code column
+ * @method AreaQuery groupBySlug() Group by the slug column
  *
  * @method AreaQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method AreaQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -39,10 +41,12 @@ use LeDjassa\AdsBundle\Model\City;
  *
  * @method Area findOneByName(string $name) Return the first Area filtered by the name column
  * @method Area findOneByCode(string $code) Return the first Area filtered by the code column
+ * @method Area findOneBySlug(string $slug) Return the first Area filtered by the slug column
  *
  * @method array findById(int $id) Return Area objects filtered by the id column
  * @method array findByName(string $name) Return Area objects filtered by the name column
  * @method array findByCode(string $code) Return Area objects filtered by the code column
+ * @method array findBySlug(string $slug) Return Area objects filtered by the slug column
  */
 abstract class BaseAreaQuery extends ModelCriteria
 {
@@ -144,7 +148,7 @@ abstract class BaseAreaQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `CODE` FROM `area` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `NAME`, `CODE`, `SLUG` FROM `area` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -319,6 +323,35 @@ abstract class BaseAreaQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the slug column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySlug('fooValue');   // WHERE slug = 'fooValue'
+     * $query->filterBySlug('%fooValue%'); // WHERE slug LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $slug The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AreaQuery The current query, for fluid interface
+     */
+    public function filterBySlug($slug = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($slug)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $slug)) {
+                $slug = str_replace('*', '%', $slug);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AreaPeer::SLUG, $slug, $comparison);
+    }
+
+    /**
      * Filter the query by a related City object
      *
      * @param   City|PropelObjectCollection $city  the related object to use as filter
@@ -406,6 +439,21 @@ abstract class BaseAreaQuery extends ModelCriteria
         }
 
         return $this;
+    }
+
+    // sluggable behavior
+
+    /**
+     * Find one object based on its slug
+     *
+     * @param     string $slug The value to use as filter.
+     * @param     PropelPDO $con The optional connection object
+     *
+     * @return    Area the result, formatted by the current formatter
+     */
+    public function findOneBySlug($slug, $con = null)
+    {
+        return $this->filterBySlug($slug)->findOne($con);
     }
 
 }

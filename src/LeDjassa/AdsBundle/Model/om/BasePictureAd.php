@@ -214,7 +214,7 @@ abstract class BasePictureAd extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 3; // 3 = PictureAdPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {

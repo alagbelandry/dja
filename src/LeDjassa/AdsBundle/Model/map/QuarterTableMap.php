@@ -46,6 +46,7 @@ class QuarterTableMap extends TableMap
         $this->addColumn('NAME', 'Name', 'VARCHAR', true, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
+        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -57,5 +58,18 @@ class QuarterTableMap extends TableMap
         $this->addRelation('City', 'LeDjassa\\AdsBundle\\Model\\City', RelationMap::MANY_TO_ONE, array('city_id' => 'id', ), null, null);
         $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'quarter_id', ), null, null, 'Ads');
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
+        );
+    } // getBehaviors()
 
 } // QuarterTableMap

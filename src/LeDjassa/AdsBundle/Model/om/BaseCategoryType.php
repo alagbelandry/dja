@@ -219,7 +219,7 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 3; // 3 = CategoryTypePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -903,13 +903,15 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return CategoryType The current object (for fluent API support)
      * @see        addCategories()
      */
     public function clearCategories()
     {
         $this->collCategories = null; // important to set this to null since that means it is uninitialized
         $this->collCategoriesPartial = null;
+
+        return $this;
     }
 
     /**
@@ -1008,6 +1010,7 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
      *
      * @param PropelCollection $categories A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return CategoryType The current object (for fluent API support)
      */
     public function setCategories(PropelCollection $categories, PropelPDO $con = null)
     {
@@ -1024,6 +1027,8 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
 
         $this->collCategories = $categories;
         $this->collCategoriesPartial = false;
+
+        return $this;
     }
 
     /**
@@ -1090,6 +1095,7 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
 
     /**
      * @param	Category $category The category object to remove.
+     * @return CategoryType The current object (for fluent API support)
      */
     public function removeCategory($category)
     {
@@ -1102,6 +1108,8 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
             $this->categoriesScheduledForDeletion[]= $category;
             $category->setCategoryType(null);
         }
+
+        return $this;
     }
 
     /**

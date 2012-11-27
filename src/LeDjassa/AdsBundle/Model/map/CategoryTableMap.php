@@ -44,8 +44,10 @@ class CategoryTableMap extends TableMap
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 6, null);
         $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
+        $this->getColumn('TITLE', false)->setPrimaryString(true);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
         $this->addForeignKey('CATEGORY_TYPE_ID', 'CategoryTypeId', 'INTEGER', 'category_type', 'ID', true, 5, null);
+        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -57,5 +59,18 @@ class CategoryTableMap extends TableMap
         $this->addRelation('CategoryType', 'LeDjassa\\AdsBundle\\Model\\CategoryType', RelationMap::MANY_TO_ONE, array('category_type_id' => 'id', ), null, null);
         $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'category_id', ), null, null, 'Ads');
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
+        );
+    } // getBehaviors()
 
 } // CategoryTableMap

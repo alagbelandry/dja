@@ -47,6 +47,7 @@ class CityTableMap extends TableMap
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
         $this->addForeignKey('AREA_ID', 'AreaId', 'INTEGER', 'area', 'ID', true, 5, null);
+        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -59,5 +60,18 @@ class CityTableMap extends TableMap
         $this->addRelation('Quarter', 'LeDjassa\\AdsBundle\\Model\\Quarter', RelationMap::ONE_TO_MANY, array('id' => 'city_id', ), null, null, 'Quarters');
         $this->addRelation('Ad', 'LeDjassa\\AdsBundle\\Model\\Ad', RelationMap::ONE_TO_MANY, array('id' => 'city_id', ), null, null, 'Ads');
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
+        );
+    } // getBehaviors()
 
 } // CityTableMap

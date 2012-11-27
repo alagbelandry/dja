@@ -219,7 +219,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
             if ($rehydrate) {
                 $this->ensureConsistency();
             }
-
+            $this->postHydrate($row, $startcol, $rehydrate);
             return $startcol + 3; // 3 = UserTypePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
@@ -904,13 +904,15 @@ abstract class BaseUserType extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
+     * @return UserType The current object (for fluent API support)
      * @see        addAds()
      */
     public function clearAds()
     {
         $this->collAds = null; // important to set this to null since that means it is uninitialized
         $this->collAdsPartial = null;
+
+        return $this;
     }
 
     /**
@@ -1009,6 +1011,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
      *
      * @param PropelCollection $ads A Propel collection.
      * @param PropelPDO $con Optional connection object
+     * @return UserType The current object (for fluent API support)
      */
     public function setAds(PropelCollection $ads, PropelPDO $con = null)
     {
@@ -1025,6 +1028,8 @@ abstract class BaseUserType extends BaseObject implements Persistent
 
         $this->collAds = $ads;
         $this->collAdsPartial = false;
+
+        return $this;
     }
 
     /**
@@ -1091,6 +1096,7 @@ abstract class BaseUserType extends BaseObject implements Persistent
 
     /**
      * @param	Ad $ad The ad object to remove.
+     * @return UserType The current object (for fluent API support)
      */
     public function removeAd($ad)
     {
@@ -1103,6 +1109,8 @@ abstract class BaseUserType extends BaseObject implements Persistent
             $this->adsScheduledForDeletion[]= $ad;
             $ad->setUserType(null);
         }
+
+        return $this;
     }
 
 

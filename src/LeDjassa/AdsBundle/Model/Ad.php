@@ -48,6 +48,7 @@ class Ad extends BaseAd
 		}
 
 		$titleCategory = $this->getCategory() instanceof Category ? $this->getCategory()->getTitle() : '';
+		$slugCategory = $this->getCategory() instanceof Category ? $this->getCategory()->getSlug() : '';
 
 		$nameAdType = $this->getAdType() instanceof AdType ? $this->getAdType()->getName() : '';
 
@@ -76,7 +77,9 @@ class Ad extends BaseAd
 			'titleCategory' 		=> $titleCategory,
 			'nameAdType'    		=> $nameAdType,
 			'titleUserType' 		=> $titleUserType,
-			'pictures'				=> $pictureAds
+			'pictures'				=> $pictureAds,
+			'slugAd'                => $this->getSlug(),
+			'slugCategory'			=> $slugCategory
 		);
 
 		return $properties;

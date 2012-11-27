@@ -29,13 +29,13 @@ abstract class BaseAreaPeer
     const TM_CLASS = 'AreaTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the ID field */
     const ID = 'area.ID';
@@ -45,6 +45,9 @@ abstract class BaseAreaPeer
 
     /** the column name for the CODE field */
     const CODE = 'area.CODE';
+
+    /** the column name for the SLUG field */
+    const SLUG = 'area.SLUG';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -65,12 +68,12 @@ abstract class BaseAreaPeer
      * e.g. AreaPeer::$fieldNames[AreaPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Code', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'code', ),
-        BasePeer::TYPE_COLNAME => array (AreaPeer::ID, AreaPeer::NAME, AreaPeer::CODE, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CODE', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'code', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Code', 'Slug', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'code', 'slug', ),
+        BasePeer::TYPE_COLNAME => array (AreaPeer::ID, AreaPeer::NAME, AreaPeer::CODE, AreaPeer::SLUG, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CODE', 'SLUG', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'code', 'slug', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -80,12 +83,12 @@ abstract class BaseAreaPeer
      * e.g. AreaPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Code' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'code' => 2, ),
-        BasePeer::TYPE_COLNAME => array (AreaPeer::ID => 0, AreaPeer::NAME => 1, AreaPeer::CODE => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CODE' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'code' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Code' => 2, 'Slug' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'code' => 2, 'slug' => 3, ),
+        BasePeer::TYPE_COLNAME => array (AreaPeer::ID => 0, AreaPeer::NAME => 1, AreaPeer::CODE => 2, AreaPeer::SLUG => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CODE' => 2, 'SLUG' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'code' => 2, 'slug' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -162,10 +165,12 @@ abstract class BaseAreaPeer
             $criteria->addSelectColumn(AreaPeer::ID);
             $criteria->addSelectColumn(AreaPeer::NAME);
             $criteria->addSelectColumn(AreaPeer::CODE);
+            $criteria->addSelectColumn(AreaPeer::SLUG);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.NAME');
             $criteria->addSelectColumn($alias . '.CODE');
+            $criteria->addSelectColumn($alias . '.SLUG');
         }
     }
 

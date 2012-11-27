@@ -30,13 +30,13 @@ abstract class BaseCategoryPeer
     const TM_CLASS = 'CategoryTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /** the column name for the ID field */
     const ID = 'category.ID';
@@ -49,6 +49,9 @@ abstract class BaseCategoryPeer
 
     /** the column name for the CATEGORY_TYPE_ID field */
     const CATEGORY_TYPE_ID = 'category.CATEGORY_TYPE_ID';
+
+    /** the column name for the SLUG field */
+    const SLUG = 'category.SLUG';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -69,12 +72,12 @@ abstract class BaseCategoryPeer
      * e.g. CategoryPeer::$fieldNames[CategoryPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Code', 'CategoryTypeId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'code', 'categoryTypeId', ),
-        BasePeer::TYPE_COLNAME => array (CategoryPeer::ID, CategoryPeer::TITLE, CategoryPeer::CODE, CategoryPeer::CATEGORY_TYPE_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'CODE', 'CATEGORY_TYPE_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'code', 'category_type_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Code', 'CategoryTypeId', 'Slug', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'code', 'categoryTypeId', 'slug', ),
+        BasePeer::TYPE_COLNAME => array (CategoryPeer::ID, CategoryPeer::TITLE, CategoryPeer::CODE, CategoryPeer::CATEGORY_TYPE_ID, CategoryPeer::SLUG, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'CODE', 'CATEGORY_TYPE_ID', 'SLUG', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'code', 'category_type_id', 'slug', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -84,12 +87,12 @@ abstract class BaseCategoryPeer
      * e.g. CategoryPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Code' => 2, 'CategoryTypeId' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'code' => 2, 'categoryTypeId' => 3, ),
-        BasePeer::TYPE_COLNAME => array (CategoryPeer::ID => 0, CategoryPeer::TITLE => 1, CategoryPeer::CODE => 2, CategoryPeer::CATEGORY_TYPE_ID => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'CODE' => 2, 'CATEGORY_TYPE_ID' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'code' => 2, 'category_type_id' => 3, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Code' => 2, 'CategoryTypeId' => 3, 'Slug' => 4, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'code' => 2, 'categoryTypeId' => 3, 'slug' => 4, ),
+        BasePeer::TYPE_COLNAME => array (CategoryPeer::ID => 0, CategoryPeer::TITLE => 1, CategoryPeer::CODE => 2, CategoryPeer::CATEGORY_TYPE_ID => 3, CategoryPeer::SLUG => 4, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'CODE' => 2, 'CATEGORY_TYPE_ID' => 3, 'SLUG' => 4, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'code' => 2, 'category_type_id' => 3, 'slug' => 4, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -167,11 +170,13 @@ abstract class BaseCategoryPeer
             $criteria->addSelectColumn(CategoryPeer::TITLE);
             $criteria->addSelectColumn(CategoryPeer::CODE);
             $criteria->addSelectColumn(CategoryPeer::CATEGORY_TYPE_ID);
+            $criteria->addSelectColumn(CategoryPeer::SLUG);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.TITLE');
             $criteria->addSelectColumn($alias . '.CODE');
             $criteria->addSelectColumn($alias . '.CATEGORY_TYPE_ID');
+            $criteria->addSelectColumn($alias . '.SLUG');
         }
     }
 

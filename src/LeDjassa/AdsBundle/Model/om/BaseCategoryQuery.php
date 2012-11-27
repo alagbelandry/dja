@@ -23,11 +23,13 @@ use LeDjassa\AdsBundle\Model\CategoryType;
  * @method CategoryQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method CategoryQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method CategoryQuery orderByCategoryTypeId($order = Criteria::ASC) Order by the category_type_id column
+ * @method CategoryQuery orderBySlug($order = Criteria::ASC) Order by the slug column
  *
  * @method CategoryQuery groupById() Group by the id column
  * @method CategoryQuery groupByTitle() Group by the title column
  * @method CategoryQuery groupByCode() Group by the code column
  * @method CategoryQuery groupByCategoryTypeId() Group by the category_type_id column
+ * @method CategoryQuery groupBySlug() Group by the slug column
  *
  * @method CategoryQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CategoryQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -47,11 +49,13 @@ use LeDjassa\AdsBundle\Model\CategoryType;
  * @method Category findOneByTitle(string $title) Return the first Category filtered by the title column
  * @method Category findOneByCode(string $code) Return the first Category filtered by the code column
  * @method Category findOneByCategoryTypeId(int $category_type_id) Return the first Category filtered by the category_type_id column
+ * @method Category findOneBySlug(string $slug) Return the first Category filtered by the slug column
  *
  * @method array findById(int $id) Return Category objects filtered by the id column
  * @method array findByTitle(string $title) Return Category objects filtered by the title column
  * @method array findByCode(string $code) Return Category objects filtered by the code column
  * @method array findByCategoryTypeId(int $category_type_id) Return Category objects filtered by the category_type_id column
+ * @method array findBySlug(string $slug) Return Category objects filtered by the slug column
  */
 abstract class BaseCategoryQuery extends ModelCriteria
 {
@@ -153,7 +157,7 @@ abstract class BaseCategoryQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `CODE`, `CATEGORY_TYPE_ID` FROM `category` WHERE `ID` = :p0';
+        $sql = 'SELECT `ID`, `TITLE`, `CODE`, `CATEGORY_TYPE_ID`, `SLUG` FROM `category` WHERE `ID` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -371,6 +375,35 @@ abstract class BaseCategoryQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the slug column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySlug('fooValue');   // WHERE slug = 'fooValue'
+     * $query->filterBySlug('%fooValue%'); // WHERE slug LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $slug The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CategoryQuery The current query, for fluid interface
+     */
+    public function filterBySlug($slug = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($slug)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $slug)) {
+                $slug = str_replace('*', '%', $slug);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CategoryPeer::SLUG, $slug, $comparison);
+    }
+
+    /**
      * Filter the query by a related CategoryType object
      *
      * @param   CategoryType|PropelObjectCollection $categoryType The related object(s) to use as filter
@@ -534,6 +567,21 @@ abstract class BaseCategoryQuery extends ModelCriteria
         }
 
         return $this;
+    }
+
+    // sluggable behavior
+
+    /**
+     * Find one object based on its slug
+     *
+     * @param     string $slug The value to use as filter.
+     * @param     PropelPDO $con The optional connection object
+     *
+     * @return    Category the result, formatted by the current formatter
+     */
+    public function findOneBySlug($slug, $con = null)
+    {
+        return $this->filterBySlug($slug)->findOne($con);
     }
 
 }

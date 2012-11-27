@@ -24,7 +24,7 @@ use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;
 
 /**
- * @Route("/annonces")
+ * @Route("/")
  */
 class AdController extends Controller
 {
@@ -134,7 +134,7 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/afficher/{idAd}", name="ad_show")
+    * @Route("/{nameCategory}/{idAd}-{slug}", requirements={"slug" = "[a-zA-Z0-9-_/]+"}, name="ad_show")
     * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
     * @Template()
     * @param Ad $ad ad
@@ -238,7 +238,7 @@ class AdController extends Controller
     }
 
  	/**
-	* @Route("/ajouter", name="ad_add")
+	* @Route("/annonces/ajouter", name="ad_add")
 	* @Template()
 	*/
     public function addAction()

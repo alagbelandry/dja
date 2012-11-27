@@ -46,6 +46,7 @@ class AreaTableMap extends TableMap
         $this->addColumn('NAME', 'Name', 'VARCHAR', true, 100, null);
         $this->getColumn('NAME', false)->setPrimaryString(true);
         $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
+        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -56,5 +57,18 @@ class AreaTableMap extends TableMap
     {
         $this->addRelation('City', 'LeDjassa\\AdsBundle\\Model\\City', RelationMap::ONE_TO_MANY, array('id' => 'area_id', ), null, null, 'Cities');
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
+        );
+    } // getBehaviors()
 
 } // AreaTableMap

@@ -50,7 +50,10 @@ body.s_layout_fixed {
 .s_promo_price, .s_old_price, .s_promo_price .s_currency {
 	color: #ffffff;
 }
-
+.s_nav_current {
+  	background-color: #FF9900;
+    color: #FFFFFF;	
+}
 /*****************************************************/
 /******   S E L E C T I O N    ***********************/
 /*****************************************************/

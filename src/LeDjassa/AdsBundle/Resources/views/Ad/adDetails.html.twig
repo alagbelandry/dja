@@ -1,6 +1,5 @@
-  <a href="{{ path('ad_show', {'idAd': ad.Id, 'slugCategory': adProperties[ad.Id].slugCategory,'slugAd': adProperties[ad.Id].slugAd}) }}" title="{{adProperties[ad.Id].title}}">
-	<div class="grid_3 alpha">
-			<img alt="{{adProperties[ad.Id].title}}" title="{{adProperties[ad.Id].title}}" width="150px" height="150px" 
+  <a itemprop="url" href="{{ path('ad_show', {'idAd': ad.Id, 'slugCategory': adProperties[ad.Id].slugCategory,'slugAd': adProperties[ad.Id].slugAd}) }}" title="{{adProperties[ad.Id].title}}">
+			<img class="grid_3 alpha" itemprop="image"  alt="{{adProperties[ad.Id].title}}" title="{{adProperties[ad.Id].title}}" width="150px" height="150px" 
 		
 			{% if adProperties[ad.Id].pictures %}
 				src = "{{ asset('uploads/pictures/' ~ adProperties[ad.Id].pictures.0.Path)}}"
@@ -8,13 +7,12 @@
 				src="images/product_180x180.jpg"
 			{% endif %}
 			>
-	</div>
 	<div class="grid_6 omega">
-		<h3>
+		<h3 itemprop="name">
 			{{adProperties[ad.Id].title}}
 		</h3>
 		{% if adProperties[ad.Id].price %}
-		<p class="s_price s_promo_price">
+		<p itemprop="price" class="s_price s_promo_price">
 			{{adProperties[ad.Id].price}}
 			<span class="s_currency s_before">F CFA</span>
 		</p>

@@ -1,15 +1,49 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% set routeName = app.request.attributes.get('_route') %}
+{% block head_meta_site_info %}
+  {% if routeName == 'ad_list' %}
+		<meta content="www.auportdadjame.com" name="url">
+  	<meta content="http://www.auportdadjame.com/" name="alias">
+  	<meta content="Petites annonces gratuites - www.auportdadjame.com" name="abstract">
+  {% endif %}
+{% endblock %}
+
+{% block head_meta_description %}
+	{% if routeName == 'ad_list_demands' %}
+		Consulter 120 annonces de demandes sur toutes la Cote d'ivoire
+	{% elseif routeName == 'ad_list_offers' %}
+		Consulter 120 annonces d'offres  sur toutes la Cote d'ivoire
+	{% else %}
+			annonces gratuites cote d'ivoire (immobilier, voiture, moto, telephone, ordinateur, portable, emploi, tablette), acheter, louer et vendre
+	{% endif %}
+{% endblock %}
+
+{% block head_meta_keywords %}
+  {% if routeName == 'ad_list' %}
+		annonces gratuites cote d'ivoire (immobilier, voiture, moto, telephone, ordinateur, portable, emploi, tablette), acheter, louer et vendre
+	{% endif %}
+{% endblock %}
+
+{% block head_title %}
+  {% if routeName == 'ad_list_demands' %}
+    Annonces - Demandes - Cote d'ivoire
+  {% elseif routeName == 'ad_list_offers' %}
+    Annonces - Offres - Cote d'ivoire
+  {% else %}
+    Annonces gratuites Cote d'ivoire
+  {% endif %}
+{% endblock %}
+
 {% block body_container_intro %}
 	{% render "LeDjassaAdsBundle:Ad:searchForm" %}
 {% endblock %}
 {% block body_container_main %}
 <section id="content" class="container_12" role="main">
 <div class="clear" style="opacity: 1;"></div>
-
 <div id="category" class="grid_9">
 	<div class="s_listing s_list_view clearfix">
 		{% for ad in ads %}
-			<article class="s_item clearfix" style="opacity: 1;">
+			<article itemscope itemtype="http://schema.org/Product" class="s_item clearfix" style="opacity: 1;">
 				{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
 			</article>
 			<div class="clear" style="opacity: 1;"></div>

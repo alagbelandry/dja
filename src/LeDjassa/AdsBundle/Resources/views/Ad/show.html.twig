@@ -15,10 +15,10 @@
 <div id="content" class="product_view container_12">
 	<div id="product" class="grid_12">
 
-		<h2>{{ad.title}}</h2>
+		<h2 itemprop="name">{{ad.title}}</h2>
 
 		<div class="publish_by">
-		Mise en ligne par <a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">{{ad.userName}}</a>
+		Mise en ligne par <a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}"><span itemprop="author">{{ad.userName}}</span></a>
 		{% if ad.isPublishToday %}
 				aujourd'hui
 			{% elseif ad.isPublishYesterDay %}
@@ -46,7 +46,7 @@
 		<div id="product_info" class="grid_4">
 			<span class="s_info_price">
 				<span class="s_info_title">Prix:</span>
-				<span class="s_info_price_value">{{ad.price}} F CFA</span>
+				<span itemprop="price" class="s_info_price_value">{{ad.price}} F CFA</span>
 			</span>
 			<span class="s_info_location">
 				<span class="s_info_title">Lieu:</span> 
@@ -58,7 +58,7 @@
 			</span>
 			<span class="s_info_description">
 				<span class="s_info_title">Description: </span>
-				<span class="s_info_description_value">{{ad.description}}</span> 
+				<span itemprop="description" class="s_info_description_value">{{ad.description}}</span> 
 			  </span>
 		</div>
 

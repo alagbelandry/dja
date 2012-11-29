@@ -1,7 +1,17 @@
 {% extends "OryzoneBoilerplateBundle::html5.html.twig" %}
 
-{% block head_meta_description %}annonces grauites cote d'ivoire{% endblock %}
-{% block head_title %}Annonces gratuites Cote d'ivoire{% endblock %}
+{% block head_meta %}
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta content="fr" http-equiv="content-language">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  {% block head_meta_site_info %}
+  {% endblock %}
+  <meta name="description" content="{% block head_meta_description %}{% endblock %}">
+  <meta name="keywords" content="{% block head_meta_keywords %}{% endblock %}">
+  <meta name="viewport" content="width=device-width">
+{% endblock head_meta %}
+
+  {% block head_title %}{% endblock %}
 
 {% block head_css %}
 	{{ parent() }}
@@ -52,7 +62,7 @@
                       blablalbalblab lbalbalblablbalba lbalblabla blalblablabla lbalblala blalblablabalb
                       lablalblabl alblab lallbalblab lablallbla
                     </div>
-                    <div id="categories" class="s_nav">
+                    <nav id="categories" class="s_nav">
                       <ul>
                         <li> <a href="{{ path('ad_list') }}">Acceuil</a></li>
                         <li> <a href="{{ path('ad_add') }}">Deposer une annonce</a></li>
@@ -60,7 +70,7 @@
                         <li> <a href="{{ path('ad_list_demands') }}">Toutes les demandes</a></li>
                         <li> <a href="{{ path('ad_list') }}">Aide</a></li>
                       </ul>
-                    </div>
+                    </nav>
                   </div>
                 {% endblock %}
               </header>

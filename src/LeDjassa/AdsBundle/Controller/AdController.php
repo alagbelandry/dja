@@ -30,8 +30,9 @@ class AdController extends Controller
 {
     /**
     * @Route("/", name="ad_list")
-    * @Route("/offres", name="ad_list_offers")
-    * @Route("/demandes", name="ad_list_demands")
+    * @Route("/annonces", name="ad_list_synonym")
+    * @Route("/annonces/offres", name="ad_list_offers")
+    * @Route("/annonces/demandes", name="ad_list_demands")
     * @Template()
     */
     public function indexAction()
@@ -64,18 +65,19 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/rechercher/{categoryTitle}/{areaName}", name="ad_search")
+    * @Route("/annonces/{categoryTitle}+{areaName}", name="ad_search")
+    * @Route("/annonces/", name="ad_search_synonym")
     * @Template()
     * @param string $categoryTitle criteria on category
     * @param string $areaName criteria on area
     */
-    public function searchAction($categoryTitle, $areaName)
+    public function searchAction($categoryTitle = '', $areaName = '')
     {   
         $query = $this->get('request')->query;
 
         $title = $query->get('title');
-        $category = CategoryQuery::create()->findOneByTitle($categoryTitle);
-        $area = AreaQuery::create()->findOneByName($areaName);
+        $category = CategoryQuery::create()->findOneBySlug($categoryTitle);
+        $area = AreaQuery::create()->findOneBySlug($areaName);
 
         $adsCollectionCriteria = AdQuery::create()
             ->filterByLive()
@@ -114,8 +116,8 @@ class AdController extends Controller
                 $criteria = $form->getData();
                 return $this->redirect(
                     $this->generateUrl('ad_search', array(
-                        'categoryTitle' => empty($criteria['category']) ? 'toutes-categories' : $criteria['category']->getTitle(),
-                        'areaName'      => empty($criteria['area']) ? 'toutes-regions' : $criteria['area']->getName(),
+                        'categoryTitle' => empty($criteria['category']) ? '' : $criteria['category']->getSlug(),
+                        'areaName'      => empty($criteria['area']) ? '' : $criteria['area']->getSlug(),
                         'title'         => $criteria['title'],
                     )), 
                     301
@@ -134,8 +136,8 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/{nameCategory}/{idAd}-{slug}", requirements={"slug" = "[a-zA-Z0-9-_/]+"}, name="ad_show")
-    * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
+    * @Route("/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show")
+    * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}, "exclude"={"slugCategory", "slugAd"}})
     * @Template()
     * @param Ad $ad ad
     */
@@ -151,7 +153,7 @@ class AdController extends Controller
     }
     
    /**
-    * @Route("/modifier/{idAd}", name="ad_edit")
+    * @Route("/annonces/modifier/{idAd}", name="ad_edit")
     * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
     * @Template()
     * @param Ad $ad
@@ -195,7 +197,7 @@ class AdController extends Controller
     }
 
    /**
-    * @Route("/supprimer/{idAd}", name="ad_delete")
+    * @Route("annonces/supprimer/{idAd}", name="ad_delete")
     * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
     * @Template()
     * @param Ad $ad Ad

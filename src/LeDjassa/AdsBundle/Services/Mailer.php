@@ -27,7 +27,14 @@ class Mailer
     {
     	$subject = "Votre annonce ". $ad->getTitle() ." est en ligne";
 
-    	$urlShow = $this->router->generate('ad_show', array('idAd' => $ad->getId()), true);
+    	$urlShow = $this->router->generate('ad_show', array(
+            'idAd'         => $ad->getId(), 
+            'slugCategory' => $ad->getCategory()->getSlug(),
+            'slugAd'       => $ad->getSlug()
+            ),
+            true
+        );
+
     	$urlEdit = $this->router->generate('ad_edit', array('idAd' => $ad->getId()), true);
     	$urlDelete = $this->router->generate('ad_delete', array('idAd' => $ad->getId()), true);
 

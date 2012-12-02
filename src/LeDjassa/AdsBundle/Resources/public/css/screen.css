@@ -1931,11 +1931,10 @@ body.s_layout_fixed #wrapper {
 
 #product_user_info {
   width: 290px;
-  border: 1px solid #FF9900;
-  margin-top: 60px;
+  border: 1px solid #999999;
   font-weight: bold;
-  padding-top: 5px;
-  padding-bottom: 10px;
+  margin-top: 60px;
+  padding: 12px;
 }
 
 #product_user_info .s_product_user_info_title {

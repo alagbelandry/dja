@@ -8,90 +8,115 @@
 	{% endstylesheets %}
 {% endblock %}
 
+{% block head_meta_description %}
+	{{ad.description}} {{ad.nameArea}} {{ad.nameCity}} 
+	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
+{% endblock %}
+
+{% block head_meta_keywords %}
+	{{ad.title}} {{ad.nameArea}} {{ad.nameCity}}
+	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
+{% endblock %}
+
+{% block head_title %}
+	{{ad.title}} {{ad.nameArea}} {{ad.nameCity}}
+	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
+{% endblock %}
+
 {% block body_container_pre_intro %}
 	<div class="s_border"></div>
 {% endblock %}
 {% block body_container_main %}
-<div id="content" class="product_view container_12">
-	<div id="product" class="grid_12">
-
-		<h2 itemprop="name">{{ad.title}}</h2>
+<div itemscope itemtype="http://schema.org/Offer">
+<section id="content" class="product_view container_12">
+  <div id="product" class="grid_12">
+   
+	  <h2 itemprop="name">{{ad.title}}</h2>
 
 		<div class="publish_by">
-		Mise en ligne par <a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}"><span itemprop="author">{{ad.userName}}</span></a>
-		{% if ad.isPublishToday %}
+			Mise en ligne par <a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}"><span>{{ad.userName}}</span></a>
+			{% if ad.isPublishToday %}
 				aujourd'hui
 			{% elseif ad.isPublishYesterDay %}
-				hier
+			  hier
 			{% else %}
 				le {{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}
 			{% endif %}
-			à {{ ad.publishedDate|date("H:i") }}
+				à {{ ad.publishedDate|date("H:i") }}
+			<time datetime="{{ ad.publishedDate|date("Y-m-d H:i") }}" pubdate>
 		</div>
 
 		<ul id="carousel">
 			{% if ad.pictures %}
 				{% for picture in ad.pictures %}
-	      	<li>
-	      		<img src="{{ asset('uploads/pictures/' ~ picture.Path)}}"  width="400px" height="330px"/>
-	      	</li>
-	      {% endfor %}
-	    {% else %}
-	    	  <li>
-	      		<img src="{{ asset('bundles/ledjassaads/images/pas-d-image-dispo.jpg')}}"  width="320px" height="300px"/>
-	      	</li>
-	    {% endif %}
-    </ul>
+		      <li>
+		      	<img itemprop="url" src="{{ asset('uploads/pictures/' ~ picture.Path)}}"  width="400px" height="330px"/>
+		      </li>
+		    {% endfor %}
+		  {% else %}
+		    	<li>
+		      	<img itemprop="url" src="{{ asset('bundles/ledjassaads/images/pas-d-image-dispo.jpg')}}"  width="320px" height="300px"/>
+		      </li>
+		  {% endif %}
+	  </ul>
 
 		<div id="product_info" class="grid_4">
+
 			<span class="s_info_price">
 				<span class="s_info_title">Prix:</span>
 				<span itemprop="price" class="s_info_price_value">{{ad.price}} F CFA</span>
 			</span>
-			<span class="s_info_location">
-				<span class="s_info_title">Lieu:</span> 
-			  <span class="s_info_location_value">{{ad.nameArea}} / {{ad.nameCity}} 
-			  {% if ad.nameQuarter %}
-			  - {{ad.nameQuarter}}
-			  {% endif %}
-			  </span> 
-			</span>
-			<span class="s_info_description">
-				<span class="s_info_title">Description: </span>
-				<span itemprop="description" class="s_info_description_value">{{ad.description}}</span> 
-			  </span>
-		</div>
+
+			<span itemprop="availableAtOrFrom" itemscope itemtype="http://schema.org/Place" class="s_info_location">
+				<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+					<span class="s_info_title">Lieu:</span> 
+					 <span class="s_info_location_value">
+					  <span itemprop="addressRegion">{{ad.nameArea}}</span> / 
+					  <span itemprop="addressLocality">{{ad.nameCity}}</span>  
+							{% if ad.nameQuarter %}
+							 - {{ad.nameQuarter}}
+							{% endif %}
+							<meta itemprop="addressCountry" content="CI">
+					  </span> 
+				  </span>
+				</span>
+
+				<span class="s_info_description">
+					<span class="s_info_title">Description: </span>
+					<span itemprop="description" class="s_info_description_value">{{ad.description}}</span> 
+				</span>
 
 		</div>
+	</div>
+</section>
+<aside itemprop="seller" itemscope itemtype="http://schema.org/Person" id="product_user_info" class="grid_4">
 
-		<div id="product_user_info" class="grid_4">
+	<div class="s_product_user_info_title">Contactez l'annonceur</div>
+	<div class="s_product_user_info_email">
+		<span class="s_send_email_icon"></span>
+		<a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a>
+	</div>
+	<meta itemprop="givenName" content="{{ad.userName}}">
+	{% if ad.userPhone %}
+	<div class="s_product_user_info_phone">
+		<span class="s_user_phone_icon"></span>
+		<span itemprop="telephone">{{ad.userName}}: {{ad.userPhone}}</span>
+	</div>
+	{% endif %}
 
-			<div class="s_product_user_info_title">Contactez l'annonceur</div>
-			<div class="s_product_user_info_email">
-				<span class="s_send_email_icon"></span>
-				<a href="{{ path('ad_user_send_email', {'idAd': ad.id}) }}">Envoyer un mail</a>
-			</div>
-			{% if ad.userPhone %}
-				<div class="s_product_user_info_phone">
-					<span class="s_user_phone_icon"></span>
-					<span>{{ad.userName}}: {{ad.userPhone}}</span>
-				</div>
-			{% endif %}
+	<div class="s_product_user_info_title">Gérer votre annonce</div>
+	<div class="s_product_user_update">
+		<span class="s_update_icon"></span>
+		<a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a>
+	</div>
+	<div class="s_product_user_delete">
+		<span class="s_delete_icon"></span>
+		<a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a>
+	</div>
 
-			<div class="s_product_user_info_title">Gérer votre annonce</div>
-			<div class="s_product_user_update">
-				<span class="s_update_icon"></span>
-				<a href="{{ path('ad_edit', {'idAd': ad.id}) }}">Modifier</a>
-			</div>
-			<div class="s_product_user_delete">
-				<span class="s_delete_icon"></span>
-				<a href="{{ path('ad_delete', {'idAd': ad.id}) }}">Supprimer</a>
-			</div>
-
-		</div>
-
-  </div>
-<div>
+</aside>
+</div>
+<div class="clear" style="opacity: 1;"></div>
 {% endblock %}
 {% block body_js %}
   {{ parent() }}

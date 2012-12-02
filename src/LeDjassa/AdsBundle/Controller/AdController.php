@@ -30,7 +30,7 @@ class AdController extends Controller
 {
     /**
     * @Route("/", name="ad_list")
-    * @Route("/annonces", name="ad_list_synonym")
+    * @Route("/annonces")
     * @Route("/annonces/offres", name="ad_list_offers")
     * @Route("/annonces/demandes", name="ad_list_demands")
     * @Template()
@@ -41,7 +41,7 @@ class AdController extends Controller
             ->filterByLive()
             ->lastCreatedFirst();
 
-        $routeName = ($this->get('request')->get('_route'));
+        $routeName = $this->get('request')->get('_route');
         if ($routeName == 'ad_list_offers') {
            $adsCollectionCriteria->filterByAdTypeId(TypeAd::ID_OFFERS); 
         } elseif ($routeName == 'ad_list_demands') {
@@ -66,12 +66,12 @@ class AdController extends Controller
 
     /**
     * @Route("/annonces/{categoryTitle}+{areaName}", name="ad_search")
-    * @Route("/annonces/", name="ad_search_synonym")
+    * @Route("/annonces/")
     * @Template()
     * @param string $categoryTitle criteria on category
     * @param string $areaName criteria on area
     */
-    public function searchAction($categoryTitle = '', $areaName = '')
+    public function searchAction($categoryTitle = false, $areaName = false)
     {   
         $query = $this->get('request')->query;
 
@@ -114,6 +114,7 @@ class AdController extends Controller
             if ($form->isValid()) {
 
                 $criteria = $form->getData();
+
                 return $this->redirect(
                     $this->generateUrl('ad_search', array(
                         'categoryTitle' => empty($criteria['category']) ? '' : $criteria['category']->getSlug(),
@@ -136,7 +137,8 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show")
+    * @Route("/annonces/offres/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show_offers")
+    * @Route("/annonces/demandes/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show_demands")
     * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}, "exclude"={"slugCategory", "slugAd"}})
     * @Template()
     * @param Ad $ad ad

@@ -917,10 +917,10 @@ label.s_radio
   behavior: url(js/PIE.htc);
 }
 .s_price span {
-  display: block;
   font-family: "Ubuntu Regular", sans-serif;
 }
 .s_price .s_currency {
+  display: block;
   line-height: 16px;
   font-size: 15px;
 }

@@ -43,7 +43,7 @@
 <div id="category" class="grid_9">
 	<div class="s_listing s_list_view clearfix">
 		{% for ad in ads %}
-			<article itemscope itemtype="http://schema.org/Product" class="s_item clearfix" style="opacity: 1;">
+			<article itemscope itemtype="http://schema.org/Offer" class="s_item clearfix" style="opacity: 1;">
 				{% include 'LeDjassaAdsBundle:Ad:adDetails.html.twig' with {'ad': ad} %}
 			</article>
 			<div class="clear" style="opacity: 1;"></div>
@@ -52,7 +52,6 @@
 	{{ ads.render()|raw }}
 </div>
 <div class="clear" style="opacity: 1;"></div>
-<div id="right_col" class="grid_3">
-</div>
+<div id="right_col" class="grid_3"></div>
 </section>
 {% endblock %}

@@ -12,17 +12,22 @@
 			{{adProperties[ad.Id].title}}
 		</h3>
 		{% if adProperties[ad.Id].price %}
-		<p itemprop="price" class="s_price s_promo_price">
-			{{adProperties[ad.Id].price}}
+		<p class="s_price s_promo_price">
+			<span itemprop="price">{{adProperties[ad.Id].price}}</span>
 			<span class="s_currency s_before">F CFA</span>
 		</p>
 		{% endif %}
 		<p class="s_description">
 			<span class="s_category">{{adProperties[ad.Id].titleCategory}}</span>
-			<span class="s_location">{{adProperties[ad.Id].nameArea}} / {{adProperties[ad.Id].nameCity}} 
-				{% if adProperties[ad.Id].nameQuarter %}
-				- {{adProperties[ad.Id].nameQuarter}}
-				{% endif %}
+			<span itemprop="availableAtOrFrom" itemscope itemtype="http://schema.org/Place" class="s_location">
+				<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+					<span itemprop="addressRegion">{{adProperties[ad.Id].nameArea}}</span> / 
+					<span itemprop="addressLocality">{{adProperties[ad.Id].nameCity}}</span> 
+					{% if adProperties[ad.Id].nameQuarter %}
+					- {{adProperties[ad.Id].nameQuarter}}
+					{% endif %}
+					<meta itemprop="addressCountry" content="CI">
+				</span>
 			</span>
 		</p>
 		<span class="s_date">
@@ -34,6 +39,7 @@
 				{{ adProperties[ad.Id].publishedDate|date("d") }} {{ adProperties[ad.Id].publishMonth }}
 			{% endif %}
 			à {{ adProperties[ad.Id].publishedDate|date("H:i") }}
+			<time datetime="{{ adProperties[ad.Id].publishedDate|date("Y-m-d H:i") }}" pubdate>
 		</span>
 	</div>
 	</a>		

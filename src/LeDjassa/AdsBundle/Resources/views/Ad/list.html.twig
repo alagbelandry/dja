@@ -1,5 +1,4 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
-{% set routeName = app.request.attributes.get('_route') %}
 {% block head_meta_site_info %}
   {% if routeName == 'ad_list' %}
 		<meta content="www.auportdadjame.com" name="url">
@@ -10,17 +9,17 @@
 
 {% block head_meta_description %}
 	{% if routeName == 'ad_list_demands' %}
-		Consulter 120 annonces de demandes sur toutes la Cote d'ivoire
+		Consulter 120 demandes de services et prodtuits sur toutes la Cote d'ivoire
 	{% elseif routeName == 'ad_list_offers' %}
-		Consulter 120 annonces d'offres  sur toutes la Cote d'ivoire
+		Consulter 120 offres de services et produits sur toutes la Cote d'ivoire
 	{% else %}
-			annonces gratuites cote d'ivoire (immobilier, voiture, moto, telephone, ordinateur, portable, emploi, tablette), acheter, louer et vendre
+			Annonces gratuites cote d'ivoire (immobilier, voiture, moto, telephone, ordinateur, portable, emploi, tablette), acheter, louer et vendre
 	{% endif %}
 {% endblock %}
 
 {% block head_meta_keywords %}
   {% if routeName == 'ad_list' %}
-		annonces gratuites cote d'ivoire (immobilier, voiture, moto, telephone, ordinateur, portable, emploi, tablette), acheter, louer et vendre
+		Annonces gratuites cote d'ivoire (immobilier, voiture, moto, telephone, ordinateur, portable, emploi, tablette), acheter, louer et vendre
 	{% endif %}
 {% endblock %}
 

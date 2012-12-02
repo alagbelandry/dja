@@ -46,7 +46,7 @@
     <script src="{{ asset_url }}" type="text/javascript"></script>
     {% endjavascripts %}
 {% endblock %}
-
+{% set routeName = app.request.attributes.get('_route') %}
   {% block body_outer %}
     <body class="s_layout_fixed" {{bp_body_attributes|default('')|raw}}>
       <div id="wrapper">

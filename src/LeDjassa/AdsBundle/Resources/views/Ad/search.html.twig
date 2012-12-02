@@ -1,4 +1,17 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+
+{% block head_meta_description %}
+  {{categorieKeySearch}} {{areaKeySearch}} {{titleKeySearch}}
+{% endblock %}
+
+{% block head_meta_keywords %}
+  {{categorieKeySearch}} {{areaKeySearch}} {{titleKeySearch}}
+{% endblock %}
+
+{% block head_title %}
+  {{categorieKeySearch}} {{areaKeySearch}} {{titleKeySearch}}
+{% endblock %}
+
 {% block body_container_intro %}
 	{% render "LeDjassaAdsBundle:Ad:searchForm" %}
 {% endblock %}

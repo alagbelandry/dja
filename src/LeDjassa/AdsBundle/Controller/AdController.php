@@ -65,8 +65,7 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/annonces/{categoryTitle}+{areaName}", name="ad_search")
-    * @Route("/annonces/")
+    * @Route("/annonces/chercher/{categoryTitle}+{areaName}", name="ad_search")
     * @Template()
     * @param string $categoryTitle criteria on category
     * @param string $areaName criteria on area
@@ -91,10 +90,13 @@ class AdController extends Controller
         $limit = $this->container->getParameter('limit_ads');
 
         $pagination = $paginator->getPagination($adsCollectionCriteria, $page, $limit);
-
+  
         return $this->render('LeDjassaAdsBundle:Ad:search.html.twig', array(
-            'ads'           => $pagination,
-            'adProperties'  => $adProperties,
+            'ads'                   => $pagination,
+            'adProperties'          => $adProperties,
+            'categorieKeySearch'    => !empty($category) ? $category->getTitle() : '',
+            'areaKeySearch'         => !empty($area) ? $area->getName() : '',
+            'titleKeySearch'        => $title
         ));
     }
 
@@ -117,8 +119,8 @@ class AdController extends Controller
 
                 return $this->redirect(
                     $this->generateUrl('ad_search', array(
-                        'categoryTitle' => empty($criteria['category']) ? '' : $criteria['category']->getSlug(),
-                        'areaName'      => empty($criteria['area']) ? '' : $criteria['area']->getSlug(),
+                        'categoryTitle' => empty($criteria['category']) ? 'toutes-categories' : $criteria['category']->getSlug(),
+                        'areaName'      => empty($criteria['area']) ? 'toutes-regions' : $criteria['area']->getSlug(),
                         'title'         => $criteria['title'],
                     )), 
                     301

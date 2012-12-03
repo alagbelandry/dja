@@ -57,10 +57,11 @@ class AdController extends Controller
         $limit = $this->container->getParameter('limit_ads');
 
         $pagination = $paginator->getPagination($adsCollectionCriteria, $page, $limit);
-    
+
         return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
             'ads'           => $pagination,
-            'adProperties'  => $adProperties
+            'adProperties'  => $adProperties,
+            'nbAds'         => $adsCollectionCriteria->count()
         ));
     }
 

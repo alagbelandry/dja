@@ -14,7 +14,7 @@ body.s_layout_fixed {
 .s_secondary_color, a:hover, #categories > ul > li > a, #footer_categories h2, .pagination a, #view_mode .s_selected a {
 	color: #ff7700;
 }
-#content a:hover, #shop_info a:hover, #footer a:hover, #intro h1 a:hover, #intro h2 a:hover, #content a:hover, #shop_info a:hover, #footer a:hover, #breadcrumbs a:hover {
+#content a:hover, #shop_info a:hover, #footer a:hover, #intro h1 a:hover, #intro h2 a:hover, #content a:hover, #shop_info a:hover, #footer a:hover, #breadcrumbs a:hover, #product_user_info a:hover{
 	color: #ff9900 !important;
 }
 .s_secondary_color_bgr, #show_search, #view_mode .s_selected .s_icon, #view_mode a:hover .s_icon, #menu_home a:hover, .pagination a:hover, .s_item .s_button_add_to_cart:hover .s_icon, .s_cart_item .s_button_remove:hover {

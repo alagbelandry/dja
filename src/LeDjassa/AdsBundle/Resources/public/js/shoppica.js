@@ -16,13 +16,21 @@ jQuery( function($) {
     }
     ,
     function() {
-      $(this).find("a:first").stop().animate({
+      $(this).find("a:first").not('a.current').stop().animate({
           color: site_options.secondary_color,
           backgroundColor: '#ffffff'
         },300
       );
     }
   );
+
+  // Effect on current navigation
+      $(this).find("#categories > ul > li a.current").stop().animate({
+          color: '#ffffff',
+          backgroundColor: site_options.secondary_color
+        },300
+      );
+    
 
   if (!$.browser.msie || parseInt($.browser.version, 10) > 8) {
       var onMouseOutOpacity = 1;

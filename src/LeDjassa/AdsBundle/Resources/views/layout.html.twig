@@ -64,11 +64,21 @@
                     </div>
                     <nav id="categories" class="s_nav">
                       <ul>
-                        <li> <a href="{{ path('ad_list') }}">Acceuil</a></li>
-                        <li> <a href="{{ path('ad_add') }}">Deposer une annonce</a></li>
-                        <li> <a href="{{ path('ad_list_offers') }}">Toutes les offres</a></li>
-                        <li> <a href="{{ path('ad_list_demands') }}">Toutes les demandes</a></li>
-                        <li> <a href="{{ path('ad_list') }}">Aide</a></li>
+                        <li> <a {% if routeName == 'ad_list' or routeName == 'ad_search '%} class="current" {% endif %}
+                          href="{{ path('ad_list') }}">Acceuil</a>
+                        </li>
+                        <li> <a {% if routeName == 'ad_add' %} class="current" {% endif %}
+                          href="{{ path('ad_add') }}">Deposer une annonce</a>
+                        </li>
+                        <li> <a {% if routeName == 'ad_list_offers' or routeName == 'ad_show_offers' %} class="current" {% endif %}
+                          href="{{ path('ad_list_offers') }}">Toutes les offres</a>
+                        </li>
+                        <li> <a {% if routeName == 'ad_list_demands' or routeName == 'ad_show_demands' %} class="current" {% endif %}
+                          href="{{ path('ad_list_demands') }}">Toutes les demandes</a>
+                        </li>
+                        <li> <a {% if routeName == 'help' %} class="current" {% endif %}
+                          href="{{ path('ad_list') }}">Aide</a>
+                        </li>
                       </ul>
                     </nav>
                   </div>

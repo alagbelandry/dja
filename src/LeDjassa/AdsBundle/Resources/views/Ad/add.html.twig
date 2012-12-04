@@ -69,7 +69,7 @@
 	{{ form_row(form.price) }}
 	{{ form_row(form.picture_ads) }}
 
-	<a href="#" id="add_picture">Ajouter une photo</a>
+	<button type="button" id="add_picture" class="s_button_2">Ajouter une photo</button>
 
  {{ form_rest(form) }}
 
@@ -157,6 +157,15 @@
 				"ad[price]": {
 					digits: true,
 				},
+				"ad[picture_ads][0][file]": {
+					required: true,
+				},
+				"ad[picture_ads][1][file]": {
+					required: true,
+				},
+				"ad[picture_ads][2][file]": {
+					required: true,
+				}
 			},
       messages: {
         "ad[city][area]": {
@@ -208,6 +217,15 @@
         "ad[price]": {
           digits: "Veuillez saisir uniquement des chiffres.",
         },
+        "ad[picture_ads][0][file]": {
+          required: "Veuillez télécharger la photo ou Supprimer le champ.",
+        },
+        "ad[picture_ads][1][file]": {
+          required: "Veuillez télécharger la photo ou Supprimer le champ.",
+        },
+        "ad[picture_ads][2][file]": {
+          required: "Veuillez télécharger la photo ou Supprimer le champ.",
+        },
       }
 		});
 										
@@ -248,9 +266,13 @@
 
     		function addPicture() {
         		var index = $container.children().length;
+        		if (index == 3) {
+        			alert('Vous ne pouvez pas ajouter plus de 3 photos. Merci.');
+        			return;
+        		}
         		var $newContainerPicture = $container.attr('data-prototype').replace(/__name__/g, index);
 
-        		var $removePicture = $('<a href="#">Supprimer cette photo</a>');
+        		var $removePicture = $('<button type="button" class="s_button_3">X supprimer cette photo</button>');
 
        			$container.append(
            			 $($newContainerPicture).append($removePicture)

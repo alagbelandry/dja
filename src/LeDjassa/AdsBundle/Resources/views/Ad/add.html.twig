@@ -157,15 +157,6 @@
 				"ad[price]": {
 					digits: true,
 				},
-				"ad[picture_ads][0][file]": {
-					required: true,
-				},
-				"ad[picture_ads][1][file]": {
-					required: true,
-				},
-				"ad[picture_ads][2][file]": {
-					required: true,
-				}
 			},
       messages: {
         "ad[city][area]": {
@@ -217,21 +208,15 @@
         "ad[price]": {
           digits: "Veuillez saisir uniquement des chiffres.",
         },
-        "ad[picture_ads][0][file]": {
-          required: "Veuillez télécharger la photo ou Supprimer le champ.",
-        },
-        "ad[picture_ads][1][file]": {
-          required: "Veuillez télécharger la photo ou Supprimer le champ.",
-        },
-        "ad[picture_ads][2][file]": {
-          required: "Veuillez télécharger la photo ou Supprimer le champ.",
-        },
       }
 		});
-										
+			
+
 			// manage picture upload
     		var $container = $('#ad_picture_ads');
-	
+			
+			// id element picture
+			var idPictureAd = -1;
     		$('#add_picture').click(function() {
         		addPicture();
    			 });
@@ -270,7 +255,10 @@
         			alert('Vous ne pouvez pas ajouter plus de 3 photos. Merci.');
         			return;
         		}
-        		var $newContainerPicture = $container.attr('data-prototype').replace(/__name__/g, index);
+
+        		idPictureAd++;
+
+        		var $newContainerPicture = $($container.attr('data-prototype').replace(/__name__/g, idPictureAd)).remove('label');
 
         		var $removePicture = $('<button type="button" class="s_button_3">X supprimer cette photo</button>');
 
@@ -280,8 +268,10 @@
 
        			$removePicture.click(function(e) {
         			e.preventDefault();
-			        $('#ad_picture_ads_' + index).parent('div').remove();
+			        $(this).parent('div').remove();
 			    });
+       	
+       			$('#ad_picture_ads_'+ idPictureAd + '_file').rules('add', {required: true, messages: { required: "Veuillez télécharger la photo ou Supprimer le champ."}});
   			}
 
 

@@ -17,7 +17,6 @@ class PictureAdType extends AbstractType {
     {   
         $builder->add('file', 'file', array(
             'required' => true,
-            'label' => ''
         ));
     }
 

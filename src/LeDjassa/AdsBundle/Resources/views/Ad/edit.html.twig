@@ -14,27 +14,22 @@
 
 	{{ form_row(form.description) }}
 	{{ form_row(form.price) }}
-
-	<ul>
-		{% for picture in ad.pictures %}
-      		<li>
-      			<img src="{{ asset('uploads/pictures/' ~ picture.Path)}}"/>
-      			<a href="#" class="picture_delete" id="{{ picture.Id }}">Supprimer</a>
-      		</li>
-      	{% endfor %}
-	</ul>
-	<div style="display:none">
-		{{ form_row(form.picture_ads) }}
+		
+	{% for pictureAd in form.picture_ads %}
+		{{ dump(pictureAd.vars.value.path) }}
+		{{ form_row(pictureAd, { 'value': pictureAd.vars.value.path }) }}
+		<img src="{{ asset('uploads/pictures/' ~ pictureAd.vars.value.path)}}"/>
+	{% endfor %}
 	</div>
 
 	<div id="picture_ads">
 	</div>
 
-	<a href="#" id="add_picture">Ajouter une photo</a>
+	<button type="button" id="add_picture" class="s_button_2">Ajouter une photo</button>
 
 	{{ form_row(form.user_password) }}
 
-	{{ form_rest(form) }}
+	{{ form_widget(form._token) }}
 
  <button class="s_button_1 s_main_color_bgr" type="submit"/>
    <span class="s_text">Valider</span>

@@ -193,7 +193,7 @@ class AdController extends Controller
 
             return array(
                 'form'  => $form->createView(), 
-                'ad' => $ad->getProperties()
+                'ad'    => $ad->getProperties()
             );
 
         } else {

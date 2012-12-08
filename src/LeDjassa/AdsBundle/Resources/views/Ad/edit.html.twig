@@ -17,7 +17,8 @@
 		
 	{% for pictureAd in form.picture_ads %}
 		{{ dump(pictureAd.vars.value.path) }}
-		{{ form_row(pictureAd, { 'value': pictureAd.vars.value.path }) }}
+		
+		{{ form_widget(pictureAd, { 'attr': {'value': pictureAd.vars.value.path} }) }}
 		<img src="{{ asset('uploads/pictures/' ~ pictureAd.vars.value.path)}}"/>
 	{% endfor %}
 	</div>

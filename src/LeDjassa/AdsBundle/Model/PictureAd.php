@@ -55,7 +55,7 @@ class PictureAd extends BasePictureAd
      */
     public function upload()
     {   
-        if (null === $this->file) {
+        if (empty($this->file)) {
             return false;
         }
 
@@ -76,7 +76,7 @@ class PictureAd extends BasePictureAd
      */
     public function preUpload()
     {   
-        if (null === $this->file) {
+        if (empty($this->file)) {
             return false;
         }
 

@@ -34,7 +34,7 @@ class AdEditType extends AbstractType
             'allow_delete' => true,
             'required'     => false,
             'by_reference' => false,
-            'label'        => 'Photos d\'illustration',
+            'label'        => 'Photos d\'illustration (3 photos maximum).',
         ));
 
         $builder->add('user_password', 'password', array(

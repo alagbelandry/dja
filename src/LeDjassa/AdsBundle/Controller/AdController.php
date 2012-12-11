@@ -13,6 +13,7 @@ use LeDjassa\AdsBundle\Model\AdType as TypeAd;
 use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\PictureAdType;
 use LeDjassa\AdsBundle\Form\Type\AdDeleteType;
+use LeDjassa\AdsBundle\Form\Type\AdAcessEditType;
 use LeDjassa\AdsBundle\Form\Type\AdSearchType;
 use LeDjassa\AdsBundle\Form\Type\AdEditType;
 use LeDjassa\AdsBundle\Model\AdQuery;
@@ -22,6 +23,7 @@ use LeDjassa\AdsBundle\Model\AreaQuery;
 use LeDjassa\AdsBundle\Form\Handler\AdAddHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;
+use LeDjassa\AdsBundle\Form\Handler\AdAcessEditHandler;
 
 /**
  * @Route("/")
@@ -172,22 +174,14 @@ class AdController extends Controller
         $form = $this->createForm(new AdEditType(), $ad);
         
         $request = $this->get('request');
-        $formHandler = new AdEditHandler($form, $request, $this->get('password_encoder'));
+        $formHandler = new AdEditHandler($form, $request);
         $process = $formHandler->process();
 
-        if ($process == AdEditHandler::AD_SAVE_SUCCESS_STATUT) {
+        if ($process) {
 
             return $this->render('LeDjassaAdsBundle:Ad:editSuccess.html.twig', array(
                 'ad' => $ad->getProperties()
             ));
-
-        } elseif ($process == AdEditHandler::INVALID_PASSWORD_STATUT) {
-
-            return array(
-                'form'              => $form->createView(), 
-                'ad'                => $ad->getProperties(), 
-                'isInvalidPassword' => true
-            );
 
         } elseif ('GET' === $request->getMethod()) {
 
@@ -198,6 +192,54 @@ class AdController extends Controller
 
         } else {
             throw new Exception("An error occurs during edit ad action");
+        }
+    }
+
+   /**
+    * @Route("annonces/acces-modifications/{idAd}", name="ad_access_edit")
+    * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
+    * @Template()
+    * @param Ad $ad Ad
+    */
+    public function accessEditAction(Ad $ad)
+    {   
+        if (!$ad->isLive()) {
+            return $this->render('LeDjassaAdsBundle:Ad:notFound.html.twig');   
+        }
+
+        $request = $this->get('request');
+
+        $form = $this->createForm(new AdAcessEditType());
+        $formHandler = new AdAcessEditHandler($form, $request, $ad, $this->get('password_encoder'));
+        $process = $formHandler->process();
+
+        if ($process == AdAcessEditHandler::AD_DELETE_SUCCESS_STATUT) {
+             
+            return $this->redirect(
+                    $this->generateUrl('ad_edit', array(
+                        'idAd' => $ad->getId(),
+                    )), 
+                    301
+                );
+
+        } elseif ($process == AdAcessEditHandler::INVALID_PASSWORD_STATUT) {
+
+            return array(
+                'form' => $form->createView(), 
+                'ad' => $ad->getProperties(), 
+                'isInvalidPassword' => true
+            );
+
+        } elseif ('GET' === $request->getMethod()) {
+
+            return array(
+                'form' => $form->createView(),
+                'ad' => $ad->getProperties()
+            );
+
+        } else {
+
+            throw new Exception("An error occurs during delete ad action");
         }
     }
 

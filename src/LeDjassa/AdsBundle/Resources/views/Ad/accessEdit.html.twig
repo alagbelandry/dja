@@ -1,0 +1,14 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block body_container_main %}
+<h3>Accès à la page de modification de l'annonce </h3>
+{{ ad.title }} 
+<form action="{{ path('ad_access_edit', {'idAd': ad.id}) }}" method="post" }}>
+
+	{{ form_errors(form) }}
+	{{ form_row(form.user_password) }}
+
+	{{ form_rest(form) }}
+	
+	<input type="submit" value="Valider"/>
+</form>
+{% endblock %}

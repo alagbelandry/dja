@@ -36,13 +36,6 @@ class AdEditType extends AbstractType
             'by_reference' => false,
             'label'        => 'Photos d\'illustration (3 photos maximum).',
         ));
-
-        $builder->add('user_password', 'password', array(
-            'label'         => 'Mot de passe :',
-            'property_path' => false,
-            'attr'          => array(
-                'autocomplete' => 'off'
-        )));
     }
    
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -1998,7 +1998,7 @@ body.s_layout_fixed #wrapper {
 
 #product_user_info {
   width: 290px;
-  border: 1px solid #999999;
+  border: 1px solid #EEEEEE;
   font-weight: bold;
   margin-top: 60px;
   padding: 12px;
@@ -2451,11 +2451,27 @@ body.s_layout_fixed #wrapper {
  display: inline;
  width: 150px;
  height: 150px;
- border: 1px solid #79D64B;
+ border: 1px solid #EEEEEE;
  margin-left: 30px;
  padding: 0 5px 0 0;
  margin-bottom: 27px;
 }
+
+.s_add_ad_block #ad_picture_ads .s_edit_picture_ad img {
+  display: block;
+  margin-bottom: 60px;
+  margin-left: -20px;
+}
+
+.s_add_ad_block #ad_picture_ads .s_edit_picture_ad button {
+  position: absolute;
+}
+
+.s_add_ad_block #ad_picture_ads .s_edit_picture_ad div  {
+  float: left;
+  margin-top: 20px;
+}
+
 
 .s_add_ad_block #ad_picture_ads label {
   display: none;

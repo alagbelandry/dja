@@ -19,7 +19,6 @@
 	  <div id="ad_picture_ads" data-prototype="{{ form_widget(form.picture_ads.vars.prototype)|e }}">	
 			{% for pictureAd in form.picture_ads %}
 				<div class="s_edit_picture_ad">
-					{{ form_row(pictureAd) }}
 					<img src="{{ asset('uploads/pictures/' ~ pictureAd.vars.value.path)}}"/>
 					<button type="button" class="s_button_3 picture_delete" id="{{pictureAd.vars.value.id}}">X supprimer cette photo</button>
 				</div>
@@ -28,13 +27,12 @@
 
 		<button type="button" id="add_picture" class="s_button_2">Ajouter une photo</button>
 
-		{{ form_row(form.user_password) }}
-
 		{{ form_widget(form._token) }}
+
+	 <button class="s_button_1 s_main_color_bgr" type="submit"/>
+     <span class="s_text">Valider</span>
+   </button>
 	</div>
- <button class="s_button_1 s_main_color_bgr" type="submit"/>
-   <span class="s_text">Valider</span>
- </button>
 </div>
 </form>
 {% endblock %}
@@ -97,9 +95,9 @@
 			$('input[type=file]').live('change' ,function(){
 
 				var fileFieldId = $(this).attr('id'),
-					fileField 	= document.getElementById(fileFieldId),
-					picture     = fileField.files[0];
-
+					  fileField 	= document.getElementById(fileFieldId),
+					   picture     = fileField.files[0];
+	
 			    if (picture.type.match('image.*') && (typeof window.FileReader !== 'undefined')) {
 			       
 			        // new instance FileReader for manage onload
@@ -129,7 +127,6 @@
         			return;
         		}
         		var $newContainerPicture = $container.attr('data-prototype').replace(/__name__/g, idPictureAd);
-        		idPictureAd++;
 
         		var $removePicture = $('<button type="button" class="s_button_3">X supprimer cette photo</button>');
 
@@ -141,6 +138,9 @@
         			e.preventDefault();
 			        $(this).parent().remove();
 			    });
+
+       			$('#ad_edit_picture_ads_'+ idPictureAd + '_file').rules('add', {required: true, messages: { required: "Veuillez télécharger la photo ou Supprimer le champ."}});
+       			idPictureAd++;
   			}
 
   			// manage delete picture

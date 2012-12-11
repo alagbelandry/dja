@@ -9,12 +9,12 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 /**
-* The AdDeleteHandler.
+* The AdAcessEditHandler.
 * Use for manage your form submitions for update or delete ad
 *
 * @author Landry Alagbe
 */
-class AdDeleteHandler
+class AdAcessEditHandler
 {
     const ERROR_PROCESSING_STATUT = 0;
     const AD_DELETE_SUCCESS_STATUT = 1;
@@ -79,8 +79,6 @@ class AdDeleteHandler
         }
 
         if ($this->encoder->isPasswordValid($this->ad->getUserPassword(), $data['user_password'], $this->ad->getUserSalt())) {
-            $this->ad->setStatut(Ad::STATUT_DELETED)
-               ->save();
             return true;
         }
         return false;

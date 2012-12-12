@@ -79,6 +79,7 @@ class AdAcessEditHandler
         }
 
         if ($this->encoder->isPasswordValid($this->ad->getUserPassword(), $data['user_password'], $this->ad->getUserSalt())) {
+            $this->request->cookies->set('ad_secure', $this->ad->getId());
             return true;
         }
         return false;

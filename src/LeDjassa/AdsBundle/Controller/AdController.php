@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Cookie;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\AdType as TypeAd;
 use LeDjassa\AdsBundle\Form\Type\AdType;
@@ -167,13 +169,25 @@ class AdController extends Controller
     */
     public function editAction(Ad $ad)
     {   
+
         if (!$ad->isLive()) {
             return $this->render('LeDjassaAdsBundle:Ad:notFound.html.twig');   
         }
 
+        $request = $this->get('request');
+        $cookieAdSecureValue = $request->cookies->get('ad_secure');
+        $isValidCookieAdSecureValue = !empty($cookieAdSecureValue) && $cookieAdSecureValue == $ad->getId();;
+        if (!$isValidCookieAdSecureValue) {
+            return $this->redirect(
+                    $this->generateUrl('ad_access_edit', array(
+                        'idAd' => $ad->getId()
+                    )), 
+                    301
+                );  
+        }
+
         $form = $this->createForm(new AdEditType(), $ad);
         
-        $request = $this->get('request');
         $formHandler = new AdEditHandler($form, $request);
         $process = $formHandler->process();
 
@@ -215,12 +229,15 @@ class AdController extends Controller
 
         if ($process == AdAcessEditHandler::AD_DELETE_SUCCESS_STATUT) {
              
-            return $this->redirect(
-                    $this->generateUrl('ad_edit', array(
-                        'idAd' => $ad->getId(),
-                    )), 
-                    301
-                );
+            $response = new RedirectResponse($this->generateUrl('ad_edit', array(
+                'idAd' => $ad->getId(),
+                )), 
+                301
+            );
+
+            $response->headers->setCookie(new Cookie('ad_secure', $ad->getId()));
+
+            return $response;
 
         } elseif ($process == AdAcessEditHandler::INVALID_PASSWORD_STATUT) {
 

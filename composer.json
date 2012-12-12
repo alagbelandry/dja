@@ -6,7 +6,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.1.*",
+        "symfony/symfony": "2.1.0",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.1.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
@@ -22,7 +22,8 @@
         "friendsofsymfony/user-bundle": "*",
         "willdurand/propel-typehintable-behavior": "*",
         "knplabs/knp-paginator-bundle": "dev-master",
-        "oryzone/boilerplate-bundle": "dev-master"
+        "oryzone/boilerplate-bundle": "dev-master",
+        "nelmio/security-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [

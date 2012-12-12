@@ -33,10 +33,10 @@ use LeDjassa\AdsBundle\Form\Handler\AdAcessEditHandler;
 class AdController extends Controller
 {
     /**
-    * @Route("/", name="ad_list")
-    * @Route("/annonces")
-    * @Route("/annonces/offres", name="ad_list_offers")
-    * @Route("/annonces/demandes", name="ad_list_demands")
+    * @Route("", name="ad_list")
+    * @Route("annonces")
+    * @Route("annonces/offres", name="ad_list_offers")
+    * @Route("annonces/demandes", name="ad_list_demands")
     * @Template()
     */
     public function indexAction()
@@ -70,7 +70,7 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/annonces/chercher/{categoryTitle}+{areaName}", name="ad_search")
+    * @Route("annonces/chercher/{categoryTitle}+{areaName}", name="ad_search")
     * @Template()
     * @param string $categoryTitle criteria on category
     * @param string $areaName criteria on area
@@ -106,7 +106,7 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/formulaireRechercher", name="ad_search_form")
+    * @Route("formulaireRechercher", name="ad_search_form")
     * @Template()
     */
     public function searchFormAction()
@@ -144,8 +144,8 @@ class AdController extends Controller
     }
 
     /**
-    * @Route("/annonces/offres/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show_offers")
-    * @Route("/annonces/demandes/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show_demands")
+    * @Route("annonces/offres/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show_offers")
+    * @Route("annonces/demandes/{slugCategory}+{slugAd}-{idAd}", requirements={"slugAd" = "[a-zA-Z0-9-_/]+", "slugCategory" = "[a-zA-Z0-9-_/]+"}, name="ad_show_demands")
     * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}, "exclude"={"slugCategory", "slugAd"}})
     * @Template()
     * @param Ad $ad ad
@@ -162,14 +162,13 @@ class AdController extends Controller
     }
     
    /**
-    * @Route("/annonces/modifier/{idAd}", name="ad_edit")
+    * @Route("annonces/modifier/{idAd}", name="ad_edit")
     * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
     * @Template()
     * @param Ad $ad
     */
     public function editAction(Ad $ad)
     {   
-
         if (!$ad->isLive()) {
             return $this->render('LeDjassaAdsBundle:Ad:notFound.html.twig');   
         }
@@ -304,7 +303,7 @@ class AdController extends Controller
     }
 
  	/**
-	* @Route("/annonces/ajouter", name="ad_add")
+	* @Route("annonces/ajouter", name="ad_add")
 	* @Template()
 	*/
     public function addAction()
@@ -337,7 +336,7 @@ class AdController extends Controller
     /**
     * Delete picture of ad
     * @return Response true if success otherwise false
-    * @Route("/supprimerPhotos", name="picture_delete")
+    * @Route("supprimerPhotos", name="picture_delete")
     *
     */
     public function pictureDeleteAction()

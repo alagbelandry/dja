@@ -16,6 +16,7 @@ use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
 use LeDjassa\AdsBundle\Model\AdTypeQuery;
+use LeDjassa\AdsBundle\Model\PictureAdQuery;
 
 class LocationAjaxController extends Controller
 {
@@ -65,6 +66,29 @@ class LocationAjaxController extends Controller
         }
     
         $response = new Response(json_encode($quarterList));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+    * Delete picture of ad
+    * @return Response true if success otherwise false
+    * @Route("supprimerPhotos", name="picture_delete")
+    *
+    */
+    public function ajaxPictureDeleteAction()
+    {
+        $request = $this->get('request');
+        $pictureId = $request->get('pictureId');
+
+        if ($request->isXmlHttpRequest()) {
+
+            PictureAdQuery::create()
+                ->findPk($pictureId)
+                ->delete();
+        }
+
+        $response = new Response(json_encode($pictureId));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }

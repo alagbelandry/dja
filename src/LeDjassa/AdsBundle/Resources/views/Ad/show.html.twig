@@ -62,10 +62,12 @@
 
 		<div id="product_info" class="grid_4">
 
-			<span class="s_info_price">
-				<span class="s_info_title">Prix:</span>
-				<span itemprop="price" class="s_info_price_value">{{ad.price}} F CFA</span>
-			</span>
+			{% if ad.price %}
+				<span class="s_info_price">
+					<span class="s_info_title">Prix:</span>
+					<span itemprop="price" class="s_info_price_value">{{ad.price}} F CFA</span>
+				</span>
+			{% endif %}
 
 			<span itemprop="availableAtOrFrom" itemscope itemtype="http://schema.org/Place" class="s_info_location">
 				<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">

@@ -86,6 +86,11 @@ class Mailer
         $this->sendEmailMessage($rendered, $informationUser->getSubject(), $informationUser->getEmail(), $this->parameters["email"]["contact"]);
     }
 
+    public function sendNewPasswordUserEmailMessage($password, $ad)
+    {
+
+    }
+
     protected function sendEmailMessage($body, $subject, $fromEmail, $toEmail)
     {
         $message = \Swift_Message::newInstance()

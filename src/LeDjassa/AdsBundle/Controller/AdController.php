@@ -18,14 +18,15 @@ use LeDjassa\AdsBundle\Form\Type\AdDeleteType;
 use LeDjassa\AdsBundle\Form\Type\AdAcessEditType;
 use LeDjassa\AdsBundle\Form\Type\AdSearchType;
 use LeDjassa\AdsBundle\Form\Type\AdEditType;
+use LeDjassa\AdsBundle\Form\Type\PasswordForgotType;
 use LeDjassa\AdsBundle\Model\AdQuery;
-use LeDjassa\AdsBundle\Model\PictureAdQuery;
 use LeDjassa\AdsBundle\Model\CategoryQuery;
 use LeDjassa\AdsBundle\Model\AreaQuery;
 use LeDjassa\AdsBundle\Form\Handler\AdAddHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdAcessEditHandler;
+use LeDjassa\AdsBundle\Form\Handler\PasswordForgotHandler;
 
 /**
  * @Route("/")
@@ -333,26 +334,45 @@ class AdController extends Controller
         }
     }
 
-    /**
-    * Delete picture of ad
-    * @return Response true if success otherwise false
-    * @Route("supprimerPhotos", name="picture_delete")
-    *
+   /**
+    * @Route("recupererMotDePasse/{idAd}", name="password_forgot")
+    * @ParamConverter("ad", class="LeDjassa\AdsBundle\Model\Ad", options={"mapping"={"idAd":"id"}})
+    * @Template()
+    * @param Ad $ad
     */
-    public function pictureDeleteAction()
-    {
-        $request = $this->get('request');
-        $pictureId = $request->get('pictureId');
-
-        if ($request->isXmlHttpRequest()) {
-
-            PictureAdQuery::create()
-                ->findPk($pictureId)
-                ->delete();
+    public function passwordForgotAction(Ad $ad)
+    {   
+        if (!$ad->isLive()) {
+            return $this->render('LeDjassaAdsBundle:Ad:notFound.html.twig');   
         }
 
-        $response = new Response(json_encode($pictureId));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        $request = $this->get('request');
+        $form = $this->createForm(new PasswordForgotType());
+        $formHandler = new PasswordForgotHandler($form, $request, $ad, $this->get('ledjassa.mailer'), $this->get('password_encoder'));
+        $process = $formHandler->process();
+        //var_dump($process);die;
+        if ($process == PasswordForgotHandler::PASSWORD_SEND_SUCCESS_STATUT) {
+             
+             return $this->render('LeDjassaAdsBundle:Ad:forgotPasswordSuccess.html.twig');
+
+        } elseif ($process == PasswordForgotHandler::INVALID_EMAIL_STATUT) {
+
+            return array(
+                'form'           => $form->createView(), 
+                'ad'             => $ad->getProperties(), 
+                'isInvalidEmail' => true
+            );
+
+        } elseif ('GET' === $request->getMethod()) {
+
+            return array(
+                'form' => $form->createView(),
+                'ad'   => $ad->getProperties()
+            );
+
+        } else {
+
+            throw new Exception("An error occurs during password forgot action");
+        }
     }
 }

@@ -350,7 +350,7 @@ class AdController extends Controller
         $form = $this->createForm(new PasswordForgotType());
         $formHandler = new PasswordForgotHandler($form, $request, $ad, $this->get('ledjassa.mailer'), $this->get('password_encoder'));
         $process = $formHandler->process();
-        //var_dump($process);die;
+    
         if ($process == PasswordForgotHandler::PASSWORD_SEND_SUCCESS_STATUT) {
              
              return $this->render('LeDjassaAdsBundle:Ad:forgotPasswordSuccess.html.twig');

@@ -60,8 +60,8 @@ class PasswordForgotHandler
 
             if ($this->form->isValid()) {
 
-             $emailEnter = $this->form->getData();
-             return $this->onSuccess($emailEnter);
+                $dataEnter = $this->form->getData();
+                return $this->onSuccess($dataEnter['user_email']);
         }
 
         return self::ERROR_PROCESSING_STATUT;
@@ -83,13 +83,13 @@ class PasswordForgotHandler
         }
 
         // generate new password
-        $plainTextPassword = '';
+        $plainTextPassword = 'passeur';
 
         $this->ad
             ->setUserPassword($this->encoder->encodePassword($plainTextPassword, $this->ad->getUserSalt()))
             ->save();
 
         $this->mailer->sendNewPasswordUserEmailMessage($plainTextPassword, $this->ad);
-        return PASSWORD_SEND_SUCCESS_STATUT;
+        return self::PASSWORD_SEND_SUCCESS_STATUT;
     }
 }

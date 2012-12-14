@@ -86,9 +86,19 @@ class Mailer
         $this->sendEmailMessage($rendered, $informationUser->getSubject(), $informationUser->getEmail(), $this->parameters["email"]["contact"]);
     }
 
-    public function sendNewPasswordUserEmailMessage($password, $ad)
-    {
+    public function sendNewPasswordUserEmailMessage($plainTextPassword, $ad)
+    {   
+        $subject = sprintf("Votre nouveau mot de passe pour votre annonce %s",
+            $ad->getTitle()
+        );
 
+        $template = $this->parameters['template']['user.password_forgot'];
+        $rendered = $this->templating->render($template, array(
+            'ad'                => $ad,
+            'plainTextPassword' => $plainTextPassword,
+        ));
+
+        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
     }
 
     protected function sendEmailMessage($body, $subject, $fromEmail, $toEmail)

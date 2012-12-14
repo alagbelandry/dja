@@ -14,6 +14,7 @@
         <parameter key="ad_created.confirmation.template">LeDjassaAdsBundle:Ad:adCreatedConfirmation.txt.twig</parameter>
         <parameter key="contact.template">LeDjassaAdsBundle:InformationUser:contactSendEmail.txt.twig</parameter>
         <parameter key="interested_user.contact.template">LeDjassaAdsBundle:InterestedUser:interestedUserContact.txt.twig</parameter>
+        <parameter key="user.password_forgot.template">LeDjassaAdsBundle:Ad:userPasswordForgot.txt.twig</parameter>
         <parameter key="noreply_from_email">ne.pas.repondre@auportdadjame.com</parameter>
         <parameter key="contact_to_email">as.landry@gmail.com</parameter>
 
@@ -36,6 +37,7 @@
                     <argument key="ad_created_confirmation">%ad_created.confirmation.template%</argument>
                     <argument key="contact">%contact.template%</argument>
                     <argument key="interested_user.contact">%interested_user.contact.template%</argument>
+                    <argument key="user.password_forgot">%user.password_forgot.template%</argument>
                 </argument>
                 <argument key="email" type="collection">
                     <argument key="noreply">%noreply_from_email%</argument>

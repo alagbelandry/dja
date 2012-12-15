@@ -42,31 +42,26 @@ class AdController extends Controller
     */
     public function indexAction()
     {   
-        $adsCollectionCriteria = AdQuery::create()
-            ->filterByLive()
-            ->lastCreatedFirst();
+        $adsCollectionCriteria = AdQuery::create()->filterByLive()->lastCreatedFirst();
 
         $routeName = $this->get('request')->get('_route');
         if ($routeName == 'ad_list_offers') {
            $adsCollectionCriteria->filterByAdTypeId(TypeAd::ID_OFFERS); 
         } elseif ($routeName == 'ad_list_demands') {
-            $adsCollectionCriteria->filterByAdTypeId(TypeAd::ID_DEMANDS); 
+           $adsCollectionCriteria->filterByAdTypeId(TypeAd::ID_DEMANDS); 
         } else {
             // no need more filter
         }
-
-        $adProperties = $adsCollectionCriteria->getProperties();
 
         $paginator = $this->get('ledjassa.paginator');
         $page = $this->get('request')->query->get('page', 1);
         $limit = $this->container->getParameter('limit_ads');
 
-        $pagination = $paginator->getPagination($adsCollectionCriteria, $page, $limit);
-
         return $this->render('LeDjassaAdsBundle:Ad:list.html.twig', array(
-            'ads'           => $pagination,
-            'adProperties'  => $adProperties,
-            'nbAds'         => $adsCollectionCriteria->count()
+            'ads'           => $paginator->getPagination($adsCollectionCriteria, $page, $limit),
+            'adProperties'  => $adsCollectionCriteria->getProperties(),
+            'nbAdsOnline'   => $adsCollectionCriteria->count(),
+            'nbAdsTotal'    => AdQuery::create()->count(),
         ));
     }
 
@@ -79,8 +74,8 @@ class AdController extends Controller
     public function searchAction($categoryTitle = false, $areaName = false)
     {   
         $query = $this->get('request')->query;
-
         $title = $query->get('title');
+
         $category = CategoryQuery::create()->findOneBySlug($categoryTitle);
         $area = AreaQuery::create()->findOneBySlug($areaName);
 
@@ -89,20 +84,17 @@ class AdController extends Controller
             ->searchByCategoryAndAreaAndTitleOrDescription($category, $area, '%'.$title.'%')
             ->lastCreatedFirst();
 
-        $adProperties = $adsCollectionCriteria->getProperties();
-
         $paginator = $this->get('ledjassa.paginator');
         $page = $query->get('page', 1);
         $limit = $this->container->getParameter('limit_ads');
 
-        $pagination = $paginator->getPagination($adsCollectionCriteria, $page, $limit);
-  
         return $this->render('LeDjassaAdsBundle:Ad:search.html.twig', array(
-            'ads'                   => $pagination,
-            'adProperties'          => $adProperties,
+            'ads'                   => $paginator->getPagination($adsCollectionCriteria, $page, $limit),
+            'adProperties'          => $adsCollectionCriteria->getProperties(),
             'categorieKeySearch'    => !empty($category) ? $category->getTitle() : '',
             'areaKeySearch'         => !empty($area) ? $area->getName() : '',
-            'titleKeySearch'        => $title
+            'titleKeySearch'        => $title,
+            'nbAdsFound'            => $adsCollectionCriteria->count()
         ));
     }
 
@@ -122,7 +114,6 @@ class AdController extends Controller
             if ($form->isValid()) {
 
                 $criteria = $form->getData();
-
                 return $this->redirect(
                     $this->generateUrl('ad_search', array(
                         'categoryTitle' => empty($criteria['category']) ? 'toutes-categories' : $criteria['category']->getSlug(),
@@ -234,9 +225,7 @@ class AdController extends Controller
                 )), 
                 301
             );
-
             $response->headers->setCookie(new Cookie('ad_secure', $ad->getId()));
-
             return $response;
 
         } elseif ($process == AdAcessEditHandler::INVALID_PASSWORD_STATUT) {
@@ -255,7 +244,6 @@ class AdController extends Controller
             );
 
         } else {
-
             throw new Exception("An error occurs during delete ad action");
         }
     }
@@ -298,7 +286,6 @@ class AdController extends Controller
             );
 
         } else {
-
             throw new Exception("An error occurs during delete ad action");
         }
     }
@@ -318,7 +305,7 @@ class AdController extends Controller
         $process = $formHandler->process();
 
         if ($process) {
-            //var_dump($ad);
+            
             return $this->render('LeDjassaAdsBundle:Ad:addSuccess.html.twig', array(
                 'ad' => $ad->getProperties()
             ));
@@ -371,7 +358,6 @@ class AdController extends Controller
             );
 
         } else {
-
             throw new Exception("An error occurs during password forgot action");
         }
     }

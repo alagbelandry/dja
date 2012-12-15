@@ -57,10 +57,8 @@
                   <div class="grid_12">
                     <a id="site_logo" href="{{ path('ad_list') }}">Auportdadjame.com - A vous de conclure le marché</a>
                     <div id="site_description">
-                      Auportdadjame.com est votre site d'annonces gratuites. Consulter ou déposer lalblalbal
-                      des offres ou demandes reste d'une rare simplicité. Blablablalbal balalbalabl
-                      blablalbalblab lbalbalblablbalba lbalblabla blalblablabla lbalblala blalblablabalb
-                      lablalblabl alblab lallbalblab lablallbla
+                      Auportdadjame.com propose un concept simple : cherchez ou passez des annonces gratuites près de chez vous.<br/>
+                      {% if nbAdsTotal is defined and nbAdsTotal != 0 %}Vous trouverez forcément l’annonce que vous recherchez parmi <b>{{nbAdsTotal}} annonces.</b>{% endif %}
                     </div>
                     <nav id="categories" class="s_nav">
                       <ul>

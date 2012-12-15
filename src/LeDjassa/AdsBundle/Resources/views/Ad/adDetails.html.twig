@@ -10,7 +10,7 @@
 			{% if adProperties[ad.Id].pictures %}
 				src = "{{ asset('uploads/pictures/' ~ adProperties[ad.Id].pictures.0.Path)}}"
 			{% else %}
-				src="images/product_180x180.jpg"
+				src="{{ asset('bundles/ledjassaads/images/pas-d-image-dispo.jpg')}}"
 			{% endif %}
 			>
 	<div class="grid_6 omega">

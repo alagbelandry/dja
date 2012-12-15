@@ -9,9 +9,9 @@
 
 {% block head_meta_description %}
 	{% if routeName == 'ad_list_demands' %}
-		Consulter {{ nbAdsOnline }} demandes de services et prodtuits sur toutes la Cote d'ivoire
+		Consulter {{ nbAdsOnline }} annonces sur toutes la Cote d'ivoire.
 	{% elseif routeName == 'ad_list_offers' %}
-		Consulter {{ nbAdsOnline }} offres de services et produits sur toutes la Cote d'ivoire
+		Consulter {{ nbAdsOnline }} annonces sur toutes la Cote d'ivoire.
 	{% else %}
 			Annonces gratuites cote d'ivoire (immobilier, voiture, moto, telephone, ordinateur, portable, emploi, tablette), acheter, louer et vendre
 	{% endif %}
@@ -40,6 +40,15 @@
 <section id="content" class="container_12" role="main">
 <div class="clear" style="opacity: 1;"></div>
 <div id="category" class="grid_9">
+	<h3 class="s_title_ads"><span class="s_secondary_color">{{nbAdsOnline}}</span>
+	{% if routeName == 'ad_list_demands' %}
+    DEMANDES
+    {% elseif routeName == 'ad_list_offers' %}
+    OFFRES
+    {% else %}
+    ANNONCES
+    {% endif %}
+	</h3>
 	<div class="s_listing s_list_view clearfix">
 		{% for ad in ads %}
 			<article itemscope itemtype="http://schema.org/Offer" class="s_item clearfix" style="opacity: 1;">

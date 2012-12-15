@@ -1209,8 +1209,6 @@ label.s_radio
   height: 150px;
 }
 
-
-
 .container_12 .grid_3.s_item h3 {
   font-size: 15px;
   font-weight: normal;
@@ -1230,6 +1228,17 @@ label.s_radio
 .container_12 .s_item .grid_6 .s_mode
 {
   margin-right: 120px;
+}
+
+.container_12 .grid_9 h3.s_title_ads span
+{
+  margin-right: 8px;
+}
+
+.container_12 .grid_9 h3.s_title_ads
+{
+  border-bottom: 2px solid #FF7700;
+  padding-bottom: 6px;
 }
 
 .container_12 .s_item .grid_6 .s_description .s_category ,

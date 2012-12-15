@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\InterestedUser;
-use LeDjassa\AdsBundle\Form\Type\AdType;
 use LeDjassa\AdsBundle\Form\Type\AdUserSendEmailType;
 use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Form\Handler\InterestedUserSendEmailHandler;
@@ -24,12 +23,12 @@ class InterestedUserController extends Controller
     * @param int $idAd ad identifier
     */
     public function sendEmailAction($idAd)
-    {   
+    {
         $ad = $this->getAd($idAd);
 
         $interestedUser = new InterestedUser();
         $interestedUser->setAd($ad);
-        
+
         $form = $this->createForm(new AdUserSendEmailType(), $interestedUser);
 
         $request = $this->get('request');
@@ -38,18 +37,16 @@ class InterestedUserController extends Controller
         $process = $formHandler->process();
 
         if ($process) {
-
             return $this->render('LeDjassaAdsBundle:InterestedUser:sendEmailSuccess.html.twig', array(
                 'ad' => $ad->getProperties()
             ));
 
         } elseif ('GET' === $request->getMethod()) {
-
             return array(
                 'form' => $form->createView(),
                 'ad' => $ad->getProperties()
             );
-            
+
         } else {
             throw new Exception("An error occurs during sending email");
         }
@@ -57,16 +54,18 @@ class InterestedUserController extends Controller
 
     /**
      * Get ad
-     * @param int $id ad identifier
-     * @return Ad $ad ad
+     * @param  int $id ad identifier
+     * @return Ad  $ad ad
      */
-    public function getAd($id) {
+    public function getAd($id)
+    {
         $ad = AdQuery::create()
                 ->findOneById($id);
 
         if (!$ad instanceof Ad) {
             throw $this->createNotFoundException('Ad not found!');
         }
+
         return $ad;
     }
 }

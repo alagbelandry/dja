@@ -4,18 +4,12 @@ namespace LeDjassa\AdsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\Quarter;
-use LeDjassa\AdsBundle\Model\PictureAd;
-use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
-use LeDjassa\AdsBundle\Model\UserTypeQuery;
-use LeDjassa\AdsBundle\Model\AdTypeQuery;
 use LeDjassa\AdsBundle\Model\PictureAdQuery;
 
 class LocationAjaxController extends Controller
@@ -41,6 +35,7 @@ class LocationAjaxController extends Controller
         // todo _format:json pour specifier le content type
         $response = new Response(json_encode($cityList));
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 
@@ -64,9 +59,10 @@ class LocationAjaxController extends Controller
                                 ->find()
                                 ->toArray();
         }
-    
+
         $response = new Response(json_encode($quarterList));
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 
@@ -90,6 +86,7 @@ class LocationAjaxController extends Controller
 
         $response = new Response(json_encode($pictureId));
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 }

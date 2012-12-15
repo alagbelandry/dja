@@ -18,7 +18,14 @@
 {% block body_container_main %}
 <section id="content" class="container_12" role="main">
 <div class="clear" style="opacity: 1;"></div>
+{% if ads is empty %}
+<h3>Aucune annonce trouvé.</h3>
+{% else %}
 <div id="category" class="grid_9">
+
+	<h3 class="s_title_ads"><span class="s_secondary_color">{{nbAdsFound}}</span>
+    ANNONCES TROUVEES
+	</h3>
 	<div class="s_listing s_list_view clearfix">
 		{% for ad in ads %}
 			<article itemscope itemtype="http://schema.org/Offer" class="s_item clearfix" style="opacity: 1;">
@@ -29,6 +36,7 @@
 	</div>
 	{{ ads.render()|raw }}
 </div>
+{% endif %}
 <div class="clear" style="opacity: 1;"></div>
 <div id="right_col" class="grid_3"></div>
 </section>

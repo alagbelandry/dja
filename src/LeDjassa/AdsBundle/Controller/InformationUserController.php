@@ -10,7 +10,6 @@ use LeDjassa\AdsBundle\Model\InformationUser;
 use LeDjassa\AdsBundle\Form\Type\ContactType;
 use LeDjassa\AdsBundle\Form\Handler\InformationUserSendEmailHandler;
 
-
 class InformationUserController extends Controller
 {
     /**
@@ -18,9 +17,9 @@ class InformationUserController extends Controller
     * @Template()
     */
     public function sendEmailAction()
-    {   
+    {
         $informationUser = new InformationUser();
-        
+
         $form = $this->createForm(new ContactType(), $informationUser);
 
         $request = $this->get('request');
@@ -29,15 +28,13 @@ class InformationUserController extends Controller
         $process = $formHandler->process();
 
         if ($process) {
-
             return $this->render('LeDjassaAdsBundle:InformationUser:sendEmailSuccess.html.twig');
 
         } elseif ('GET' === $request->getMethod()) {
-
             return array(
                 'form' => $form->createView(),
             );
-            
+
         } else {
             throw new Exception("An error occurs during contact sending email");
         }

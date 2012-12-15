@@ -83,7 +83,7 @@ class PasswordForgotHandler
         }
 
         // generate new password
-        $plainTextPassword = 'passeur';
+        $plainTextPassword = substr(uniqid(), 0, 10);
 
         $this->ad
             ->setUserPassword($this->encoder->encodePassword($plainTextPassword, $this->ad->getUserSalt()))

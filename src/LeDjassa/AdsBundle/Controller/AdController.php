@@ -41,7 +41,7 @@ class AdController extends Controller
     * @Template()
     */
     public function indexAction()
-    {  
+    {   
         $adsCollectionCriteria = AdQuery::create()
             ->filterByLive()
             ->lastCreatedFirst();
@@ -318,7 +318,7 @@ class AdController extends Controller
         $process = $formHandler->process();
 
         if ($process) {
-
+            //var_dump($ad);
             return $this->render('LeDjassaAdsBundle:Ad:addSuccess.html.twig', array(
                 'ad' => $ad->getProperties()
             ));

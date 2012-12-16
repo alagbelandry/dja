@@ -9,17 +9,17 @@
 {% endblock %}
 
 {% block head_meta_description %}
-	{{ad.description}} {{ad.nameArea}} {{ad.nameCity}} 
+	{{ad.description}} {{ad.titleCategory}}  {{ad.nameArea}} {{ad.nameCity}} 
 	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
 {% endblock %}
 
 {% block head_meta_keywords %}
-	{{ad.title}} {{ad.nameArea}} {{ad.nameCity}}
+	{{ad.title}} {{ad.titleCategory}} {{ad.nameArea}} {{ad.nameCity}}
 	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
 {% endblock %}
 
 {% block head_title %}
-	{{ad.title}} {{ad.nameArea}} {{ad.nameCity}}
+	{{ad.title}} {{ad.titleCategory}}  {{ad.nameArea}} {{ad.nameCity}}
 	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
 {% endblock %}
 

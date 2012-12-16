@@ -4,7 +4,6 @@ namespace LeDjassa\AdsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Class for manage search ad
@@ -15,7 +14,7 @@ class AdSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	$builder->add('title', 'search', array(
+        $builder->add('title', 'search', array(
             'required'      => false,
         ));
 

@@ -9,7 +9,6 @@ use LeDjassa\AdsBundle\Model\City;
 use LeDjassa\AdsBundle\Model\Quarter;
 use LeDjassa\AdsBundle\Model\CityQuery;
 use LeDjassa\AdsBundle\Model\QuarterQuery;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use LeDjassa\AdsBundle\Services\Mailer;
 
@@ -106,7 +105,7 @@ class AdAddHandler
     * Get city select in form
     * @return City city select
     */
-    function getCity(Ad $ad)
+    public function getCity(Ad $ad)
     {
         $parameters = $this->request->get('ad');
         $idCity = isset($parameters['city']['name']) ? $parameters['city']['name'] : '';
@@ -119,7 +118,7 @@ class AdAddHandler
     * Get new quarter depends of name quarter parameter of form
     * @return Quarter|false new quarter or false if it's not
     */
-    function getQuarter()
+    public function getQuarter()
     {
         $parameters = $this->request->get('ad');
         $nameQuarter = isset($parameters['city']['quarter']['name']) ? ucfirst($parameters['city']['quarter']['name']) : '';
@@ -135,7 +134,7 @@ class AdAddHandler
         if ($quarter instanceof Quarter) {
             return false;
         }
-                
+
         $quarter = new Quarter();
         $quarter->setName($nameQuarter);
 

@@ -8,7 +8,17 @@
 {% endblock %}
 {% block body_container_main %}
 <div id="content" class="container_16">
-	<h2><span class="s_secondary_color">Annonce</span>mise à jour</h2>
+	<h2>Confirmation annonce<span class="s_secondary_color"> mise à jour.</span></h2>
+	<h4>Votre annonce a été mise à jour avec succès, vous pouvez la consulter :
+   	<a href=
+	{% if ad.idAdType == 1 %} 
+  		"{{ path('ad_show_offers', {'idAd': ad.id, 'slugCategory': ad.slugCategory,'slugAd': ad.slugAd}) }}" 
+  	{% else %}
+  	    "{{ path('ad_show_demands', {'idAd': ad.id, 'slugCategory': ad.slugCategory,'slugAd': ad.slugAd}) }}" 
+  	{% endif %}
+  	>{{ad.title}}.
+    </a>
+  	 </h4>
 	<a href="{{ path('ad_list') }}">Retour à l'accueil</a>
 </div>
 {% endblock %}

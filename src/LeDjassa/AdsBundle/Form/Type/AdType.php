@@ -30,7 +30,7 @@ class AdType extends AbstractType
         $builder->add('price', 'money', array(
             'label'    => 'Prix :',
             'currency' => 'CFA',
-            'required' => false, 
+            'required' => false,
         ));
 
         // User information
@@ -50,13 +50,13 @@ class AdType extends AbstractType
         $builder->add('user_password', 'repeated', array(
             'type'           => 'password',
             'attr'           => array(
-                'autocomplete' => 'off'),  
+                'autocomplete' => 'off'),
             'first_options'  => array(
                 'label' => 'Mot de passe'),
             'second_options' => array(
-                'label' => 'Confirmer le mot de passe'), 
+                'label' => 'Confirmer le mot de passe'),
         ));
- 
+
         // Category  relation
         $builder->add('category', 'model', array(
             'class'         => 'LeDjassa\AdsBundle\Model\Category',
@@ -78,8 +78,8 @@ class AdType extends AbstractType
                 'class' => 's_form_add_field_radio')
         ));
 
-        // Ad type relation 
-  		$builder->add('ad_type', 'model', array(
+        // Ad type relation
+          $builder->add('ad_type', 'model', array(
             'class'    => 'LeDjassa\AdsBundle\Model\AdType',
             'label'    => 'Type d\'annonce :',
             'property' => 'name',
@@ -91,8 +91,8 @@ class AdType extends AbstractType
 
         // City relation
         $builder->add('city', new CityType());
-        
-        // Picture ad relation 
+
+        // Picture ad relation
         $builder->add('picture_ads', 'collection', array(
             'type'         => new PictureAdType(),
             'prototype'    => true,
@@ -101,9 +101,9 @@ class AdType extends AbstractType
             'required'     => false,
             'by_reference' => false,
             'label'        => 'Photos d\'illustration (3 photos maximum).',
-        )); 
+        ));
     }
-   
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -115,4 +115,4 @@ class AdType extends AbstractType
     {
         return 'ad';
     }
-} 
+}

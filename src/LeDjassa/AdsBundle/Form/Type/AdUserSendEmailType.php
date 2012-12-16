@@ -5,7 +5,6 @@ namespace LeDjassa\AdsBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use LeDjassa\AdsBundle\Model\UserTypeQuery;
 
 /**
  * Class for manage send email to user who add ad
@@ -16,7 +15,7 @@ class AdUserSendEmailType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	$builder->add('name', 'text', array(
+        $builder->add('name', 'text', array(
             'label' => 'Votre nom :',
         ));
 
@@ -37,7 +36,7 @@ class AdUserSendEmailType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-        	'data_class' => 'LeDjassa\AdsBundle\Model\InterestedUser',
+            'data_class' => 'LeDjassa\AdsBundle\Model\InterestedUser',
         ));
     }
 

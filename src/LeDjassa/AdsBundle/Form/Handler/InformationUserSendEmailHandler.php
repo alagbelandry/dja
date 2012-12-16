@@ -5,7 +5,6 @@ namespace LeDjassa\AdsBundle\Form\Handler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use LeDjassa\AdsBundle\Model\InformationUser;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Services\Mailer;
 
 /**

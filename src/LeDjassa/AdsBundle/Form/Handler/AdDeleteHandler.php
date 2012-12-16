@@ -5,6 +5,7 @@ namespace LeDjassa\AdsBundle\Form\Handler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use LeDjassa\AdsBundle\Model\Ad;
+use LeDjassa\AdsBundle\Services\Mailer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
@@ -24,6 +25,7 @@ class AdDeleteHandler
     protected $form;
     protected $ad;
     protected $encoder;
+    protected $mailer;
 
     /**
     * Initialize the handler with the form and the request
@@ -32,14 +34,16 @@ class AdDeleteHandler
     * @param Request $request
     * @param Ad $ad
     * @param MessageDigestPasswordEncoder $encoder
+    * @param Mailer $mailer
     *
     */
-    public function __construct(Form $form, Request $request, Ad $ad, MessageDigestPasswordEncoder $encoder)
+    public function __construct(Form $form, Request $request, Ad $ad, MessageDigestPasswordEncoder $encoder, Mailer $mailer)
     {
         $this->form = $form;
         $this->request = $request;
         $this->ad = $ad;
         $this->encoder = $encoder;
+        $this->mailer  = $mailer;
     }
 
     /**
@@ -55,15 +59,10 @@ class AdDeleteHandler
             $this->form->bindRequest($this->request);
 
             if ($this->form->isValid()) {
-
-                $isPasswordInvalid = !$this->onSuccess($this->form->getData());
-                if ($isPasswordInvalid) {
-                    return self::INVALID_PASSWORD_STATUT;
-                }
-
-                return self::AD_DELETE_SUCCESS_STATUT;
+                return $this->onSuccess($this->form->getData());
             }
      }
+
         return self::ERROR_PROCESSING_STATUT;
     }
 
@@ -81,8 +80,12 @@ class AdDeleteHandler
         if ($this->encoder->isPasswordValid($this->ad->getUserPassword(), $data['user_password'], $this->ad->getUserSalt())) {
             $this->ad->setStatut(Ad::STATUT_DELETED)
                ->save();
-            return true;
+
+            // send confirmation email
+            //$this->mailer->sendConfirmAdEditedEmailMessage($this->ad);
+            return self::AD_DELETE_SUCCESS_STATUT;
         }
-        return false;
+
+        return self::INVALID_PASSWORD_STATUT;
     }
 }

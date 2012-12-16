@@ -4,7 +4,6 @@ namespace LeDjassa\AdsBundle\Form\Handler;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Services\Mailer;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use LeDjassa\AdsBundle\Model\Ad;
@@ -61,6 +60,7 @@ class PasswordForgotHandler
             if ($this->form->isValid()) {
 
                 $dataEnter = $this->form->getData();
+
                 return $this->onSuccess($dataEnter['user_email']);
         }
 
@@ -77,7 +77,7 @@ class PasswordForgotHandler
     *
     */
     protected function onSuccess($emailEnter)
-    {   
+    {
         if ($emailEnter != $this->ad->getUserEmail()) {
             return self::INVALID_EMAIL_STATUT;
         }
@@ -90,6 +90,7 @@ class PasswordForgotHandler
             ->save();
 
         $this->mailer->sendNewPasswordUserEmailMessage($plainTextPassword, $this->ad);
+
         return self::PASSWORD_SEND_SUCCESS_STATUT;
     }
 }

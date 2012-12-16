@@ -2612,6 +2612,14 @@ body.s_layout_fixed #wrapper {
   font-size: 20px;
 }
 
+#add_success ul.s_to_know {
+  list-style-type:square;
+}
+
+#add_success ul.s_reason_no_confirmation_email {
+  list-style-type:circle;
+}
+
 #contact_form {
 	position: relative;
 }

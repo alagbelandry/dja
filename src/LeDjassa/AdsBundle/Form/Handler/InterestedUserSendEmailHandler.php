@@ -6,7 +6,6 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use LeDjassa\AdsBundle\Model\Ad;
 use LeDjassa\AdsBundle\Model\InterestedUser;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use LeDjassa\AdsBundle\Services\Mailer;
 
 /**

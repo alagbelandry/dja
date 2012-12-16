@@ -23,10 +23,10 @@ class AdEditType extends AbstractType
             'label'     => 'Prix :',
             'currency'  => 'CFA',
             'precision' => 0,
-            'required'  => false, 
+            'required'  => false,
         ));
 
-        // Picture ad relation 
+        // Picture ad relation
         $builder->add('picture_ads', 'collection', array(
             'type'         => new PictureAdType(),
             'prototype'    => true,
@@ -37,7 +37,7 @@ class AdEditType extends AbstractType
             'label'        => 'Photos d\'illustration (3 photos maximum).',
         ));
     }
-   
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -49,4 +49,4 @@ class AdEditType extends AbstractType
     {
         return 'ad_edit';
     }
-} 
+}

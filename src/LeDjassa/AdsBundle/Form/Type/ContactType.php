@@ -19,7 +19,7 @@ class ContactType extends AbstractType
             'label' => 'Sujet :',
         ));
 
-    	$builder->add('name', 'text', array(
+        $builder->add('name', 'text', array(
             'label' => 'Votre nom :',
         ));
 

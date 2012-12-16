@@ -64,6 +64,7 @@ class AdAcessEditHandler
                 return self::AD_DELETE_SUCCESS_STATUT;
             }
      }
+
         return self::ERROR_PROCESSING_STATUT;
     }
 
@@ -80,8 +81,10 @@ class AdAcessEditHandler
 
         if ($this->encoder->isPasswordValid($this->ad->getUserPassword(), $data['user_password'], $this->ad->getUserSalt())) {
             $this->request->cookies->set('ad_secure', $this->ad->getId());
+
             return true;
         }
+
         return false;
     }
 }

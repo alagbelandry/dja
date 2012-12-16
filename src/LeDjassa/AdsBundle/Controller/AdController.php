@@ -21,7 +21,6 @@ use LeDjassa\AdsBundle\Form\Type\PasswordForgotType;
 use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\CategoryQuery;
 use LeDjassa\AdsBundle\Model\AreaQuery;
-use LeDjassa\AdsBundle\Model\UserTypeQuery;
 use LeDjassa\AdsBundle\Form\Handler\AdAddHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;
@@ -260,7 +259,7 @@ class AdController extends Controller
         $request = $this->get('request');
 
         $form = $this->createForm(new AdDeleteType());
-        $formHandler = new AdDeleteHandler($form, $request, $ad, $this->get('password_encoder'));
+        $formHandler = new AdDeleteHandler($form, $request, $ad, $this->get('password_encoder'), $this->get('ledjassa.mailer'));
         $process = $formHandler->process();
 
         if ($process == AdDeleteHandler::AD_DELETE_SUCCESS_STATUT) {

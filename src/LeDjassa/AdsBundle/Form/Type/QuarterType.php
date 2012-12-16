@@ -11,12 +11,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Landry Alagbe
  */
-class QuarterType extends AbstractType {
+class QuarterType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
 
-	public function buildForm(FormBuilderInterface $builder, array $options)
-    {   
-        
-    	$builder->add('name', 'text', array(
+        $builder->add('name', 'text', array(
             'label' => 'Quartier :',
             'required' => false,
             'attr'          => array(

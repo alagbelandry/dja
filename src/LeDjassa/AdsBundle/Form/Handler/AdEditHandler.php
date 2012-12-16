@@ -5,7 +5,6 @@ namespace LeDjassa\AdsBundle\Form\Handler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use LeDjassa\AdsBundle\Model\Ad;
-use LeDjassa\AdsBundle\Model\QuarterQuery;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
@@ -47,9 +46,11 @@ class AdEditHandler
             if ($this->form->isValid()) {
 
                 $parameters = $this->request->get('ad_edit');
+
                 return $this->onSuccess($this->form->getData());
             }
      }
+
         return false;
     }
 
@@ -65,6 +66,7 @@ class AdEditHandler
         }
 
         $ad->save();
+
         return true;
     }
 }

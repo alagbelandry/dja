@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
+use LeDjassa\AdsBundle\Model\UserType;
 
 /**
  * Class for manage ad form
@@ -61,7 +62,7 @@ class AdType extends AbstractType
             'property' => 'title',
             'empty_value'   => 'Choisir une catégorie',
         ));
-   
+
         $builder->add('user_type', 'model', array(
             'class'    => 'LeDjassa\AdsBundle\Model\UserType',
             'label'    => 'Vous publiez l\'annonce en tant que : ',
@@ -70,7 +71,7 @@ class AdType extends AbstractType
             'multiple' => false,
             'query'    => UserTypeQuery::create()->orderByTitle(UserTypeQuery::ASC),
             'attr'     => array(
-                'class' => 's_form_add_field_radio'),
+                'class' => 's_form_add_field_radio')
         ));
 
         // Ad type relation 

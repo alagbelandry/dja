@@ -1,14 +1,73 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
-{% block body_container_main %}
-<h3>Accès à la page de modification de l'annonce </h3>
-{{ ad.title }} 
-<form action="{{ path('ad_access_edit', {'idAd': ad.id}) }}" method="post" }}>
-
-	{{ form_errors(form) }}
-	{{ form_row(form.user_password) }}
-
-	{{ form_rest(form) }}
-	
-	<input type="submit" value="Valider"/>
-</form>
+{% block head_title %}Gestion de l'annonce : accéder à la page de modification de l'annonce{% endblock %}
+{% block head_meta_site_info %}
+  <meta content="noindex,follow" name="robots">
 {% endblock %}
+{% block body_container_pre_intro %}
+	<div class="s_border"></div>
+{% endblock %}
+{% block body_container_main %}
+<div id="content" class="container_16">
+	<h2><span class="s_secondary_color">Accéder à la page de </span>modification de l'annonce </h2>
+	<h3>{{ ad.title }}</h3>
+		Mise en ligne
+			{% if ad.isPublishToday %}
+				Aujourd'hui
+			{% elseif ad.isPublishYesterDay %}
+				Hier
+			{% else %}
+				{{ ad.publishedDate|date("d") }} {{ ad.publishMonth }}
+			{% endif %}
+			à {{ ad.publishedDate|date("H:i") }}
+			<time datetime="{{ ad.publishedDate|date("Y-m-d H:i") }}" pubdate>
+		par {{ad.userName}}
+	<form action="{{ path('ad_access_edit', {'idAd': ad.id}) }}" id="access_edit_form" method="post" }}>
+
+		{{ form_errors(form) }}
+		<div class="s_add_ad_block">
+			{{ form_row(form.user_password) }} {% if isInvalidPassword is defined %}<span class="s_error_msg s_invalid_passord">Mot de passe invalide.</span>{% endif %}
+			<a href="{{ path('password_forgot', {'idAd': ad.id}) }}">Mot de passe oublié</a>
+			{{ form_rest(form) }}
+		
+			<button class="s_button_1 s_main_color_bgr" type="submit"/>
+   				<span class="s_text">Valider</span>
+ 			</button>
+		</div>
+	</form>
+</div>
+{% endblock %}
+{% block body_js %}
+	{{ parent() }}
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			// manage validation form		
+			$("#access_edit_form").validate({
+				errorElement: "p",
+				errorClass: "s_error_msg",
+				errorPlacement: function(error, element) {
+					error.insertAfter(element);
+				},
+				highlight: function(element, errorClass, validClass) {
+					$(element).addClass("error_element").removeClass(validClass);
+					$(element).parent("div").addClass("s_error_row");
+				},
+				unhighlight: function(element, errorClass, validClass) {
+					$(element).removeClass("error_element").addClass(validClass);
+					$(element).parent("div").removeClass("s_error_row");
+				},
+				rules: {
+					"ad_access_edit[user_password]": {
+						required: true,
+					},
+				},
+
+	      		messages: {
+	        		"ad_access_edit[user_password]": {
+	          			required: "Veuillez saisir le mot de passe.",
+	        		},
+	        	}
+			});
+			});
+	</script>
+{% endblock body_js %}

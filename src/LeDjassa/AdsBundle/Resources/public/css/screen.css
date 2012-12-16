@@ -2490,6 +2490,11 @@ body.s_layout_fixed #wrapper {
   margin-bottom: 30px;
 }
 
+.s_add_ad_block span.s_invalid_passord {
+  margin: -25px 0 0 300px;
+  position: absolute;
+}
+
 #ad_price, #ad_edit_price {
   width: 150px;
 }

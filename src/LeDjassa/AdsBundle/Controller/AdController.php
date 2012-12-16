@@ -21,6 +21,7 @@ use LeDjassa\AdsBundle\Form\Type\PasswordForgotType;
 use LeDjassa\AdsBundle\Model\AdQuery;
 use LeDjassa\AdsBundle\Model\CategoryQuery;
 use LeDjassa\AdsBundle\Model\AreaQuery;
+use LeDjassa\AdsBundle\Model\UserTypeQuery;
 use LeDjassa\AdsBundle\Form\Handler\AdAddHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdDeleteHandler;
 use LeDjassa\AdsBundle\Form\Handler\AdEditHandler;

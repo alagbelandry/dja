@@ -144,7 +144,7 @@ abstract class BaseAdTypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `CODE` FROM `ad_type` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `name`, `code` FROM `ad_type` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

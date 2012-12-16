@@ -42,26 +42,26 @@ class AdTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
-        $this->getColumn('TITLE', false)->setPrimaryString(true);
-        $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 500, null);
-        $this->addColumn('PRICE', 'Price', 'VARCHAR', false, 30, null);
-        $this->addColumn('STATUT', 'Statut', 'TINYINT', false, 2, 0);
-        $this->addColumn('USER_NAME', 'UserName', 'VARCHAR', true, 100, null);
-        $this->addColumn('USER_EMAIL', 'UserEmail', 'VARCHAR', true, 100, null);
-        $this->addColumn('USER_PASSWORD', 'UserPassword', 'VARCHAR', true, 255, null);
-        $this->addColumn('USER_SALT', 'UserSalt', 'VARCHAR', true, 100, null);
-        $this->addColumn('USER_PHONE', 'UserPhone', 'VARCHAR', false, 50, null);
-        $this->addColumn('USER_IP_ADRESS', 'UserIpAdress', 'VARCHAR', false, 40, null);
-        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('AD_TYPE_ID', 'AdTypeId', 'INTEGER', 'ad_type', 'ID', false, 5, null);
-        $this->addForeignKey('CATEGORY_ID', 'CategoryId', 'INTEGER', 'category', 'ID', false, 6, null);
-        $this->addForeignKey('USER_TYPE_ID', 'UserTypeId', 'INTEGER', 'user_type', 'ID', false, 6, null);
-        $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
-        $this->addForeignKey('QUARTER_ID', 'QuarterId', 'INTEGER', 'quarter', 'ID', false, 6, null);
-        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 100, null);
+        $this->getColumn('title', false)->setPrimaryString(true);
+        $this->addColumn('description', 'Description', 'VARCHAR', false, 500, null);
+        $this->addColumn('price', 'Price', 'VARCHAR', false, 30, null);
+        $this->addColumn('statut', 'Statut', 'TINYINT', false, 2, 0);
+        $this->addColumn('user_name', 'UserName', 'VARCHAR', true, 100, null);
+        $this->addColumn('user_email', 'UserEmail', 'VARCHAR', true, 100, null);
+        $this->addColumn('user_password', 'UserPassword', 'VARCHAR', true, 255, null);
+        $this->addColumn('user_salt', 'UserSalt', 'VARCHAR', true, 100, null);
+        $this->addColumn('user_phone', 'UserPhone', 'VARCHAR', false, 50, null);
+        $this->addColumn('user_ip_adress', 'UserIpAdress', 'VARCHAR', false, 40, null);
+        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addForeignKey('ad_type_id', 'AdTypeId', 'INTEGER', 'ad_type', 'id', false, 5, null);
+        $this->addForeignKey('category_id', 'CategoryId', 'INTEGER', 'category', 'id', false, 6, null);
+        $this->addForeignKey('user_type_id', 'UserTypeId', 'INTEGER', 'user_type', 'id', false, 6, null);
+        $this->addForeignKey('city_id', 'CityId', 'INTEGER', 'city', 'id', false, 6, null);
+        $this->addForeignKey('quarter_id', 'QuarterId', 'INTEGER', 'quarter', 'id', false, 6, null);
+        $this->addColumn('slug', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -88,8 +88,20 @@ class AdTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_updated_at' => 'false', ),
-            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
+            'timestampable' =>  array (
+  'create_column' => 'created_at',
+  'update_column' => 'updated_at',
+  'disable_updated_at' => 'false',
+),
+            'sluggable' =>  array (
+  'slug_column' => 'slug',
+  'slug_pattern' => '',
+  'replace_pattern' => '/\\W+/',
+  'replacement' => '-',
+  'separator' => '-',
+  'permanent' => 'false',
+  'scope_column' => '',
+),
         );
     } // getBehaviors()
 

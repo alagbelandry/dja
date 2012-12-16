@@ -168,7 +168,7 @@ abstract class BaseInterestedUserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `EMAIL`, `PHONE`, `MESSAGE`, `IP_ADRESS`, `CREATED_AT`, `AD_ID`, `UPDATED_AT` FROM `interested_user` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `name`, `email`, `phone`, `message`, `ip_adress`, `created_at`, `ad_id`, `updated_at` FROM `interested_user` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

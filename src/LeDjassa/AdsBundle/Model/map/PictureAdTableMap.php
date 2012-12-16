@@ -42,9 +42,9 @@ class PictureAdTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('PATH', 'Path', 'VARCHAR', true, 500, null);
-        $this->addForeignKey('AD_ID', 'AdId', 'INTEGER', 'ad', 'ID', false, 5, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('path', 'Path', 'VARCHAR', true, 500, null);
+        $this->addForeignKey('ad_id', 'AdId', 'INTEGER', 'ad', 'id', false, 5, null);
         // validators
     } // initialize()
 

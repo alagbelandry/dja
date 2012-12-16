@@ -37,14 +37,14 @@ abstract class BaseUserTypePeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 3;
 
-    /** the column name for the ID field */
-    const ID = 'user_type.ID';
+    /** the column name for the id field */
+    const ID = 'user_type.id';
 
-    /** the column name for the TITLE field */
-    const TITLE = 'user_type.TITLE';
+    /** the column name for the title field */
+    const TITLE = 'user_type.title';
 
-    /** the column name for the CODE field */
-    const CODE = 'user_type.CODE';
+    /** the column name for the code field */
+    const CODE = 'user_type.code';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -163,9 +163,9 @@ abstract class BaseUserTypePeer
             $criteria->addSelectColumn(UserTypePeer::TITLE);
             $criteria->addSelectColumn(UserTypePeer::CODE);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.CODE');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.code');
         }
     }
 

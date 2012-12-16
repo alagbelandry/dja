@@ -42,16 +42,16 @@ class InterestedUserTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 6, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', false, 100, null);
-        $this->getColumn('NAME', false)->setPrimaryString(true);
-        $this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 100, null);
-        $this->addColumn('PHONE', 'Phone', 'VARCHAR', false, 100, null);
-        $this->addColumn('MESSAGE', 'Message', 'VARCHAR', false, 500, null);
-        $this->addColumn('IP_ADRESS', 'IpAdress', 'VARCHAR', false, 20, null);
-        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('AD_ID', 'AdId', 'INTEGER', 'ad', 'ID', false, 5, null);
-        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 6, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 100, null);
+        $this->getColumn('name', false)->setPrimaryString(true);
+        $this->addColumn('email', 'Email', 'VARCHAR', false, 100, null);
+        $this->addColumn('phone', 'Phone', 'VARCHAR', false, 100, null);
+        $this->addColumn('message', 'Message', 'VARCHAR', false, 500, null);
+        $this->addColumn('ip_adress', 'IpAdress', 'VARCHAR', false, 20, null);
+        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addForeignKey('ad_id', 'AdId', 'INTEGER', 'ad', 'id', false, 5, null);
+        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators
     } // initialize()
 
@@ -72,7 +72,11 @@ class InterestedUserTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_updated_at' => 'false', ),
+            'timestampable' =>  array (
+  'create_column' => 'created_at',
+  'update_column' => 'updated_at',
+  'disable_updated_at' => 'false',
+),
         );
     } // getBehaviors()
 

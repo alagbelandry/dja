@@ -37,17 +37,17 @@ abstract class BaseAreaPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 4;
 
-    /** the column name for the ID field */
-    const ID = 'area.ID';
+    /** the column name for the id field */
+    const ID = 'area.id';
 
-    /** the column name for the NAME field */
-    const NAME = 'area.NAME';
+    /** the column name for the name field */
+    const NAME = 'area.name';
 
-    /** the column name for the CODE field */
-    const CODE = 'area.CODE';
+    /** the column name for the code field */
+    const CODE = 'area.code';
 
-    /** the column name for the SLUG field */
-    const SLUG = 'area.SLUG';
+    /** the column name for the slug field */
+    const SLUG = 'area.slug';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -167,10 +167,10 @@ abstract class BaseAreaPeer
             $criteria->addSelectColumn(AreaPeer::CODE);
             $criteria->addSelectColumn(AreaPeer::SLUG);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.CODE');
-            $criteria->addSelectColumn($alias . '.SLUG');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.code');
+            $criteria->addSelectColumn($alias . '.slug');
         }
     }
 

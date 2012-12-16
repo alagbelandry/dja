@@ -38,32 +38,32 @@ abstract class BaseInterestedUserPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 9;
 
-    /** the column name for the ID field */
-    const ID = 'interested_user.ID';
+    /** the column name for the id field */
+    const ID = 'interested_user.id';
 
-    /** the column name for the NAME field */
-    const NAME = 'interested_user.NAME';
+    /** the column name for the name field */
+    const NAME = 'interested_user.name';
 
-    /** the column name for the EMAIL field */
-    const EMAIL = 'interested_user.EMAIL';
+    /** the column name for the email field */
+    const EMAIL = 'interested_user.email';
 
-    /** the column name for the PHONE field */
-    const PHONE = 'interested_user.PHONE';
+    /** the column name for the phone field */
+    const PHONE = 'interested_user.phone';
 
-    /** the column name for the MESSAGE field */
-    const MESSAGE = 'interested_user.MESSAGE';
+    /** the column name for the message field */
+    const MESSAGE = 'interested_user.message';
 
-    /** the column name for the IP_ADRESS field */
-    const IP_ADRESS = 'interested_user.IP_ADRESS';
+    /** the column name for the ip_adress field */
+    const IP_ADRESS = 'interested_user.ip_adress';
 
-    /** the column name for the CREATED_AT field */
-    const CREATED_AT = 'interested_user.CREATED_AT';
+    /** the column name for the created_at field */
+    const CREATED_AT = 'interested_user.created_at';
 
-    /** the column name for the AD_ID field */
-    const AD_ID = 'interested_user.AD_ID';
+    /** the column name for the ad_id field */
+    const AD_ID = 'interested_user.ad_id';
 
-    /** the column name for the UPDATED_AT field */
-    const UPDATED_AT = 'interested_user.UPDATED_AT';
+    /** the column name for the updated_at field */
+    const UPDATED_AT = 'interested_user.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -188,15 +188,15 @@ abstract class BaseInterestedUserPeer
             $criteria->addSelectColumn(InterestedUserPeer::AD_ID);
             $criteria->addSelectColumn(InterestedUserPeer::UPDATED_AT);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.EMAIL');
-            $criteria->addSelectColumn($alias . '.PHONE');
-            $criteria->addSelectColumn($alias . '.MESSAGE');
-            $criteria->addSelectColumn($alias . '.IP_ADRESS');
-            $criteria->addSelectColumn($alias . '.CREATED_AT');
-            $criteria->addSelectColumn($alias . '.AD_ID');
-            $criteria->addSelectColumn($alias . '.UPDATED_AT');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.email');
+            $criteria->addSelectColumn($alias . '.phone');
+            $criteria->addSelectColumn($alias . '.message');
+            $criteria->addSelectColumn($alias . '.ip_adress');
+            $criteria->addSelectColumn($alias . '.created_at');
+            $criteria->addSelectColumn($alias . '.ad_id');
+            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

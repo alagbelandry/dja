@@ -42,10 +42,10 @@ class AdTypeTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 5, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 100, null);
-        $this->getColumn('NAME', false)->setPrimaryString(true);
-        $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 5, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 100, null);
+        $this->getColumn('name', false)->setPrimaryString(true);
+        $this->addColumn('code', 'Code', 'VARCHAR', false, 20, null);
         // validators
     } // initialize()
 

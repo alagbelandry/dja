@@ -420,7 +420,7 @@ abstract class BaseAdType extends BaseObject implements Persistent
 
             if ($this->collAds !== null) {
                 foreach ($this->collAds as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -453,13 +453,13 @@ abstract class BaseAdType extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(AdTypePeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(AdTypePeer::NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`NAME`';
+            $modifiedColumns[':p' . $index++]  = '`name`';
         }
         if ($this->isColumnModified(AdTypePeer::CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`CODE`';
+            $modifiedColumns[':p' . $index++]  = '`code`';
         }
 
         $sql = sprintf(
@@ -472,13 +472,13 @@ abstract class BaseAdType extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`NAME`':
+                    case '`name`':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '`CODE`':
+                    case '`code`':
                         $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
                         break;
                 }
@@ -549,11 +549,11 @@ abstract class BaseAdType extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -1015,9 +1015,11 @@ abstract class BaseAdType extends BaseObject implements Persistent
      */
     public function setAds(PropelCollection $ads, PropelPDO $con = null)
     {
-        $this->adsScheduledForDeletion = $this->getAds(new Criteria(), $con)->diff($ads);
+        $adsToDelete = $this->getAds(new Criteria(), $con)->diff($ads);
 
-        foreach ($this->adsScheduledForDeletion as $adRemoved) {
+        $this->adsScheduledForDeletion = unserialize(serialize($adsToDelete));
+
+        foreach ($adsToDelete as $adRemoved) {
             $adRemoved->setAdType(null);
         }
 
@@ -1047,22 +1049,22 @@ abstract class BaseAdType extends BaseObject implements Persistent
         if (null === $this->collAds || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collAds) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getAds());
-                }
-                $query = AdQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByAdType($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collAds);
+
+            if($partial && !$criteria) {
+                return count($this->getAds());
+            }
+            $query = AdQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByAdType($this)
+                ->count($con);
         }
+
+        return count($this->collAds);
     }
 
     /**

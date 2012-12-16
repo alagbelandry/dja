@@ -148,7 +148,7 @@ abstract class BaseAreaQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `CODE`, `SLUG` FROM `area` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `name`, `code`, `slug` FROM `area` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

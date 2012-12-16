@@ -464,7 +464,7 @@ abstract class BaseArea extends BaseObject implements Persistent
 
             if ($this->collCities !== null) {
                 foreach ($this->collCities as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -497,16 +497,16 @@ abstract class BaseArea extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(AreaPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(AreaPeer::NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`NAME`';
+            $modifiedColumns[':p' . $index++]  = '`name`';
         }
         if ($this->isColumnModified(AreaPeer::CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`CODE`';
+            $modifiedColumns[':p' . $index++]  = '`code`';
         }
         if ($this->isColumnModified(AreaPeer::SLUG)) {
-            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+            $modifiedColumns[':p' . $index++]  = '`slug`';
         }
 
         $sql = sprintf(
@@ -519,16 +519,16 @@ abstract class BaseArea extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`NAME`':
+                    case '`name`':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '`CODE`':
+                    case '`code`':
                         $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
                         break;
-                    case '`SLUG`':
+                    case '`slug`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                 }
@@ -599,11 +599,11 @@ abstract class BaseArea extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -1075,9 +1075,11 @@ abstract class BaseArea extends BaseObject implements Persistent
      */
     public function setCities(PropelCollection $cities, PropelPDO $con = null)
     {
-        $this->citiesScheduledForDeletion = $this->getCities(new Criteria(), $con)->diff($cities);
+        $citiesToDelete = $this->getCities(new Criteria(), $con)->diff($cities);
 
-        foreach ($this->citiesScheduledForDeletion as $cityRemoved) {
+        $this->citiesScheduledForDeletion = unserialize(serialize($citiesToDelete));
+
+        foreach ($citiesToDelete as $cityRemoved) {
             $cityRemoved->setArea(null);
         }
 
@@ -1107,22 +1109,22 @@ abstract class BaseArea extends BaseObject implements Persistent
         if (null === $this->collCities || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collCities) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getCities());
-                }
-                $query = CityQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByArea($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collCities);
+
+            if($partial && !$criteria) {
+                return count($this->getCities());
+            }
+            $query = CityQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByArea($this)
+                ->count($con);
         }
+
+        return count($this->collCities);
     }
 
     /**
@@ -1166,7 +1168,7 @@ abstract class BaseArea extends BaseObject implements Persistent
                 $this->citiesScheduledForDeletion = clone $this->collCities;
                 $this->citiesScheduledForDeletion->clear();
             }
-            $this->citiesScheduledForDeletion[]= $city;
+            $this->citiesScheduledForDeletion[]= clone $city;
             $city->setArea(null);
         }
 
@@ -1303,10 +1305,10 @@ abstract class BaseArea extends BaseObject implements Persistent
     /**
      * Make sure the slug is short enough to accomodate the column size
      *
-     * @param	string $slug                   the slug to check
-     * @param	int    $incrementReservedSpace the number of characters to keep empty
+     * @param    string $slug                   the slug to check
+     * @param    int    $incrementReservedSpace the number of characters to keep empty
      *
-     * @return string						the truncated slug
+     * @return string                            the truncated slug
      */
     protected static function limitSlugSize($slug, $incrementReservedSpace = 3)
     {
@@ -1322,23 +1324,54 @@ abstract class BaseArea extends BaseObject implements Persistent
     /**
      * Get the slug, ensuring its uniqueness
      *
-     * @param	string $slug			the slug to check
-     * @param	string $separator the separator used by slug
-     * @param	int    $increment the count of occurences of the slug
-     * @return string						the unique slug
+     * @param    string $slug            the slug to check
+     * @param    string $separator       the separator used by slug
+     * @param    int    $alreadyExists   false for the first try, true for the second, and take the high count + 1
+     * @return   string                   the unique slug
      */
-    protected function makeSlugUnique($slug, $separator = '-', $increment = 0)
+    protected function makeSlugUnique($slug, $separator = '-', $alreadyExists = false)
     {
-        $slug2 = empty($increment) ? $slug : $slug . $separator . $increment;
-        $slugAlreadyExists = AreaQuery::create()
-            ->filterBySlug($slug2)
-            ->prune($this)
-            ->count();
-        if ($slugAlreadyExists) {
-            return $this->makeSlugUnique($slug, $separator, ++$increment);
+        if (!$alreadyExists) {
+            $slug2 = $slug;
         } else {
+            $slug2 = $slug . $separator;
+
+            $count = AreaQuery::create()
+                ->filterBySlug($this->getSlug())
+                ->filterByPrimaryKey($this->getPrimaryKey())
+            ->count();
+
+            if (1 == $count) {
+                return $this->getSlug();
+            }
+        }
+
+        $query = AreaQuery::create('q')
+            ->where('q.Slug ' . ($alreadyExists ? 'REGEXP' : '=') . ' ?', $alreadyExists ? '^' . $slug2 . '[0-9]+$' : $slug2)
+            ->prune($this)
+        ;
+
+        if (!$alreadyExists) {
+            $count = $query->count();
+            if ($count > 0) {
+                return $this->makeSlugUnique($slug, $separator, true);
+            }
+
             return $slug2;
         }
+
+        // Already exists
+        $object = $query
+            ->addDescendingOrderByColumn('LENGTH(slug)')
+            ->addDescendingOrderByColumn('slug')
+        ->findOne();
+
+        // First duplicate slug
+        if (null == $object) {
+            return $slug2 . '1';
+        }
+
+        return $slug2 . (substr($object->getSlug(), strlen($slug) + 1) + 1);
     }
 
 }

@@ -444,13 +444,13 @@ abstract class BasePictureAd extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(PictureAdPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(PictureAdPeer::PATH)) {
-            $modifiedColumns[':p' . $index++]  = '`PATH`';
+            $modifiedColumns[':p' . $index++]  = '`path`';
         }
         if ($this->isColumnModified(PictureAdPeer::AD_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`AD_ID`';
+            $modifiedColumns[':p' . $index++]  = '`ad_id`';
         }
 
         $sql = sprintf(
@@ -463,13 +463,13 @@ abstract class BasePictureAd extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`PATH`':
+                    case '`path`':
                         $stmt->bindValue($identifier, $this->path, PDO::PARAM_STR);
                         break;
-                    case '`AD_ID`':
+                    case '`ad_id`':
                         $stmt->bindValue($identifier, $this->ad_id, PDO::PARAM_INT);
                         break;
                 }
@@ -540,11 +540,11 @@ abstract class BasePictureAd extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -903,12 +903,13 @@ abstract class BasePictureAd extends BaseObject implements Persistent
      * Get the associated Ad object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return Ad The associated Ad object.
      * @throws PropelException
      */
-    public function getAd(PropelPDO $con = null)
+    public function getAd(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aAd === null && ($this->ad_id !== null)) {
+        if ($this->aAd === null && ($this->ad_id !== null) && $doQuery) {
             $this->aAd = AdQuery::create()->findPk($this->ad_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference

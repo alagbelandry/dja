@@ -192,22 +192,25 @@ abstract class BaseInterestedUser extends BaseObject implements Persistent
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
-        } else {
-            try {
-                $dt = new DateTime($this->created_at);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
-            }
+        }
+
+        try {
+            $dt = new DateTime($this->created_at);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is true, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -239,22 +242,25 @@ abstract class BaseInterestedUser extends BaseObject implements Persistent
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
-        } else {
-            try {
-                $dt = new DateTime($this->updated_at);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->updated_at, true), $x);
-            }
+        }
+
+        try {
+            $dt = new DateTime($this->updated_at);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->updated_at, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is true, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -743,31 +749,31 @@ abstract class BaseInterestedUser extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(InterestedUserPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(InterestedUserPeer::NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`NAME`';
+            $modifiedColumns[':p' . $index++]  = '`name`';
         }
         if ($this->isColumnModified(InterestedUserPeer::EMAIL)) {
-            $modifiedColumns[':p' . $index++]  = '`EMAIL`';
+            $modifiedColumns[':p' . $index++]  = '`email`';
         }
         if ($this->isColumnModified(InterestedUserPeer::PHONE)) {
-            $modifiedColumns[':p' . $index++]  = '`PHONE`';
+            $modifiedColumns[':p' . $index++]  = '`phone`';
         }
         if ($this->isColumnModified(InterestedUserPeer::MESSAGE)) {
-            $modifiedColumns[':p' . $index++]  = '`MESSAGE`';
+            $modifiedColumns[':p' . $index++]  = '`message`';
         }
         if ($this->isColumnModified(InterestedUserPeer::IP_ADRESS)) {
-            $modifiedColumns[':p' . $index++]  = '`IP_ADRESS`';
+            $modifiedColumns[':p' . $index++]  = '`ip_adress`';
         }
         if ($this->isColumnModified(InterestedUserPeer::CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
+            $modifiedColumns[':p' . $index++]  = '`created_at`';
         }
         if ($this->isColumnModified(InterestedUserPeer::AD_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`AD_ID`';
+            $modifiedColumns[':p' . $index++]  = '`ad_id`';
         }
         if ($this->isColumnModified(InterestedUserPeer::UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
+            $modifiedColumns[':p' . $index++]  = '`updated_at`';
         }
 
         $sql = sprintf(
@@ -780,31 +786,31 @@ abstract class BaseInterestedUser extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`NAME`':
+                    case '`name`':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '`EMAIL`':
+                    case '`email`':
                         $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
                         break;
-                    case '`PHONE`':
+                    case '`phone`':
                         $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
                         break;
-                    case '`MESSAGE`':
+                    case '`message`':
                         $stmt->bindValue($identifier, $this->message, PDO::PARAM_STR);
                         break;
-                    case '`IP_ADRESS`':
+                    case '`ip_adress`':
                         $stmt->bindValue($identifier, $this->ip_adress, PDO::PARAM_STR);
                         break;
-                    case '`CREATED_AT`':
+                    case '`created_at`':
                         $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
                         break;
-                    case '`AD_ID`':
+                    case '`ad_id`':
                         $stmt->bindValue($identifier, $this->ad_id, PDO::PARAM_INT);
                         break;
-                    case '`UPDATED_AT`':
+                    case '`updated_at`':
                         $stmt->bindValue($identifier, $this->updated_at, PDO::PARAM_STR);
                         break;
                 }
@@ -875,11 +881,11 @@ abstract class BaseInterestedUser extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -1298,12 +1304,13 @@ abstract class BaseInterestedUser extends BaseObject implements Persistent
      * Get the associated Ad object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return Ad The associated Ad object.
      * @throws PropelException
      */
-    public function getAd(PropelPDO $con = null)
+    public function getAd(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aAd === null && ($this->ad_id !== null)) {
+        if ($this->aAd === null && ($this->ad_id !== null) && $doQuery) {
             $this->aAd = AdQuery::create()->findPk($this->ad_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference

@@ -162,7 +162,7 @@ abstract class BaseCityQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `NAME`, `CODE`, `AREA_ID`, `SLUG` FROM `city` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `name`, `code`, `area_id`, `slug` FROM `city` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

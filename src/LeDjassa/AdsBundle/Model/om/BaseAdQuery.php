@@ -238,7 +238,7 @@ abstract class BaseAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `DESCRIPTION`, `PRICE`, `STATUT`, `USER_NAME`, `USER_EMAIL`, `USER_PASSWORD`, `USER_SALT`, `USER_PHONE`, `USER_IP_ADRESS`, `CREATED_AT`, `UPDATED_AT`, `AD_TYPE_ID`, `CATEGORY_ID`, `USER_TYPE_ID`, `CITY_ID`, `QUARTER_ID`, `SLUG` FROM `ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `title`, `description`, `price`, `statut`, `user_name`, `user_email`, `user_password`, `user_salt`, `user_phone`, `user_ip_adress`, `created_at`, `updated_at`, `ad_type_id`, `category_id`, `user_type_id`, `city_id`, `quarter_id`, `slug` FROM `ad` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

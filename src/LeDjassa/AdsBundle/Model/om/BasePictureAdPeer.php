@@ -38,14 +38,14 @@ abstract class BasePictureAdPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 3;
 
-    /** the column name for the ID field */
-    const ID = 'picture_ad.ID';
+    /** the column name for the id field */
+    const ID = 'picture_ad.id';
 
-    /** the column name for the PATH field */
-    const PATH = 'picture_ad.PATH';
+    /** the column name for the path field */
+    const PATH = 'picture_ad.path';
 
-    /** the column name for the AD_ID field */
-    const AD_ID = 'picture_ad.AD_ID';
+    /** the column name for the ad_id field */
+    const AD_ID = 'picture_ad.ad_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -164,9 +164,9 @@ abstract class BasePictureAdPeer
             $criteria->addSelectColumn(PictureAdPeer::PATH);
             $criteria->addSelectColumn(PictureAdPeer::AD_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.PATH');
-            $criteria->addSelectColumn($alias . '.AD_ID');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.path');
+            $criteria->addSelectColumn($alias . '.ad_id');
         }
     }
 

@@ -144,7 +144,7 @@ abstract class BaseCategoryTypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `TITLE`, `CODE` FROM `category_type` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `title`, `code` FROM `category_type` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

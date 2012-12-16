@@ -42,10 +42,10 @@ class CategoryTypeTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 5, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
-        $this->getColumn('TITLE', false)->setPrimaryString(true);
-        $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 5, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 100, null);
+        $this->getColumn('title', false)->setPrimaryString(true);
+        $this->addColumn('code', 'Code', 'VARCHAR', false, 20, null);
         // validators
     } // initialize()
 

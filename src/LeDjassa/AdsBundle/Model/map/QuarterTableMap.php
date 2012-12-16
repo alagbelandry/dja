@@ -42,11 +42,11 @@ class QuarterTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 100, null);
-        $this->getColumn('NAME', false)->setPrimaryString(true);
-        $this->addForeignKey('CITY_ID', 'CityId', 'INTEGER', 'city', 'ID', false, 6, null);
-        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 100, null);
+        $this->getColumn('name', false)->setPrimaryString(true);
+        $this->addForeignKey('city_id', 'CityId', 'INTEGER', 'city', 'id', false, 6, null);
+        $this->addColumn('slug', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -68,7 +68,15 @@ class QuarterTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
+            'sluggable' =>  array (
+  'slug_column' => 'slug',
+  'slug_pattern' => '',
+  'replace_pattern' => '/\\W+/',
+  'replacement' => '-',
+  'separator' => '-',
+  'permanent' => 'false',
+  'scope_column' => '',
+),
         );
     } // getBehaviors()
 

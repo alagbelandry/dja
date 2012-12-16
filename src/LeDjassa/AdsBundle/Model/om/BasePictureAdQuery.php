@@ -144,7 +144,7 @@ abstract class BasePictureAdQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `ID`, `PATH`, `AD_ID` FROM `picture_ad` WHERE `ID` = :p0';
+        $sql = 'SELECT `id`, `path`, `ad_id` FROM `picture_ad` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

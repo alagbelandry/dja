@@ -37,14 +37,14 @@ abstract class BaseAdTypePeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 3;
 
-    /** the column name for the ID field */
-    const ID = 'ad_type.ID';
+    /** the column name for the id field */
+    const ID = 'ad_type.id';
 
-    /** the column name for the NAME field */
-    const NAME = 'ad_type.NAME';
+    /** the column name for the name field */
+    const NAME = 'ad_type.name';
 
-    /** the column name for the CODE field */
-    const CODE = 'ad_type.CODE';
+    /** the column name for the code field */
+    const CODE = 'ad_type.code';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -163,9 +163,9 @@ abstract class BaseAdTypePeer
             $criteria->addSelectColumn(AdTypePeer::NAME);
             $criteria->addSelectColumn(AdTypePeer::CODE);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.CODE');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.code');
         }
     }
 

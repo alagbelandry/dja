@@ -382,22 +382,25 @@ abstract class BaseAd extends BaseObject implements Persistent
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
-        } else {
-            try {
-                $dt = new DateTime($this->created_at);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
-            }
+        }
+
+        try {
+            $dt = new DateTime($this->created_at);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is true, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -419,22 +422,25 @@ abstract class BaseAd extends BaseObject implements Persistent
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
-        } else {
-            try {
-                $dt = new DateTime($this->updated_at);
-            } catch (Exception $x) {
-                throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->updated_at, true), $x);
-            }
+        }
+
+        try {
+            $dt = new DateTime($this->updated_at);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->updated_at, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is true, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -1263,7 +1269,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
             if ($this->collInterestedUsers !== null) {
                 foreach ($this->collInterestedUsers as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -1281,7 +1287,7 @@ abstract class BaseAd extends BaseObject implements Persistent
 
             if ($this->collPictureAds !== null) {
                 foreach ($this->collPictureAds as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -1314,61 +1320,61 @@ abstract class BaseAd extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(AdPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(AdPeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+            $modifiedColumns[':p' . $index++]  = '`title`';
         }
         if ($this->isColumnModified(AdPeer::DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = '`DESCRIPTION`';
+            $modifiedColumns[':p' . $index++]  = '`description`';
         }
         if ($this->isColumnModified(AdPeer::PRICE)) {
-            $modifiedColumns[':p' . $index++]  = '`PRICE`';
+            $modifiedColumns[':p' . $index++]  = '`price`';
         }
         if ($this->isColumnModified(AdPeer::STATUT)) {
-            $modifiedColumns[':p' . $index++]  = '`STATUT`';
+            $modifiedColumns[':p' . $index++]  = '`statut`';
         }
         if ($this->isColumnModified(AdPeer::USER_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_NAME`';
+            $modifiedColumns[':p' . $index++]  = '`user_name`';
         }
         if ($this->isColumnModified(AdPeer::USER_EMAIL)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_EMAIL`';
+            $modifiedColumns[':p' . $index++]  = '`user_email`';
         }
         if ($this->isColumnModified(AdPeer::USER_PASSWORD)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_PASSWORD`';
+            $modifiedColumns[':p' . $index++]  = '`user_password`';
         }
         if ($this->isColumnModified(AdPeer::USER_SALT)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_SALT`';
+            $modifiedColumns[':p' . $index++]  = '`user_salt`';
         }
         if ($this->isColumnModified(AdPeer::USER_PHONE)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_PHONE`';
+            $modifiedColumns[':p' . $index++]  = '`user_phone`';
         }
         if ($this->isColumnModified(AdPeer::USER_IP_ADRESS)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_IP_ADRESS`';
+            $modifiedColumns[':p' . $index++]  = '`user_ip_adress`';
         }
         if ($this->isColumnModified(AdPeer::CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`CREATED_AT`';
+            $modifiedColumns[':p' . $index++]  = '`created_at`';
         }
         if ($this->isColumnModified(AdPeer::UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = '`UPDATED_AT`';
+            $modifiedColumns[':p' . $index++]  = '`updated_at`';
         }
         if ($this->isColumnModified(AdPeer::AD_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`AD_TYPE_ID`';
+            $modifiedColumns[':p' . $index++]  = '`ad_type_id`';
         }
         if ($this->isColumnModified(AdPeer::CATEGORY_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`CATEGORY_ID`';
+            $modifiedColumns[':p' . $index++]  = '`category_id`';
         }
         if ($this->isColumnModified(AdPeer::USER_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`USER_TYPE_ID`';
+            $modifiedColumns[':p' . $index++]  = '`user_type_id`';
         }
         if ($this->isColumnModified(AdPeer::CITY_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`CITY_ID`';
+            $modifiedColumns[':p' . $index++]  = '`city_id`';
         }
         if ($this->isColumnModified(AdPeer::QUARTER_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`QUARTER_ID`';
+            $modifiedColumns[':p' . $index++]  = '`quarter_id`';
         }
         if ($this->isColumnModified(AdPeer::SLUG)) {
-            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+            $modifiedColumns[':p' . $index++]  = '`slug`';
         }
 
         $sql = sprintf(
@@ -1381,61 +1387,61 @@ abstract class BaseAd extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
+                    case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`DESCRIPTION`':
+                    case '`description`':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
-                    case '`PRICE`':
+                    case '`price`':
                         $stmt->bindValue($identifier, $this->price, PDO::PARAM_STR);
                         break;
-                    case '`STATUT`':
+                    case '`statut`':
                         $stmt->bindValue($identifier, $this->statut, PDO::PARAM_INT);
                         break;
-                    case '`USER_NAME`':
+                    case '`user_name`':
                         $stmt->bindValue($identifier, $this->user_name, PDO::PARAM_STR);
                         break;
-                    case '`USER_EMAIL`':
+                    case '`user_email`':
                         $stmt->bindValue($identifier, $this->user_email, PDO::PARAM_STR);
                         break;
-                    case '`USER_PASSWORD`':
+                    case '`user_password`':
                         $stmt->bindValue($identifier, $this->user_password, PDO::PARAM_STR);
                         break;
-                    case '`USER_SALT`':
+                    case '`user_salt`':
                         $stmt->bindValue($identifier, $this->user_salt, PDO::PARAM_STR);
                         break;
-                    case '`USER_PHONE`':
+                    case '`user_phone`':
                         $stmt->bindValue($identifier, $this->user_phone, PDO::PARAM_STR);
                         break;
-                    case '`USER_IP_ADRESS`':
+                    case '`user_ip_adress`':
                         $stmt->bindValue($identifier, $this->user_ip_adress, PDO::PARAM_STR);
                         break;
-                    case '`CREATED_AT`':
+                    case '`created_at`':
                         $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
                         break;
-                    case '`UPDATED_AT`':
+                    case '`updated_at`':
                         $stmt->bindValue($identifier, $this->updated_at, PDO::PARAM_STR);
                         break;
-                    case '`AD_TYPE_ID`':
+                    case '`ad_type_id`':
                         $stmt->bindValue($identifier, $this->ad_type_id, PDO::PARAM_INT);
                         break;
-                    case '`CATEGORY_ID`':
+                    case '`category_id`':
                         $stmt->bindValue($identifier, $this->category_id, PDO::PARAM_INT);
                         break;
-                    case '`USER_TYPE_ID`':
+                    case '`user_type_id`':
                         $stmt->bindValue($identifier, $this->user_type_id, PDO::PARAM_INT);
                         break;
-                    case '`CITY_ID`':
+                    case '`city_id`':
                         $stmt->bindValue($identifier, $this->city_id, PDO::PARAM_INT);
                         break;
-                    case '`QUARTER_ID`':
+                    case '`quarter_id`':
                         $stmt->bindValue($identifier, $this->quarter_id, PDO::PARAM_INT);
                         break;
-                    case '`SLUG`':
+                    case '`slug`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                 }
@@ -1506,11 +1512,11 @@ abstract class BaseAd extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -2099,12 +2105,13 @@ abstract class BaseAd extends BaseObject implements Persistent
      * Get the associated City object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return City The associated City object.
      * @throws PropelException
      */
-    public function getCity(PropelPDO $con = null)
+    public function getCity(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aCity === null && ($this->city_id !== null)) {
+        if ($this->aCity === null && ($this->city_id !== null) && $doQuery) {
             $this->aCity = CityQuery::create()->findPk($this->city_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -2150,12 +2157,13 @@ abstract class BaseAd extends BaseObject implements Persistent
      * Get the associated UserType object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return UserType The associated UserType object.
      * @throws PropelException
      */
-    public function getUserType(PropelPDO $con = null)
+    public function getUserType(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aUserType === null && ($this->user_type_id !== null)) {
+        if ($this->aUserType === null && ($this->user_type_id !== null) && $doQuery) {
             $this->aUserType = UserTypeQuery::create()->findPk($this->user_type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -2201,12 +2209,13 @@ abstract class BaseAd extends BaseObject implements Persistent
      * Get the associated AdType object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return AdType The associated AdType object.
      * @throws PropelException
      */
-    public function getAdType(PropelPDO $con = null)
+    public function getAdType(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aAdType === null && ($this->ad_type_id !== null)) {
+        if ($this->aAdType === null && ($this->ad_type_id !== null) && $doQuery) {
             $this->aAdType = AdTypeQuery::create()->findPk($this->ad_type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -2252,12 +2261,13 @@ abstract class BaseAd extends BaseObject implements Persistent
      * Get the associated Category object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return Category The associated Category object.
      * @throws PropelException
      */
-    public function getCategory(PropelPDO $con = null)
+    public function getCategory(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aCategory === null && ($this->category_id !== null)) {
+        if ($this->aCategory === null && ($this->category_id !== null) && $doQuery) {
             $this->aCategory = CategoryQuery::create()->findPk($this->category_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -2303,12 +2313,13 @@ abstract class BaseAd extends BaseObject implements Persistent
      * Get the associated Quarter object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return Quarter The associated Quarter object.
      * @throws PropelException
      */
-    public function getQuarter(PropelPDO $con = null)
+    public function getQuarter(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aQuarter === null && ($this->quarter_id !== null)) {
+        if ($this->aQuarter === null && ($this->quarter_id !== null) && $doQuery) {
             $this->aQuarter = QuarterQuery::create()->findPk($this->quarter_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -2458,9 +2469,11 @@ abstract class BaseAd extends BaseObject implements Persistent
      */
     public function setInterestedUsers(PropelCollection $interestedUsers, PropelPDO $con = null)
     {
-        $this->interestedUsersScheduledForDeletion = $this->getInterestedUsers(new Criteria(), $con)->diff($interestedUsers);
+        $interestedUsersToDelete = $this->getInterestedUsers(new Criteria(), $con)->diff($interestedUsers);
 
-        foreach ($this->interestedUsersScheduledForDeletion as $interestedUserRemoved) {
+        $this->interestedUsersScheduledForDeletion = unserialize(serialize($interestedUsersToDelete));
+
+        foreach ($interestedUsersToDelete as $interestedUserRemoved) {
             $interestedUserRemoved->setAd(null);
         }
 
@@ -2490,22 +2503,22 @@ abstract class BaseAd extends BaseObject implements Persistent
         if (null === $this->collInterestedUsers || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collInterestedUsers) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getInterestedUsers());
-                }
-                $query = InterestedUserQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByAd($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collInterestedUsers);
+
+            if($partial && !$criteria) {
+                return count($this->getInterestedUsers());
+            }
+            $query = InterestedUserQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByAd($this)
+                ->count($con);
         }
+
+        return count($this->collInterestedUsers);
     }
 
     /**
@@ -2673,9 +2686,11 @@ abstract class BaseAd extends BaseObject implements Persistent
      */
     public function setPictureAds(PropelCollection $pictureAds, PropelPDO $con = null)
     {
-        $this->pictureAdsScheduledForDeletion = $this->getPictureAds(new Criteria(), $con)->diff($pictureAds);
+        $pictureAdsToDelete = $this->getPictureAds(new Criteria(), $con)->diff($pictureAds);
 
-        foreach ($this->pictureAdsScheduledForDeletion as $pictureAdRemoved) {
+        $this->pictureAdsScheduledForDeletion = unserialize(serialize($pictureAdsToDelete));
+
+        foreach ($pictureAdsToDelete as $pictureAdRemoved) {
             $pictureAdRemoved->setAd(null);
         }
 
@@ -2705,22 +2720,22 @@ abstract class BaseAd extends BaseObject implements Persistent
         if (null === $this->collPictureAds || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collPictureAds) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getPictureAds());
-                }
-                $query = PictureAdQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByAd($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collPictureAds);
+
+            if($partial && !$criteria) {
+                return count($this->getPictureAds());
+            }
+            $query = PictureAdQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByAd($this)
+                ->count($con);
         }
+
+        return count($this->collPictureAds);
     }
 
     /**
@@ -2945,10 +2960,10 @@ abstract class BaseAd extends BaseObject implements Persistent
     /**
      * Make sure the slug is short enough to accomodate the column size
      *
-     * @param	string $slug                   the slug to check
-     * @param	int    $incrementReservedSpace the number of characters to keep empty
+     * @param    string $slug                   the slug to check
+     * @param    int    $incrementReservedSpace the number of characters to keep empty
      *
-     * @return string						the truncated slug
+     * @return string                            the truncated slug
      */
     protected static function limitSlugSize($slug, $incrementReservedSpace = 3)
     {
@@ -2964,23 +2979,54 @@ abstract class BaseAd extends BaseObject implements Persistent
     /**
      * Get the slug, ensuring its uniqueness
      *
-     * @param	string $slug			the slug to check
-     * @param	string $separator the separator used by slug
-     * @param	int    $increment the count of occurences of the slug
-     * @return string						the unique slug
+     * @param    string $slug            the slug to check
+     * @param    string $separator       the separator used by slug
+     * @param    int    $alreadyExists   false for the first try, true for the second, and take the high count + 1
+     * @return   string                   the unique slug
      */
-    protected function makeSlugUnique($slug, $separator = '-', $increment = 0)
+    protected function makeSlugUnique($slug, $separator = '-', $alreadyExists = false)
     {
-        $slug2 = empty($increment) ? $slug : $slug . $separator . $increment;
-        $slugAlreadyExists = AdQuery::create()
-            ->filterBySlug($slug2)
-            ->prune($this)
-            ->count();
-        if ($slugAlreadyExists) {
-            return $this->makeSlugUnique($slug, $separator, ++$increment);
+        if (!$alreadyExists) {
+            $slug2 = $slug;
         } else {
+            $slug2 = $slug . $separator;
+
+            $count = AdQuery::create()
+                ->filterBySlug($this->getSlug())
+                ->filterByPrimaryKey($this->getPrimaryKey())
+            ->count();
+
+            if (1 == $count) {
+                return $this->getSlug();
+            }
+        }
+
+        $query = AdQuery::create('q')
+            ->where('q.Slug ' . ($alreadyExists ? 'REGEXP' : '=') . ' ?', $alreadyExists ? '^' . $slug2 . '[0-9]+$' : $slug2)
+            ->prune($this)
+        ;
+
+        if (!$alreadyExists) {
+            $count = $query->count();
+            if ($count > 0) {
+                return $this->makeSlugUnique($slug, $separator, true);
+            }
+
             return $slug2;
         }
+
+        // Already exists
+        $object = $query
+            ->addDescendingOrderByColumn('LENGTH(slug)')
+            ->addDescendingOrderByColumn('slug')
+        ->findOne();
+
+        // First duplicate slug
+        if (null == $object) {
+            return $slug2 . '1';
+        }
+
+        return $slug2 . (substr($object->getSlug(), strlen($slug) + 1) + 1);
     }
 
 }

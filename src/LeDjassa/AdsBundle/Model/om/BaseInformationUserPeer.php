@@ -37,29 +37,29 @@ abstract class BaseInformationUserPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 8;
 
-    /** the column name for the ID field */
-    const ID = 'information_user.ID';
+    /** the column name for the id field */
+    const ID = 'information_user.id';
 
-    /** the column name for the NAME field */
-    const NAME = 'information_user.NAME';
+    /** the column name for the name field */
+    const NAME = 'information_user.name';
 
-    /** the column name for the SUBJECT field */
-    const SUBJECT = 'information_user.SUBJECT';
+    /** the column name for the subject field */
+    const SUBJECT = 'information_user.subject';
 
-    /** the column name for the EMAIL field */
-    const EMAIL = 'information_user.EMAIL';
+    /** the column name for the email field */
+    const EMAIL = 'information_user.email';
 
-    /** the column name for the MESSAGE field */
-    const MESSAGE = 'information_user.MESSAGE';
+    /** the column name for the message field */
+    const MESSAGE = 'information_user.message';
 
-    /** the column name for the IP_ADRESS field */
-    const IP_ADRESS = 'information_user.IP_ADRESS';
+    /** the column name for the ip_adress field */
+    const IP_ADRESS = 'information_user.ip_adress';
 
-    /** the column name for the CREATED_AT field */
-    const CREATED_AT = 'information_user.CREATED_AT';
+    /** the column name for the created_at field */
+    const CREATED_AT = 'information_user.created_at';
 
-    /** the column name for the UPDATED_AT field */
-    const UPDATED_AT = 'information_user.UPDATED_AT';
+    /** the column name for the updated_at field */
+    const UPDATED_AT = 'information_user.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -183,14 +183,14 @@ abstract class BaseInformationUserPeer
             $criteria->addSelectColumn(InformationUserPeer::CREATED_AT);
             $criteria->addSelectColumn(InformationUserPeer::UPDATED_AT);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.SUBJECT');
-            $criteria->addSelectColumn($alias . '.EMAIL');
-            $criteria->addSelectColumn($alias . '.MESSAGE');
-            $criteria->addSelectColumn($alias . '.IP_ADRESS');
-            $criteria->addSelectColumn($alias . '.CREATED_AT');
-            $criteria->addSelectColumn($alias . '.UPDATED_AT');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.subject');
+            $criteria->addSelectColumn($alias . '.email');
+            $criteria->addSelectColumn($alias . '.message');
+            $criteria->addSelectColumn($alias . '.ip_adress');
+            $criteria->addSelectColumn($alias . '.created_at');
+            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

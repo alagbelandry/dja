@@ -419,7 +419,7 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
 
             if ($this->collCategories !== null) {
                 foreach ($this->collCategories as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -452,13 +452,13 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(CategoryTypePeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(CategoryTypePeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+            $modifiedColumns[':p' . $index++]  = '`title`';
         }
         if ($this->isColumnModified(CategoryTypePeer::CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`CODE`';
+            $modifiedColumns[':p' . $index++]  = '`code`';
         }
 
         $sql = sprintf(
@@ -471,13 +471,13 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
+                    case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`CODE`':
+                    case '`code`':
                         $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
                         break;
                 }
@@ -548,11 +548,11 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -1014,9 +1014,11 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
      */
     public function setCategories(PropelCollection $categories, PropelPDO $con = null)
     {
-        $this->categoriesScheduledForDeletion = $this->getCategories(new Criteria(), $con)->diff($categories);
+        $categoriesToDelete = $this->getCategories(new Criteria(), $con)->diff($categories);
 
-        foreach ($this->categoriesScheduledForDeletion as $categoryRemoved) {
+        $this->categoriesScheduledForDeletion = unserialize(serialize($categoriesToDelete));
+
+        foreach ($categoriesToDelete as $categoryRemoved) {
             $categoryRemoved->setCategoryType(null);
         }
 
@@ -1046,22 +1048,22 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
         if (null === $this->collCategories || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collCategories) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getCategories());
-                }
-                $query = CategoryQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByCategoryType($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collCategories);
+
+            if($partial && !$criteria) {
+                return count($this->getCategories());
+            }
+            $query = CategoryQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCategoryType($this)
+                ->count($con);
         }
+
+        return count($this->collCategories);
     }
 
     /**
@@ -1105,7 +1107,7 @@ abstract class BaseCategoryType extends BaseObject implements Persistent
                 $this->categoriesScheduledForDeletion = clone $this->collCategories;
                 $this->categoriesScheduledForDeletion->clear();
             }
-            $this->categoriesScheduledForDeletion[]= $category;
+            $this->categoriesScheduledForDeletion[]= clone $category;
             $category->setCategoryType(null);
         }
 

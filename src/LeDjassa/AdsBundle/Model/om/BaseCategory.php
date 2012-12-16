@@ -530,7 +530,7 @@ abstract class BaseCategory extends BaseObject implements Persistent
 
             if ($this->collAds !== null) {
                 foreach ($this->collAds as $referrerFK) {
-                    if (!$referrerFK->isDeleted()) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
@@ -563,19 +563,19 @@ abstract class BaseCategory extends BaseObject implements Persistent
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(CategoryPeer::ID)) {
-            $modifiedColumns[':p' . $index++]  = '`ID`';
+            $modifiedColumns[':p' . $index++]  = '`id`';
         }
         if ($this->isColumnModified(CategoryPeer::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = '`TITLE`';
+            $modifiedColumns[':p' . $index++]  = '`title`';
         }
         if ($this->isColumnModified(CategoryPeer::CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`CODE`';
+            $modifiedColumns[':p' . $index++]  = '`code`';
         }
         if ($this->isColumnModified(CategoryPeer::CATEGORY_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`CATEGORY_TYPE_ID`';
+            $modifiedColumns[':p' . $index++]  = '`category_type_id`';
         }
         if ($this->isColumnModified(CategoryPeer::SLUG)) {
-            $modifiedColumns[':p' . $index++]  = '`SLUG`';
+            $modifiedColumns[':p' . $index++]  = '`slug`';
         }
 
         $sql = sprintf(
@@ -588,19 +588,19 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`ID`':
+                    case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`TITLE`':
+                    case '`title`':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case '`CODE`':
+                    case '`code`':
                         $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
                         break;
-                    case '`CATEGORY_TYPE_ID`':
+                    case '`category_type_id`':
                         $stmt->bindValue($identifier, $this->category_type_id, PDO::PARAM_INT);
                         break;
-                    case '`SLUG`':
+                    case '`slug`':
                         $stmt->bindValue($identifier, $this->slug, PDO::PARAM_STR);
                         break;
                 }
@@ -671,11 +671,11 @@ abstract class BaseCategory extends BaseObject implements Persistent
             $this->validationFailures = array();
 
             return true;
-        } else {
-            $this->validationFailures = $res;
-
-            return false;
         }
+
+        $this->validationFailures = $res;
+
+        return false;
     }
 
     /**
@@ -1071,12 +1071,13 @@ abstract class BaseCategory extends BaseObject implements Persistent
      * Get the associated CategoryType object
      *
      * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
      * @return CategoryType The associated CategoryType object.
      * @throws PropelException
      */
-    public function getCategoryType(PropelPDO $con = null)
+    public function getCategoryType(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aCategoryType === null && ($this->category_type_id !== null)) {
+        if ($this->aCategoryType === null && ($this->category_type_id !== null) && $doQuery) {
             $this->aCategoryType = CategoryTypeQuery::create()->findPk($this->category_type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
@@ -1223,9 +1224,11 @@ abstract class BaseCategory extends BaseObject implements Persistent
      */
     public function setAds(PropelCollection $ads, PropelPDO $con = null)
     {
-        $this->adsScheduledForDeletion = $this->getAds(new Criteria(), $con)->diff($ads);
+        $adsToDelete = $this->getAds(new Criteria(), $con)->diff($ads);
 
-        foreach ($this->adsScheduledForDeletion as $adRemoved) {
+        $this->adsScheduledForDeletion = unserialize(serialize($adsToDelete));
+
+        foreach ($adsToDelete as $adRemoved) {
             $adRemoved->setCategory(null);
         }
 
@@ -1255,22 +1258,22 @@ abstract class BaseCategory extends BaseObject implements Persistent
         if (null === $this->collAds || null !== $criteria || $partial) {
             if ($this->isNew() && null === $this->collAds) {
                 return 0;
-            } else {
-                if($partial && !$criteria) {
-                    return count($this->getAds());
-                }
-                $query = AdQuery::create(null, $criteria);
-                if ($distinct) {
-                    $query->distinct();
-                }
-
-                return $query
-                    ->filterByCategory($this)
-                    ->count($con);
             }
-        } else {
-            return count($this->collAds);
+
+            if($partial && !$criteria) {
+                return count($this->getAds());
+            }
+            $query = AdQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCategory($this)
+                ->count($con);
         }
+
+        return count($this->collAds);
     }
 
     /**
@@ -1553,10 +1556,10 @@ abstract class BaseCategory extends BaseObject implements Persistent
     /**
      * Make sure the slug is short enough to accomodate the column size
      *
-     * @param	string $slug                   the slug to check
-     * @param	int    $incrementReservedSpace the number of characters to keep empty
+     * @param    string $slug                   the slug to check
+     * @param    int    $incrementReservedSpace the number of characters to keep empty
      *
-     * @return string						the truncated slug
+     * @return string                            the truncated slug
      */
     protected static function limitSlugSize($slug, $incrementReservedSpace = 3)
     {
@@ -1572,23 +1575,54 @@ abstract class BaseCategory extends BaseObject implements Persistent
     /**
      * Get the slug, ensuring its uniqueness
      *
-     * @param	string $slug			the slug to check
-     * @param	string $separator the separator used by slug
-     * @param	int    $increment the count of occurences of the slug
-     * @return string						the unique slug
+     * @param    string $slug            the slug to check
+     * @param    string $separator       the separator used by slug
+     * @param    int    $alreadyExists   false for the first try, true for the second, and take the high count + 1
+     * @return   string                   the unique slug
      */
-    protected function makeSlugUnique($slug, $separator = '-', $increment = 0)
+    protected function makeSlugUnique($slug, $separator = '-', $alreadyExists = false)
     {
-        $slug2 = empty($increment) ? $slug : $slug . $separator . $increment;
-        $slugAlreadyExists = CategoryQuery::create()
-            ->filterBySlug($slug2)
-            ->prune($this)
-            ->count();
-        if ($slugAlreadyExists) {
-            return $this->makeSlugUnique($slug, $separator, ++$increment);
+        if (!$alreadyExists) {
+            $slug2 = $slug;
         } else {
+            $slug2 = $slug . $separator;
+
+            $count = CategoryQuery::create()
+                ->filterBySlug($this->getSlug())
+                ->filterByPrimaryKey($this->getPrimaryKey())
+            ->count();
+
+            if (1 == $count) {
+                return $this->getSlug();
+            }
+        }
+
+        $query = CategoryQuery::create('q')
+            ->where('q.Slug ' . ($alreadyExists ? 'REGEXP' : '=') . ' ?', $alreadyExists ? '^' . $slug2 . '[0-9]+$' : $slug2)
+            ->prune($this)
+        ;
+
+        if (!$alreadyExists) {
+            $count = $query->count();
+            if ($count > 0) {
+                return $this->makeSlugUnique($slug, $separator, true);
+            }
+
             return $slug2;
         }
+
+        // Already exists
+        $object = $query
+            ->addDescendingOrderByColumn('LENGTH(slug)')
+            ->addDescendingOrderByColumn('slug')
+        ->findOne();
+
+        // First duplicate slug
+        if (null == $object) {
+            return $slug2 . '1';
+        }
+
+        return $slug2 . (substr($object->getSlug(), strlen($slug) + 1) + 1);
     }
 
 }

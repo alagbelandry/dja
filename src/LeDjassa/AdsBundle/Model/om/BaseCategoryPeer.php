@@ -38,20 +38,20 @@ abstract class BaseCategoryPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 5;
 
-    /** the column name for the ID field */
-    const ID = 'category.ID';
+    /** the column name for the id field */
+    const ID = 'category.id';
 
-    /** the column name for the TITLE field */
-    const TITLE = 'category.TITLE';
+    /** the column name for the title field */
+    const TITLE = 'category.title';
 
-    /** the column name for the CODE field */
-    const CODE = 'category.CODE';
+    /** the column name for the code field */
+    const CODE = 'category.code';
 
-    /** the column name for the CATEGORY_TYPE_ID field */
-    const CATEGORY_TYPE_ID = 'category.CATEGORY_TYPE_ID';
+    /** the column name for the category_type_id field */
+    const CATEGORY_TYPE_ID = 'category.category_type_id';
 
-    /** the column name for the SLUG field */
-    const SLUG = 'category.SLUG';
+    /** the column name for the slug field */
+    const SLUG = 'category.slug';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -172,11 +172,11 @@ abstract class BaseCategoryPeer
             $criteria->addSelectColumn(CategoryPeer::CATEGORY_TYPE_ID);
             $criteria->addSelectColumn(CategoryPeer::SLUG);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.CODE');
-            $criteria->addSelectColumn($alias . '.CATEGORY_TYPE_ID');
-            $criteria->addSelectColumn($alias . '.SLUG');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.code');
+            $criteria->addSelectColumn($alias . '.category_type_id');
+            $criteria->addSelectColumn($alias . '.slug');
         }
     }
 

@@ -38,20 +38,20 @@ abstract class BaseCityPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 5;
 
-    /** the column name for the ID field */
-    const ID = 'city.ID';
+    /** the column name for the id field */
+    const ID = 'city.id';
 
-    /** the column name for the NAME field */
-    const NAME = 'city.NAME';
+    /** the column name for the name field */
+    const NAME = 'city.name';
 
-    /** the column name for the CODE field */
-    const CODE = 'city.CODE';
+    /** the column name for the code field */
+    const CODE = 'city.code';
 
-    /** the column name for the AREA_ID field */
-    const AREA_ID = 'city.AREA_ID';
+    /** the column name for the area_id field */
+    const AREA_ID = 'city.area_id';
 
-    /** the column name for the SLUG field */
-    const SLUG = 'city.SLUG';
+    /** the column name for the slug field */
+    const SLUG = 'city.slug';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -172,11 +172,11 @@ abstract class BaseCityPeer
             $criteria->addSelectColumn(CityPeer::AREA_ID);
             $criteria->addSelectColumn(CityPeer::SLUG);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.CODE');
-            $criteria->addSelectColumn($alias . '.AREA_ID');
-            $criteria->addSelectColumn($alias . '.SLUG');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.code');
+            $criteria->addSelectColumn($alias . '.area_id');
+            $criteria->addSelectColumn($alias . '.slug');
         }
     }
 

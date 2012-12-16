@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use LeDjassa\AdsBundle\Model\UserTypeQuery;
+use LeDjassa\AdsBundle\Model\CategoryQuery;
+use LeDjassa\AdsBundle\Model\Category;
 use LeDjassa\AdsBundle\Model\UserType;
 
 /**
@@ -54,12 +56,14 @@ class AdType extends AbstractType
             'attr'           => array(
                 'autocomplete' => 'off')   
         ));
-
+ 
         // Category  relation
         $builder->add('category', 'model', array(
-            'class'    => 'LeDjassa\AdsBundle\Model\Category',
-            'label'    => 'Categorie :',
-            'property' => 'title',
+            'class'         => 'LeDjassa\AdsBundle\Model\Category',
+            'label'         => 'Categorie :',
+            'property'      => 'title',
+            'group_by'      => 'categoryType.title',
+            'query'         => CategoryQuery::create()->joinCategoryType('categoryType'),
             'empty_value'   => 'Choisir une catégorie',
         ));
 

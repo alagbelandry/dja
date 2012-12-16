@@ -42,62 +42,62 @@ abstract class BaseAdPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 19;
 
-    /** the column name for the ID field */
-    const ID = 'ad.ID';
+    /** the column name for the id field */
+    const ID = 'ad.id';
 
-    /** the column name for the TITLE field */
-    const TITLE = 'ad.TITLE';
+    /** the column name for the title field */
+    const TITLE = 'ad.title';
 
-    /** the column name for the DESCRIPTION field */
-    const DESCRIPTION = 'ad.DESCRIPTION';
+    /** the column name for the description field */
+    const DESCRIPTION = 'ad.description';
 
-    /** the column name for the PRICE field */
-    const PRICE = 'ad.PRICE';
+    /** the column name for the price field */
+    const PRICE = 'ad.price';
 
-    /** the column name for the STATUT field */
-    const STATUT = 'ad.STATUT';
+    /** the column name for the statut field */
+    const STATUT = 'ad.statut';
 
-    /** the column name for the USER_NAME field */
-    const USER_NAME = 'ad.USER_NAME';
+    /** the column name for the user_name field */
+    const USER_NAME = 'ad.user_name';
 
-    /** the column name for the USER_EMAIL field */
-    const USER_EMAIL = 'ad.USER_EMAIL';
+    /** the column name for the user_email field */
+    const USER_EMAIL = 'ad.user_email';
 
-    /** the column name for the USER_PASSWORD field */
-    const USER_PASSWORD = 'ad.USER_PASSWORD';
+    /** the column name for the user_password field */
+    const USER_PASSWORD = 'ad.user_password';
 
-    /** the column name for the USER_SALT field */
-    const USER_SALT = 'ad.USER_SALT';
+    /** the column name for the user_salt field */
+    const USER_SALT = 'ad.user_salt';
 
-    /** the column name for the USER_PHONE field */
-    const USER_PHONE = 'ad.USER_PHONE';
+    /** the column name for the user_phone field */
+    const USER_PHONE = 'ad.user_phone';
 
-    /** the column name for the USER_IP_ADRESS field */
-    const USER_IP_ADRESS = 'ad.USER_IP_ADRESS';
+    /** the column name for the user_ip_adress field */
+    const USER_IP_ADRESS = 'ad.user_ip_adress';
 
-    /** the column name for the CREATED_AT field */
-    const CREATED_AT = 'ad.CREATED_AT';
+    /** the column name for the created_at field */
+    const CREATED_AT = 'ad.created_at';
 
-    /** the column name for the UPDATED_AT field */
-    const UPDATED_AT = 'ad.UPDATED_AT';
+    /** the column name for the updated_at field */
+    const UPDATED_AT = 'ad.updated_at';
 
-    /** the column name for the AD_TYPE_ID field */
-    const AD_TYPE_ID = 'ad.AD_TYPE_ID';
+    /** the column name for the ad_type_id field */
+    const AD_TYPE_ID = 'ad.ad_type_id';
 
-    /** the column name for the CATEGORY_ID field */
-    const CATEGORY_ID = 'ad.CATEGORY_ID';
+    /** the column name for the category_id field */
+    const CATEGORY_ID = 'ad.category_id';
 
-    /** the column name for the USER_TYPE_ID field */
-    const USER_TYPE_ID = 'ad.USER_TYPE_ID';
+    /** the column name for the user_type_id field */
+    const USER_TYPE_ID = 'ad.user_type_id';
 
-    /** the column name for the CITY_ID field */
-    const CITY_ID = 'ad.CITY_ID';
+    /** the column name for the city_id field */
+    const CITY_ID = 'ad.city_id';
 
-    /** the column name for the QUARTER_ID field */
-    const QUARTER_ID = 'ad.QUARTER_ID';
+    /** the column name for the quarter_id field */
+    const QUARTER_ID = 'ad.quarter_id';
 
-    /** the column name for the SLUG field */
-    const SLUG = 'ad.SLUG';
+    /** the column name for the slug field */
+    const SLUG = 'ad.slug';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -232,25 +232,25 @@ abstract class BaseAdPeer
             $criteria->addSelectColumn(AdPeer::QUARTER_ID);
             $criteria->addSelectColumn(AdPeer::SLUG);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
-            $criteria->addSelectColumn($alias . '.DESCRIPTION');
-            $criteria->addSelectColumn($alias . '.PRICE');
-            $criteria->addSelectColumn($alias . '.STATUT');
-            $criteria->addSelectColumn($alias . '.USER_NAME');
-            $criteria->addSelectColumn($alias . '.USER_EMAIL');
-            $criteria->addSelectColumn($alias . '.USER_PASSWORD');
-            $criteria->addSelectColumn($alias . '.USER_SALT');
-            $criteria->addSelectColumn($alias . '.USER_PHONE');
-            $criteria->addSelectColumn($alias . '.USER_IP_ADRESS');
-            $criteria->addSelectColumn($alias . '.CREATED_AT');
-            $criteria->addSelectColumn($alias . '.UPDATED_AT');
-            $criteria->addSelectColumn($alias . '.AD_TYPE_ID');
-            $criteria->addSelectColumn($alias . '.CATEGORY_ID');
-            $criteria->addSelectColumn($alias . '.USER_TYPE_ID');
-            $criteria->addSelectColumn($alias . '.CITY_ID');
-            $criteria->addSelectColumn($alias . '.QUARTER_ID');
-            $criteria->addSelectColumn($alias . '.SLUG');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.price');
+            $criteria->addSelectColumn($alias . '.statut');
+            $criteria->addSelectColumn($alias . '.user_name');
+            $criteria->addSelectColumn($alias . '.user_email');
+            $criteria->addSelectColumn($alias . '.user_password');
+            $criteria->addSelectColumn($alias . '.user_salt');
+            $criteria->addSelectColumn($alias . '.user_phone');
+            $criteria->addSelectColumn($alias . '.user_ip_adress');
+            $criteria->addSelectColumn($alias . '.created_at');
+            $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.ad_type_id');
+            $criteria->addSelectColumn($alias . '.category_id');
+            $criteria->addSelectColumn($alias . '.user_type_id');
+            $criteria->addSelectColumn($alias . '.city_id');
+            $criteria->addSelectColumn($alias . '.quarter_id');
+            $criteria->addSelectColumn($alias . '.slug');
         }
     }
 

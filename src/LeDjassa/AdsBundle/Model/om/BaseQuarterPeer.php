@@ -38,17 +38,17 @@ abstract class BaseQuarterPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 4;
 
-    /** the column name for the ID field */
-    const ID = 'quarter.ID';
+    /** the column name for the id field */
+    const ID = 'quarter.id';
 
-    /** the column name for the NAME field */
-    const NAME = 'quarter.NAME';
+    /** the column name for the name field */
+    const NAME = 'quarter.name';
 
-    /** the column name for the CITY_ID field */
-    const CITY_ID = 'quarter.CITY_ID';
+    /** the column name for the city_id field */
+    const CITY_ID = 'quarter.city_id';
 
-    /** the column name for the SLUG field */
-    const SLUG = 'quarter.SLUG';
+    /** the column name for the slug field */
+    const SLUG = 'quarter.slug';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -168,10 +168,10 @@ abstract class BaseQuarterPeer
             $criteria->addSelectColumn(QuarterPeer::CITY_ID);
             $criteria->addSelectColumn(QuarterPeer::SLUG);
         } else {
-            $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NAME');
-            $criteria->addSelectColumn($alias . '.CITY_ID');
-            $criteria->addSelectColumn($alias . '.SLUG');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.city_id');
+            $criteria->addSelectColumn($alias . '.slug');
         }
     }
 

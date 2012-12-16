@@ -42,12 +42,12 @@ class CategoryTableMap extends TableMap
         $this->setPackage('src.LeDjassa.AdsBundle.Model');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 6, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', true, 100, null);
-        $this->getColumn('TITLE', false)->setPrimaryString(true);
-        $this->addColumn('CODE', 'Code', 'VARCHAR', false, 20, null);
-        $this->addForeignKey('CATEGORY_TYPE_ID', 'CategoryTypeId', 'INTEGER', 'category_type', 'ID', true, 5, null);
-        $this->addColumn('SLUG', 'Slug', 'VARCHAR', false, 255, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 6, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 100, null);
+        $this->getColumn('title', false)->setPrimaryString(true);
+        $this->addColumn('code', 'Code', 'VARCHAR', false, 20, null);
+        $this->addForeignKey('category_type_id', 'CategoryTypeId', 'INTEGER', 'category_type', 'id', true, 5, null);
+        $this->addColumn('slug', 'Slug', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -69,7 +69,15 @@ class CategoryTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'sluggable' => array('slug_column' => 'slug', 'slug_pattern' => '', 'replace_pattern' => '/\W+/', 'replacement' => '-', 'separator' => '-', 'permanent' => 'false', 'scope_column' => '', ),
+            'sluggable' =>  array (
+  'slug_column' => 'slug',
+  'slug_pattern' => '',
+  'replace_pattern' => '/\\W+/',
+  'replacement' => '-',
+  'separator' => '-',
+  'permanent' => 'false',
+  'scope_column' => '',
+),
         );
     } // getBehaviors()
 

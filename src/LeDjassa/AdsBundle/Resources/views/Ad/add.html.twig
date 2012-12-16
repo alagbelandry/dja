@@ -145,11 +145,12 @@
 				},
 				"ad[user_password][first]": {
 					required: true,
-					rangelength: [3, 12]
+					rangelength: [3, 12]					
 				},
 				"ad[user_password][second]": {
 					required: true,
-					rangelength: [3, 12]
+					rangelength: [3, 12],
+					equalTo: '#ad_user_password_first'
 				},
 				"ad[title]": {
 					required: true,
@@ -200,7 +201,8 @@
         },
         "ad[user_password][second]": {
           required: "Veuillez confirmer le mot de passe.",
-          rangelength: jQuery.validator.format("Le mot de passe doit etre compris entre {0} et {1} caractères.")
+          rangelength: jQuery.validator.format("Le mot de passe doit etre compris entre {0} et {1} caractères."),
+          equalTo: 'Les mots de passe ne sont pas identiques'
         },
         "ad[title]": {
           required: "Veuillez saisir le titre de l'annonce",

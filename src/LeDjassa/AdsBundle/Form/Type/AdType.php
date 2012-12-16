@@ -49,12 +49,12 @@ class AdType extends AbstractType
 
         $builder->add('user_password', 'repeated', array(
             'type'           => 'password',
+            'attr'           => array(
+                'autocomplete' => 'off'),  
             'first_options'  => array(
                 'label' => 'Mot de passe'),
             'second_options' => array(
-                'label' => 'Confirmer le mot de passe'),
-            'attr'           => array(
-                'autocomplete' => 'off')   
+                'label' => 'Confirmer le mot de passe'), 
         ));
  
         // Category  relation

@@ -231,8 +231,12 @@
 					fileField 	= document.getElementById(fileFieldId),
 					picture     = fileField.files[0];
 
-			    if (picture.type.match('image.*') && (typeof window.FileReader !== 'undefined')) {
-			       
+			    if (picture.type.match('image.*') == null || (typeof window.FileReader === 'undefined')) {
+			    	alert('La photo téléchargée n\'est pas une image valide');
+			  		$(fileField).val('');
+			  		return;
+			    }
+
 			        // new instance FileReader for manage onload
 			        reader = new FileReader();
 			        reader.onload = function (event) {
@@ -250,7 +254,6 @@
 			        }
 			   
 			        reader.readAsDataURL(picture);   
-			    }
 			 });
 
     		function addPicture() {

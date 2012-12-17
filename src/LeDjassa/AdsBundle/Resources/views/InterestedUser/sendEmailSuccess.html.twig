@@ -1,2 +1,16 @@
-Votre message a bien été envoyer.
-<a href="{{ path('ad_list') }}">Retour à l'accueil</a>
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block head_title %}Message envoyé à l'annonceur{% endblock %}
+{% block head_meta_site_info %}
+  <meta content="noindex,follow" name="robots">
+{% endblock %}
+{% block body_container_pre_intro %}
+	<div class="s_border"></div>
+{% endblock %}
+{% block body_container_main %}
+<div id="content" class="container_16">
+	<h2>Confirmation message<span class="s_secondary_color"> envoyé à l'annonceur</span></h2>
+	<h4>Votre message a bien été envoyé à l'annonceur.<br/ >
+	</h4>
+	<a href="{{ path('ad_list') }}">Retour à l'accueil</a>
+</div>
+{% endblock %}

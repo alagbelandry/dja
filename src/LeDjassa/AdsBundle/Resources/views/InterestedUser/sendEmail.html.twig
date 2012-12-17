@@ -1,5 +1,17 @@
 {% extends 'LeDjassaAdsBundle::layout.html.twig' %}
-{% block head_title %}Contactez l'annonceur{% endblock %}
+{% block head_meta_description %}
+	{{ad.description}} {{ad.titleCategory}}  {{ad.nameArea}} {{ad.nameCity}} 
+	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
+{% endblock %}
+
+{% block head_meta_keywords %}
+	{{ad.title}} {{ad.titleCategory}} {{ad.nameArea}} {{ad.nameCity}}
+	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
+{% endblock %}
+{% block head_title %}Contactez l'annonceur
+	{{ad.title}} {{ad.titleCategory}}  {{ad.nameArea}} {{ad.nameCity}}
+	{% if ad.nameQuarter %}{{ad.nameQuarter}}{% endif %}
+{% endblock %}
 {% block head_meta_site_info %}
   <meta content="noindex,follow" name="robots">
 {% endblock %}		
@@ -23,7 +35,7 @@
 		par {{ad.userName}}
 <h4>Pensez à indiquer vos coordonnées téléphoniques pour que l'annonceur puisse vous contacter facilement.<br/>
 Tout démarchage publicitaire ou spamming sera éliminé. </h4>
-<form action="{{ path('contact') }}" id="contact_ad_user_form" method="post" {{ form_enctype(form) }}>
+<form action="{{ path('ad_user_send_email', {'idAd': ad.id}) }}" id="contact_ad_user_form" method="post" {{ form_enctype(form) }}>
 	
 	{{ form_errors(form) }}
 	<div class="s_add_ad_block">

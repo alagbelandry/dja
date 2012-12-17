@@ -59,13 +59,22 @@ class Mailer
             $interestedUser->getName()
         );
 
+        $nameAdShow = $ad->getAdType()->getId() == AdType::ID_OFFERS ? 'ad_show_offers' : 'ad_show_demands';
+        $urlShow = $this->router->generate($nameAdShow, array(
+            'idAd'         => $ad->getId(),
+            'slugCategory' => $ad->getCategory()->getSlug(),
+            'slugAd'       => $ad->getSlug()
+            ),
+            true
+        );
+
         $template = $this->parameters['template']['interested_user.contact'];
 
         $nameAdShow = $ad->getAdType()->getId() == AdType::ID_OFFERS ? 'ad_show_offers' : 'ad_show_demands';
         $rendered = $this->templating->render($template, array(
             'ad'       => $ad->getProperties(),
             'message'  => $interestedUser->getMessage(),
-            'urlShow'  => $urlShow = $this->router->generate($nameAdShow, array('idAd' => $ad->getId()), true),
+            'urlShow'  => $urlShow,
             'name'     => $interestedUser->getName(),
             'email'    => $interestedUser->getEmail(),
             'phone'    => $interestedUser->getPhone(),

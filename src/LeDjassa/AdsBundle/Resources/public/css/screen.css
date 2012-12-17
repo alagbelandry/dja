@@ -2504,7 +2504,7 @@ body.s_layout_fixed #wrapper {
   width: 150px;
 }
 
-#ad_description, #ad_edit_description {
+#ad_description, #ad_edit_description, #ad_user_send_email_message {
   width: 350px;
   height: 150px;
 }

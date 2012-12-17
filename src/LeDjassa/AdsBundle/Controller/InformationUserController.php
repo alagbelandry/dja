@@ -24,7 +24,7 @@ class InformationUserController extends Controller
 
         $request = $this->get('request');
 
-        $formHandler = new InformationUserSendEmailHandler($form, $request,$this->get('ledjassa.mailer'));
+        $formHandler = new InformationUserSendEmailHandler($form, $request, $this->get('ledjassa.mailer'));
         $process = $formHandler->process();
 
         if ($process) {

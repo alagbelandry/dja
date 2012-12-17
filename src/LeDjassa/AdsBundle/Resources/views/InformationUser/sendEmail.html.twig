@@ -1,16 +1,30 @@
-<h3>Envoyer un email de contact</h3>
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block head_title %}Contactez l'annonceur{% endblock %}
+{% block head_meta_site_info %}
+  <meta content="noindex,follow" name="robots">
+{% endblock %}
+{% block body_container_pre_intro %}
+	<div class="s_border"></div>
+{% endblock %}
+{% block body_container_main %}
+<div id="content" class="container_16">
+<h2>Contactez<span class="s_secondary_color"> l'annonceur</span></h2>
 
-<div>Pensez à indiquer vos coordonnées téléphoniques pour que l'annonceur puisse vous contacter facilement.</div>
+<h4>Pensez à indiquer vos coordonnées téléphoniques pour que l'annonceur puisse vous contacter facilement.</h4>
 <form action="{{ path('contact') }}" method="post" {{ form_enctype(form) }}>
 	
 	{{ form_errors(form) }}
+	<div class="s_add_ad_block">
+		{{ form_row(form.subject) }}
+		{{ form_row(form.name) }}
+		{{ form_row(form.email) }}
+		{{ form_row(form.message) }}
 
-	{{ form_row(form.subject) }}
-	{{ form_row(form.name) }}
-	{{ form_row(form.email) }}
-	{{ form_row(form.message) }}
-
-	{{ form_rest(form) }}
-
-	<input type="submit" value="Envoyer" />
+		{{ form_rest(form) }}
+	 	<button class="s_button_1 s_main_color_bgr" type="submit"/>
+	   		<span class="s_text">Envoyer</span>
+	 	</button>
+ 	</div>
 </form>
+</div>
+{% endblock %}

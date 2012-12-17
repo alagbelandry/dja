@@ -82,7 +82,7 @@ class AdDeleteHandler
                ->save();
 
             // send confirmation email
-            //$this->mailer->sendConfirmAdEditedEmailMessage($this->ad);
+            $this->mailer->sendConfirmAdEditedEmailMessage($this->ad);
             return self::AD_DELETE_SUCCESS_STATUT;
         }
 

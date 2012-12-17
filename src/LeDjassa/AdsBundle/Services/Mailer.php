@@ -26,22 +26,22 @@ class Mailer
 
     public function sendConfirmAdCreatedEmailMessage(Ad $ad, $plainTextPassword)
     {
-    	$subject = "Votre annonce ". $ad->getTitle() ." est en ligne";
+        $subject = "Votre annonce ". $ad->getTitle() ." est en ligne";
 
         $nameAdShow = $ad->getAdType()->getId() == AdType::ID_OFFERS ? 'ad_show_offers' : 'ad_show_demands';
-    	$urlShow = $this->router->generate($nameAdShow, array(
-            'idAd'         => $ad->getId(), 
+        $urlShow = $this->router->generate($nameAdShow, array(
+            'idAd'         => $ad->getId(),
             'slugCategory' => $ad->getCategory()->getSlug(),
             'slugAd'       => $ad->getSlug()
             ),
             true
         );
 
-    	$urlEdit = $this->router->generate('ad_edit', array('idAd' => $ad->getId()), true);
-    	$urlDelete = $this->router->generate('ad_delete', array('idAd' => $ad->getId()), true);
+        $urlEdit = $this->router->generate('ad_edit', array('idAd' => $ad->getId()), true);
+        $urlDelete = $this->router->generate('ad_delete', array('idAd' => $ad->getId()), true);
 
-    	$template = $this->parameters['template']['ad_created_confirmation'];
-    	$rendered = $this->templating->render($template, array(
+        $template = $this->parameters['template']['ad_created_confirmation'];
+        $rendered = $this->templating->render($template, array(
             'ad' 	  			 => $ad,
             'plainTextPassword'  => $plainTextPassword,
             'urlShow' 			 => $urlShow,
@@ -87,7 +87,7 @@ class Mailer
     }
 
     public function sendNewPasswordUserEmailMessage($plainTextPassword, $ad)
-    {   
+    {
         $subject = sprintf("Votre nouveau mot de passe pour votre annonce %s",
             $ad->getTitle()
         );
@@ -96,6 +96,20 @@ class Mailer
         $rendered = $this->templating->render($template, array(
             'ad'                => $ad,
             'plainTextPassword' => $plainTextPassword,
+        ));
+
+        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
+    }
+
+    public function sendConfirmAdEditedEmailMessage($ad)
+    {
+        $subject = sprintf("Suppression de votre annonce : %s",
+            $ad->getTitle()
+        );
+
+        $template = $this->parameters['template']['ad_edited_confirmation'];
+        $rendered = $this->templating->render($template, array(
+            'ad'                => $ad,
         ));
 
         $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
@@ -111,4 +125,4 @@ class Mailer
 
         $this->mailer->send($message);
     }
-} 
+}

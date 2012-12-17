@@ -330,7 +330,10 @@ class AdController extends Controller
         $process = $formHandler->process();
 
         if ($process == PasswordForgotHandler::PASSWORD_SEND_SUCCESS_STATUT) {
-             return $this->render('LeDjassaAdsBundle:Ad:forgotPasswordSuccess.html.twig');
+            
+             return $this->render('LeDjassaAdsBundle:Ad:forgotPasswordSuccess.html.twig', array(
+                'ad' => $ad->getProperties()
+            ));
 
         } elseif ($process == PasswordForgotHandler::INVALID_EMAIL_STATUT) {
             return array(

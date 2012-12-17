@@ -15,7 +15,7 @@ class PasswordForgotType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('user_email', 'email', array(
-            'label' => 'Votre adresse email :',
+            'label' => 'E-mail :',
         ));
 
     }

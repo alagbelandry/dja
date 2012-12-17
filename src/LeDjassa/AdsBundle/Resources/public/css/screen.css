@@ -2490,9 +2490,14 @@ body.s_layout_fixed #wrapper {
   margin-bottom: 30px;
 }
 
-.s_add_ad_block span.s_invalid_passord {
-  margin: -25px 0 0 300px;
+.s_add_ad_block span.s_invalid_passord,
+.s_add_ad_block span.s_invalid_email {
+  margin: -24px 0 0 280px;
   position: absolute;
+}
+
+#password_forgot_form p.s_error_msg{
+  margin-right: 130px;
 }
 
 #ad_price, #ad_edit_price {

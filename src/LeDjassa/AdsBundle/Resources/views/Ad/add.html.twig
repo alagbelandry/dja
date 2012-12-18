@@ -232,7 +232,7 @@
 					picture     = fileField.files[0];
 
 			    if (picture.type.match('image.*') == null || (typeof window.FileReader === 'undefined')) {
-			    	alert('La photo téléchargée n\'est pas une image valide');
+			    	alert('La photo téléchargée n\'est pas une image valide.');
 			  		$(fileField).val('');
 			  		return;
 			    }

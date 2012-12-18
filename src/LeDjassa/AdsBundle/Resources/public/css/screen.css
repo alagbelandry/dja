@@ -2617,7 +2617,7 @@ body.s_layout_fixed #wrapper {
   font-size: 20px;
 }
 
-#add_success ul.s_to_know {
+#add_success ul.s_to_know, ul.s_site_info {
   list-style-type:square;
 }
 
@@ -2802,6 +2802,19 @@ body.s_layout_fixed #wrapper {
 
 #footer {
   padding-bottom: 10px;
+  background: url(../images/shop_info.gif) repeat-x top left;
+}
+
+#footer .s_footer_info {
+  padding: 20px 0 0 0px;
+}
+
+#footer .s_footer_info a {
+  margin-left: 30px;
+}
+
+#footer .s_footer_social {
+  margin-left: 400px;
 }
 
 #footer_categories {

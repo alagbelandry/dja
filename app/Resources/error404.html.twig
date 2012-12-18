@@ -1,0 +1,15 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block head_title %}Page inexistante 404{% endblock %}
+{% block head_meta_site_info %}
+  <meta content="noindex,follow" name="robots">
+{% endblock %}
+{% block body_container_pre_intro %}
+<div class="s_border"></div>
+{% endblock %}
+{% block body_container_main %}
+<div id="content" class="container_16">
+<h2>Page<span class="s_secondary_color"> inexistante 404</span></h2>
+<h4>La page que vous avez demandé n'existe pas.</h4>
+<a href="{{ path('ad_list') }}">Retour à l'accueil</a>
+</div>
+{% endblock %}

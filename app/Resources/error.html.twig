@@ -1,0 +1,17 @@
+{% extends 'LeDjassaAdsBundle::layout.html.twig' %}
+{% block head_title %}Oops! Une erreur inattendue est survenue{% endblock %}
+{% block head_meta_site_info %}
+  <meta content="noindex,follow" name="robots">
+{% endblock %}
+{% block body_container_pre_intro %}
+<div class="s_border"></div>
+{% endblock %}
+{% block body_container_main %}
+<div id="content" class="container_16">
+<h2>Oops! Une erreur innatendue<span class="s_secondary_color"> est survenue</span></h2>
+Nous nous efforçons de corriger cela dans les plus brefs délais.<br/>
+Vous pouvez aussi nous décrire par mail le cas d'utilisation produisant l'erreur : <a href="mailto:contact@auportdadjame.com">Contact</a><br/>
+Merci de votre confiance et à très bientôt sur notre site.<br/>
+<a href="{{ path('ad_list') }}">Retour à l'accueil</a>
+</div>
+{% endblock %}

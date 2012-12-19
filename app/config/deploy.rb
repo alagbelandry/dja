@@ -15,7 +15,7 @@ role :db,         domain, :primary => true       # This is where Symfony2 migrat
 
 set  :keep_releases,  3
 
-set :php_bin, "/usr/local/bin/php.ORIG.5_4"
+set :php_bin, "/usr/local/bin/php.ORIG.5_4 -c /usr/local/lib/php.ini-2 -v"
 
 set :shared_files,      ["app/config/parameters.ini"]
 set :shared_children,   [app_path + "/logs", web_path + "/uploads", "vendor"]

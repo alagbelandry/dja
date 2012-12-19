@@ -18,7 +18,7 @@ set :shared_children,   [app_path + "/logs", web_path + "/uploads", "vendor"]
 set :update_vendors, true
 set :use_composer, true
 
-set :user, "auportda"
+set :user, "auportdadjame"
 set :passsword, "L2NWaWfd"
 
 set :deploy_via, :copy

@@ -1,0 +1,36 @@
+div.ic_myCarousel {
+	clear:right;
+}
+
+.ic_myCarousel .ic_button {
+	float: left;
+	height: 37px;
+	line-height: 25px;
+	margin: 8px 4px 0 2px;
+	width: 140px;
+	height: 100px;
+	border: 2px solid #eee;
+	background: #ddd;
+}
+
+.infiniteCarousel {
+	margin: 0 auto !important;
+}
+
+.infiniteCarousel_item img{
+	width: 400px;
+	height: 330px;
+}
+
+.ic_wrapper {
+	width: 550px !important;
+}
+
+.ic_myCarousel .ic_active {
+	background: #fff;
+	border: 2px solid #FF9900;
+}
+
+.ic_peek_padding {
+	padding: 0;
+}

@@ -1,10 +1,12 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-
-    #<IfModule mod_vhost_alias.c>
-    #    RewriteBase /
-    #</IfModule>
-
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ app.php [QSA,L]
-</IfModule>
+SetEnv SHORT_OPEN_TAGS 0
+SetEnv REGISTER_GLOBALS 0
+SetEnv MAGIC_QUOTES 0
+SetEnv SESSION_AUTOSTART 0
+SetEnv ZEND_OPTIMIZER 1
+SetEnv PHP_VER 5_3
+Options All -Indexes
+Options +FollowSymlinks
+RewriteEngine on
+<FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf|js|css|pdf)$">
+Header set Cache-Control "max-age=2592000"
+</FilesMatch>

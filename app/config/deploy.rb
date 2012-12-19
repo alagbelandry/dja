@@ -1,6 +1,6 @@
 set :application, "auportdadjame"
-set :domain,      "#{application}.com"
-set :deploy_to,   "/var/www/#{domain}"
+set :domain,      "ftp.#{application}.com"
+set :deploy_to,   "/www"
 
 set :repository,  "git@github.com:alagbelandry/dja.git"
 set :scm,         :git
@@ -28,6 +28,8 @@ set :deploy_via, :copy
  set :copy_cache, "/tmp/#{application}"
  set :copy_exclude, [".git/*"]
  set :copy_compression, :gzip
+
+ default_run_options[:pty] = true
 
 # Be more verbose by uncommenting the following line
 # logger.level = Logger::MAX_LEVEL

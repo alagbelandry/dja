@@ -6,4 +6,3 @@ SetEnv ZEND_OPTIMIZER 1
 SetEnv PHP_VER 5_3
 Options All -Indexes
 Options +FollowSymlinks
-RewriteEngine on

@@ -18,7 +18,8 @@ set :shared_children,   [app_path + "/logs", web_path + "/uploads", "vendor"]
 set :update_vendors, true
 set :use_composer, true
 
-set :user, "as67376-ovh"
+set :user, "auportda"
+set :passsword, "L2NWaWfd"
 
 # Be more verbose by uncommenting the following line
 # logger.level = Logger::MAX_LEVEL

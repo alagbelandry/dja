@@ -1,6 +1,6 @@
 set :application, "auportdadjame"
 set :domain,      "ftp.#{application}.com"
-set :deploy_to,   "/www"
+set :deploy_to,   "/www/#{application}"
 
 set :repository,  "git@github.com:alagbelandry/dja.git"
 set :scm,         :git
@@ -24,12 +24,12 @@ set :passsword, "L2NWaWfd"
 set :deploy_via, :copy
 
 # Use copy to bypass firewall...
- set :copy_strategy, :export
- set :copy_cache, "/tmp/#{application}"
- set :copy_exclude, [".git/*"]
- set :copy_compression, :gzip
+set :copy_strategy, :export
+set :copy_cache, "/tmp/#{application}"
+set :copy_exclude, [".git/*"]
+set :copy_compression, :gzip
 
- default_run_options[:pty] = true
+default_run_options[:pty] = true
 
 # Be more verbose by uncommenting the following line
-# logger.level = Logger::MAX_LEVEL
+logger.level = Logger::MAX_LEVEL

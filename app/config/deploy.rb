@@ -15,12 +15,12 @@ role :db,         domain, :primary => true       # This is where Symfony2 migrat
 
 set  :keep_releases,  3
 
-set :php, "/usr/local/bin/php.ORIG.5_3"
+set :php_bin, "/usr/local/bin/php.ORIG.5_4"
 
 set :shared_files,      ["app/config/parameters.ini"]
 set :shared_children,   [app_path + "/logs", web_path + "/uploads", "vendor"]
-set :update_vendors, true
 set :use_composer, true
+set :dump_assetic_assets, true
 
 set :user, "auportda"
 set :use_sudo, false

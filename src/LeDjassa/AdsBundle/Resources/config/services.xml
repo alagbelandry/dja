@@ -16,7 +16,7 @@
         <parameter key="contact.template">LeDjassaAdsBundle:InformationUser:contactSendEmail.txt.twig</parameter>
         <parameter key="interested_user.contact.template">LeDjassaAdsBundle:InterestedUser:interestedUserContact.txt.twig</parameter>
         <parameter key="user.password_forgot.template">LeDjassaAdsBundle:Ad:userPasswordForgot.txt.twig</parameter>
-        <parameter key="noreply_from_email">ne.pas.repondre@auportdadjame.com</parameter>
+        <parameter key="noreply_from_email">ne-pas-repondre@auportdadjame.com</parameter>
         <parameter key="contact_to_email">as.landry@gmail.com</parameter>
 
         <parameter key="paginator.class">LeDjassa\AdsBundle\Services\Paginator</parameter>

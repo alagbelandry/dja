@@ -10,11 +10,27 @@ framework:
     router:
         strict_requirements: null
 
-#doctrine:
-#    orm:
-#        metadata_cache_driver: apc
-#        result_cache_driver: apc
-#        query_cache_driver: apc
+# Swiftmailer Configuration
+swiftmailer:
+    transport:  smtp
+    auth_mode:  login
+    host:       smtp.auportdadjame.com
+    port:       587
+    username:   postmaster@auportdadjame.com
+    password:   "limperial123"
+    spool:     { type: memory }
+
+# Propel Configuration
+propel:
+    path:       "%kernel.root_dir%/../vendor/propel"
+    phing_path: "%kernel.root_dir%/../vendor/phing"
+    dbal:
+       driver:               mysql
+       user:                 auportdadjame
+       password:             "limperial123"
+       dsn:                  mysql:host=mysql51-75;dbname=auportdadjame;charset=UTF8
+       options:              {}
+       attributes:           {}
 
 monolog:
     handlers:

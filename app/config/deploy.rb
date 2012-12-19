@@ -1,6 +1,6 @@
 set :application, "auportdadjame"
-set :domain,      "auportdadjame.com"
-set :deploy_to,   "/var/www/auportdadjame.com"
+set :domain,      "#{application}.com"
+set :deploy_to,   "/var/www/#{domain}"
 
 set :repository,  "git@github.com:alagbelandry/dja.git"
 set :scm,         :git
@@ -25,7 +25,7 @@ set :deploy_via, :copy
 
 # Use copy to bypass firewall...
  set :copy_strategy, :export
- set :copy_cache, "/tmp/#{auportdadjame}"
+ set :copy_cache, "/tmp/#{application}"
  set :copy_exclude, [".git/*"]
  set :copy_compression, :gzip
 

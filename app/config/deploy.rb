@@ -1,6 +1,6 @@
 set :application, "auportdadjame"
 set :domain,      "ftp.#{application}.com"
-set :deploy_to,   "/www/#{application}"
+set :deploy_to,   "/"
 
 set :repository,  "git@github.com:alagbelandry/dja.git"
 set :scm,         :git

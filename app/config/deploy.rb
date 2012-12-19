@@ -1,6 +1,9 @@
 set :application, "auportdadjame"
-set :domain,      "ftp.#{application}.com"
-set :deploy_to,   "/www"
+set :domain,      "ftp.cluster006.ovh.net"
+set :deploy_to,   "/www/auportdadjame"
+set :app_path,    "app"
+set :copy_strategy, :checkout
+set :branch, "master"
 
 set :repository,  "git@github.com:alagbelandry/dja.git"
 set :scm,         :git
@@ -19,18 +22,16 @@ set :update_vendors, true
 set :use_composer, true
 
 set :user, "auportda"
-set :passsword, "L2NWaWfd"
 set :use_sudo, false
 
-set :deploy_via, :copy
 
 # Use copy to bypass firewall...
-set :copy_strategy, :export
 set :copy_cache, "/tmp/#{application}"
 set :copy_exclude, [".git/*"]
 set :copy_compression, :gzip
 
 default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL

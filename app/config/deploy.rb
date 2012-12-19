@@ -15,6 +15,8 @@ role :db,         domain, :primary => true       # This is where Symfony2 migrat
 
 set  :keep_releases,  3
 
+set :php, "/usr/local/bin/php.ORIG.5_3"
+
 set :shared_files,      ["app/config/parameters.ini"]
 set :shared_children,   [app_path + "/logs", web_path + "/uploads", "vendor"]
 set :update_vendors, true
@@ -32,7 +34,6 @@ set :copy_cache, "/tmp/#{application}"
 set :copy_exclude, [".git/*"]
 set :copy_compression, :gzip
 
-default_run_options[:pty] = true
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL

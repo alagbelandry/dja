@@ -21,5 +21,13 @@ set :use_composer, true
 set :user, "auportda"
 set :passsword, "L2NWaWfd"
 
+set :deploy_via, :copy
+
+# Use copy to bypass firewall...
+ set :copy_strategy, :export
+ set :copy_cache, "/tmp/#{auportdadjame}"
+ set :copy_exclude, [".git/*"]
+ set :copy_compression, :gzip
+
 # Be more verbose by uncommenting the following line
 # logger.level = Logger::MAX_LEVEL

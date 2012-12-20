@@ -1,7 +1,8 @@
 set :application, "auportdadjame"
 set :domain,      "ftp.cluster006.ovh.net"
-set :deploy_to,   "www/auportdadjame"
+set :deploy_to,   "www/"
 set :app_path,    "app"
+set :web_path,    "web"
 set :branch, "master"
 
 set :repository,  "git@ssh.github.com:alagbelandry/dja.git"
@@ -34,6 +35,8 @@ set :copy_cache, "/tmp/#{application}"
 set :copy_exclude, [".git/*"]
 set :copy_compression, :gzip
 
+set :symfony_env_prod, "staging"
+set :writable_dirs,     ["app/cache", "app/logs"]
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL

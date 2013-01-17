@@ -1,6 +1,6 @@
 set :application, "auportdadjame"
 set :domain,      "ftp.cluster006.ovh.net"
-set :deploy_to,   "www/"
+set :deploy_to,   "/"
 set :app_path,    "app"
 set :web_path,    "web"
 set :branch, "master"

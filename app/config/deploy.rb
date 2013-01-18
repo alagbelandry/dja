@@ -22,6 +22,7 @@ set :shared_files,      ["app/config/parameters.ini"]
 set :shared_children,   [app_path + "/logs", web_path + "/uploads", "vendor"]
 set :use_composer, true
 set :dump_assetic_assets, true
+set :update_vendors, true
 
 set :user, "auportda"
 set :use_sudo, false

@@ -23,6 +23,7 @@ set :shared_files,      ["app/config/parameters.ini"]
 set :shared_children,   [app_path + "/logs", web_path + "/uploads"]
 set :vendors_mode, "install"
 set :use_composer, true
+set :update_vendors, false
 set :composer_options,  "--verbose --prefer-dist"
 set :dump_assetic_assets, true
 
@@ -59,5 +60,15 @@ case vendors_mode
   when "reinstall" then symfony.vendors.reinstall
 end
 
+namespace :composer do
+    desc "Runs composer install to install vendors from composer.lock file"
+    task :install do
+      run "cd #{latest_release} && #{php_bin} composer.phar install"
+    end
+	desc "Runs composer update to install vendors and update composer.lock file"
+    task :update do
+      run "cd #{latest_release} && #{php_bin} composer.phar update"
+    end
+end
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL

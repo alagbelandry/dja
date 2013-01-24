@@ -17,7 +17,7 @@ role :db,         domain, :primary => true       # This is where Symfony2 migrat
 
 set  :keep_releases,  3
 
-set :php_bin, "/usr/local/bin/php.ORIG.5_4 -c /usr/local/lib/php.ini-2 -v"
+set :php_bin, "/usr/local/bin/php.ORIG.5_4 -n"
 
 set :shared_files,      ["app/config/parameters.ini"]
 set :shared_children,   [app_path + "/logs", web_path + "/uploads"]
@@ -54,21 +54,5 @@ namespace :symfony do
   end
 end
 
-case vendors_mode
-  when "upgrade" then symfony.vendors.upgrade
-  when "install" then symfony.vendors.install
-  when "reinstall" then symfony.vendors.reinstall
-end
-
-namespace :composer do
-    desc "Runs composer install to install vendors from composer.lock file"
-    task :install do
-      run "cd #{latest_release} && #{php_bin} composer.phar install"
-    end
-	desc "Runs composer update to install vendors and update composer.lock file"
-    task :update do
-      run "cd #{latest_release} && #{php_bin} composer.phar update"
-    end
-end
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL

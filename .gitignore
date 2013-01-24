@@ -4,4 +4,4 @@ app/cache/*
 app/logs/*
 build/
 bin/*
-vendor/* 
+vendor/*

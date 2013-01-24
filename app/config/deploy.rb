@@ -24,7 +24,6 @@ set :shared_children,   [app_path + "/logs", web_path + "/uploads"]
 set :vendors_mode, "install"
 set :use_composer, true
 set :update_vendors, false
-set :composer_options,  "--verbose --prefer-dist"
 set :dump_assetic_assets, true
 
 set :user, "auportda"

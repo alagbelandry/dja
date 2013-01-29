@@ -3,5 +3,6 @@ web/uploads/
 app/cache/*
 app/logs/*
 build/
+
 bin/*
 vendor/*

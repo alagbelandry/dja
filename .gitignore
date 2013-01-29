@@ -3,3 +3,9 @@ web/uploads/
 app/cache/*
 app/logs/*
 build/
+<<<<<<< HEAD
+=======
+
+bin/*
+vendor/*
+>>>>>>> app-without-vendor

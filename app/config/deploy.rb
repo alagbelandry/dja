@@ -1,6 +1,6 @@
 set :application, "auportdadjame"
-set :domain,      "ftp.cluster006.ovh.net"
-set :deploy_to,   "www/"
+set :domain,      "vps20391.ovh.net"
+set :deploy_to,   "/var/www/auportdadjame.com/web/"
 set :app_path,    "app"
 set :web_path,    "web"
 set :branch, "master"
@@ -17,7 +17,7 @@ role :db,         domain, :primary => true       # This is where Symfony2 migrat
 
 set  :keep_releases,  3
 
-set :php_bin, "/usr/local/bin/php.ORIG.5_4 -n"
+set :php_bin, "/usr/bin/php5"
 
 set :shared_files,      ["app/config/parameters.ini"]
 set :shared_children,   [app_path + "/logs", web_path + "/uploads"]
@@ -35,7 +35,7 @@ set :copy_cache, "/tmp/#{application}"
 set :copy_exclude, [".git/*"]
 set :copy_compression, :gzip
 
-set :symfony_env_prod, "staging"
+set :symfony_env_prod, "prod"
 set :writable_dirs,     ["app/cache", "app/logs"]
 
 # Symfony2 2.1

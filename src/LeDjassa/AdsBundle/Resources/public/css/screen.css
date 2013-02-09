@@ -19,23 +19,13 @@ button, a {cursor: pointer;}
 
 @font-face {
     font-family: 'Ubuntu Regular';
-    src: url('../fonts/Ubuntu/Ubuntu-R-webfont.eot');
     src: local('Ubuntu Regular'),
-         url('../fonts/Ubuntu/Ubuntu-R-webfont.eot?iefix') format('eot'),
-         url('../fonts/Ubuntu/Ubuntu-R-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu/Ubuntu-R-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu/Ubuntu-R-webfont.svg#webfontGZB3fjCF') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'Babel Sans';
-    src: url('../fonts/Babel/BabelSans.eot');
     src: local('Babel Sans'),
-         url('../fonts/Babel/BabelSans.eot?iefix') format('eot'),
-         url('../fonts/Babel/BabelSans.woff') format('woff'),
-         url('../fonts/Babel/BabelSans.ttf') format('truetype'),
-         url('../fonts/Babel/BabelSans.svg#BabelSans') format('svg');
     font-weight: normal;
     font-style: normal;
 }

@@ -16,7 +16,7 @@
 {% block head_css %}
 	{{ parent() }}
 
-	{% stylesheets filter='cssrewrite'
+	{% stylesheets output='css/*.css' filter='cssrewrite'
 	'bundles/ledjassaads/css/color.css'
 	'bundles/ledjassaads/css/screen.css'  
   'bundles/ledjassaads/css/jquery-ui.css'

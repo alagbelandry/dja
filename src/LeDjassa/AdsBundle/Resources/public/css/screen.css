@@ -1842,7 +1842,7 @@ body.s_layout_fixed #wrapper {
   margin-bottom: 24px;
   padding-top: 30px;
   background: url(../images/intro.png) top left repeat-x;
-  background: url(../images/intro.png) top left repeat-x;
+  background: url(../images/intro.png) top left repeat-x, url(../images/intro_texture.png) center no-repeat;
   background-color: #DEF5D0;
 }
 #intro_wrap {

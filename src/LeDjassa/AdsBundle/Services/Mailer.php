@@ -80,7 +80,7 @@ class Mailer
             'phone'    => $interestedUser->getPhone(),
         ));
 
-        $this->sendEmailMessage($rendered, $subject, $interestedUser->getEmail(), $ad->getUserEmail());
+        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
     }
 
     public function sendContactEmailMessage(InformationUser $informationUser)
@@ -92,7 +92,7 @@ class Mailer
             'email'    => $informationUser->getEmail(),
         ));
 
-        $this->sendEmailMessage($rendered, $informationUser->getSubject(), $informationUser->getEmail(), $this->parameters["email"]["contact"]);
+        $this->sendEmailMessage($rendered, $informationUser->getSubject(), $this->parameters["email"]["noreply"], $this->parameters["email"]["contact"]);
     }
 
     public function sendNewPasswordUserEmailMessage($plainTextPassword, $ad)

@@ -128,7 +128,7 @@ class Mailer
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($fromEmail)
+            ->setFrom(array($fromEmail => $fromEmailName))
             ->setTo($toEmail)
             ->setBody($body);
 

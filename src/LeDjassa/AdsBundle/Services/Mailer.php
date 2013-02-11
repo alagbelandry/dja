@@ -49,7 +49,7 @@ class Mailer
             'urlDelete' 		 => $urlDelete,
         ));
 
-        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
+        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail(), "Auportdadjame.com");
     }
 
     public function sendInterestedUserEmailMessage(Ad $ad, InterestedUser $interestedUser)
@@ -80,7 +80,7 @@ class Mailer
             'phone'    => $interestedUser->getPhone(),
         ));
 
-        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
+        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail(), "Auportdadjame.com");
     }
 
     public function sendContactEmailMessage(InformationUser $informationUser)
@@ -92,7 +92,7 @@ class Mailer
             'email'    => $informationUser->getEmail(),
         ));
 
-        $this->sendEmailMessage($rendered, $informationUser->getSubject(), $this->parameters["email"]["noreply"], $this->parameters["email"]["contact"]);
+        $this->sendEmailMessage($rendered, $informationUser->getSubject(), $this->parameters["email"]["noreply"], $this->parameters["email"]["contact"], "Auportdadjame.com");
     }
 
     public function sendNewPasswordUserEmailMessage($plainTextPassword, $ad)
@@ -107,7 +107,7 @@ class Mailer
             'plainTextPassword' => $plainTextPassword,
         ));
 
-        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
+        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail(), "Auportdadjame.com");
     }
 
     public function sendConfirmAdEditedEmailMessage($ad)
@@ -121,10 +121,10 @@ class Mailer
             'ad'                => $ad,
         ));
 
-        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail());
+        $this->sendEmailMessage($rendered, $subject, $this->parameters["email"]["noreply"], $ad->getUserEmail(), "Auportdadjame.com");
     }
 
-    protected function sendEmailMessage($body, $subject, $fromEmail, $toEmail)
+    protected function sendEmailMessage($body, $subject, $fromEmail, $toEmail, $fromEmailName)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)

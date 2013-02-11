@@ -18,7 +18,7 @@ class CityType extends AbstractType
         $builder->add('area', 'model', array(
             'class'         => 'LeDjassa\AdsBundle\Model\Area',
             'label'         => 'Region :',
-            'empty_value'   => 'Choisir une region',
+            'empty_value'   => 'Choisir une région',
             'property_path' => false,
         ));
 

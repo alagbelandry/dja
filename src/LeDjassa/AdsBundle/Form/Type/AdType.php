@@ -42,7 +42,7 @@ class AdType extends AbstractType
             'label' => 'Votre adresse email :',
         ));
 
-        $builder->add('user_phone', 'number', array(
+        $builder->add('user_phone', 'text', array(
             'label'    => 'Téléphone :',
             'required' => false
         ));

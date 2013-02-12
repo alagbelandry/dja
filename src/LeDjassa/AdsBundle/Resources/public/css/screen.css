@@ -2433,7 +2433,7 @@ body.s_layout_fixed #wrapper {
 
 .s_form_add_field_radio label {
   display: inline;
-  margin: 5px 10px;
+  margin: 0 -100px;
 }
 
 .s_add_ad_block button {

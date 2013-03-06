@@ -19,7 +19,7 @@
 		</h3>
 		{% if adProperties[ad.Id].price %}
 		<p class="s_price s_promo_price">
-			<span itemprop="price">{{adProperties[ad.Id].price}}</span>
+			<span itemprop="price">{{adProperties[ad.Id].price|number_format(0, ' ', ' ')}}</span>
 			<span class="s_currency s_before">F CFA</span>
 		</p>
 		{% endif %}

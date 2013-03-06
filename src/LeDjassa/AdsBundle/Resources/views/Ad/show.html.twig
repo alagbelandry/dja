@@ -65,7 +65,7 @@
 			{% if ad.price %}
 				<span class="s_info_price">
 					<span class="s_info_title">Prix:</span>
-					<span itemprop="price" class="s_info_price_value">{{ad.price}} F CFA</span>
+					<span itemprop="price" class="s_info_price_value">{{ad.price|number_format(0, ' ', ' ')}} F CFA</span>
 				</span>
 			{% endif %}
 

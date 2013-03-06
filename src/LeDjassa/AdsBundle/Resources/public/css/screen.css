@@ -2026,6 +2026,9 @@ body.s_layout_fixed #wrapper {
   padding: 7px 10px 20px 30px;
 }
 
+#product_user_info .s_product_user_info_name_phone {
+}
+
 #product_user_info .s_user_phone_icon {
   background-image: url(../images/i_phone_32.png);
   background-repeat: no-repeat;

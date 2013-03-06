@@ -2032,7 +2032,7 @@ body.s_layout_fixed #wrapper {
 #product_user_info .s_user_phone_icon {
   background-image: url(../images/i_phone_32.png);
   background-repeat: no-repeat;
-  padding: 10px 5px 20px 35px;
+  padding: 12px 5px 20px 35px;
 }
 
 #product_user_info  .s_product_user_update {
